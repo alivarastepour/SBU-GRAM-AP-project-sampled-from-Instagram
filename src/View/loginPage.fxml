@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<Pane centerShape="false" depthTest="DISABLE" focusTraversable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="900.0" scaleShape="false" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.logInPage_Controller">
+   <children>
+      <JFXTextField fx:id="username" depthTest="ENABLE" labelFloat="true" layoutX="462.0" layoutY="77.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="81.0" prefWidth="336.0" promptText="username" style="-fx-background-color: white;">
+         <font>
+            <Font name="Segoe UI Light" size="24.0" />
+         </font>
+         <focusColor>
+            <LinearGradient endX="1.0" endY="1.0" startY="1.0">
+               <stops>
+                  <Stop color="#007c0a94" />
+                  <Stop color="#007c0a94" offset="0.007246376811594203" />
+                  <Stop color="BLACK" offset="0.007246376811594203" />
+                  <Stop color="#0abc16" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </focusColor>
+         <unFocusColor>
+            <LinearGradient endX="1.0" endY="1.0" startY="1.0">
+               <stops>
+                  <Stop color="WHITE" />
+                  <Stop color="WHITE" offset="0.007246376811594203" />
+                  <Stop color="#00900a" offset="0.007246376811594203" />
+                  <Stop color="#23ff32" offset="0.5034811025859619" />
+                  <Stop color="WHITE" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </unFocusColor>
+      </JFXTextField>
+      <JFXPasswordField fx:id="password" labelFloat="true" layoutX="462.0" layoutY="242.0" prefHeight="81.0" prefWidth="336.0" promptText="Password" style="-fx-background-color: white;">
+         <font>
+            <Font name="Segoe UI Light" size="24.0" />
+         </font>
+         <focusColor>
+            <LinearGradient endX="1.0" endY="1.0" startY="1.0">
+               <stops>
+                  <Stop color="BLACK" />
+                  <Stop color="#23ff32" offset="0.9563796533105995" />
+                  <Stop color="WHITE" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </focusColor>
+         <unFocusColor>
+            <LinearGradient endX="1.0" endY="1.0" startY="1.0">
+               <stops>
+                  <Stop color="#007c0a94" />
+                  <Stop color="#007c0a94" offset="0.007246376811594203" />
+                  <Stop color="#00900a" offset="0.007246376811594203" />
+                  <Stop color="#23ff3294" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </unFocusColor>
+      </JFXPasswordField>
+      <JFXButton fx:id="signIn" contentDisplay="TOP" layoutX="462.0" layoutY="363.0" onAction="#login" prefHeight="51.0" prefWidth="336.0" style="-fx-border-radius: 50; -fx-background-radius: 50;" text="sign in" textOverrun="CLIP">
+         <font>
+            <Font name="Segoe UI Light" size="24.0" />
+         </font>
+         <ripplerFill>
+            <RadialGradient centerX="0.4943181818181818" centerY="0.5922330097087378" cycleMethod="REFLECT" focusAngle="90.0" radius="0.5">
+               <stops>
+                  <Stop color="#007c0a94" />
+                  <Stop color="#73d379" offset="0.007246376811594203" />
+                  <Stop color="#ffffff94" offset="0.007246376811594203" />
+                  <Stop color="#cee8d3" offset="1.0" />
+               </stops>
+            </RadialGradient>
+         </ripplerFill>
+      </JFXButton>
+      <JFXButton fx:id="forgotPass" layoutX="570.0" layoutY="431.0" onAction="#passwordRecovery" style="-fx-background-radius: 50; -fx-border-radius: 50;" text="Forgot Password?">
+         <font>
+            <Font name="Segoe UI Light" size="15.0" />
+         </font>
+         <ripplerFill>
+            <LinearGradient cycleMethod="REFLECT" endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color blue="0.03921568766236305" green="0.48627451062202454" opacity="0.5803921818733215" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.007246376811594203">
+                     <color>
+                        <Color blue="0.4745098054409027" green="0.8274509906768799" red="0.45098039507865906" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.007246376811594203">
+                     <color>
+                        <Color blue="1.0" green="1.0" opacity="0.5803921818733215" red="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color blue="0.8274509906768799" green="0.9098039269447327" red="0.8078431487083435" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </ripplerFill>
+      </JFXButton>
+      <JFXButton fx:id="accCreate" layoutX="565.0" layoutY="472.0" onAction="#toSignUpPage" style="-fx-background-radius: 50; -fx-border-radius: 50;" text="Create an Account!">
+         <font>
+            <Font name="Segoe UI Light" size="15.0" />
+         </font>
+         <ripplerFill>
+            <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color blue="1.0" green="1.0" red="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.007662835249042145">
+                     <color>
+                        <Color blue="1.0" green="1.0" red="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color blue="0.8274509906768799" green="0.9098039269447327" red="0.8078431487083435" />
+                     </color>
+                  </Stop>
+               </stops>
+            </RadialGradient>
+         </ripplerFill>
+      </JFXButton>
+      <ImageView fitHeight="214.0" fitWidth="236.0" layoutX="42.0" layoutY="98.0" opacity="0.34" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Icons/icon.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="wrongPass" alignment="CENTER" layoutX="550.0" layoutY="323.0" prefHeight="40.0" prefWidth="141.0" text="wrong Password" textAlignment="CENTER" textFill="#ff5151" visible="false">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <JFXToggleButton fx:id="togglePass" contentDisplay="GRAPHIC_ONLY" layoutX="820.0" layoutY="274.0" onAction="#showPassword" prefHeight="58.0" prefWidth="30.0" text="Show Password" textAlignment="CENTER" toggleColor="#23ff32" toggleLineColor="#24ff327f" unToggleLineColor="#a17f7f4a">
+         <font>
+            <Font name="Segoe UI Light" size="12.0" />
+         </font>
+      </JFXToggleButton>
+      <JFXTextField fx:id="password_show" labelFloat="true" layoutX="462.0" layoutY="242.0" prefHeight="81.0" prefWidth="336.0" promptText="Password" visible="false">
+         <font>
+            <Font name="Segoe UI Light" size="24.0" />
+         </font>
+         <focusColor>
+            <LinearGradient endX="1.0" endY="1.0" startY="1.0">
+               <stops>
+                  <Stop color="BLACK" />
+                  <Stop color="#23ff32" offset="0.9563796533105995" />
+                  <Stop color="WHITE" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </focusColor>
+         <unFocusColor>
+            <LinearGradient endX="1.0" endY="1.0" startY="1.0">
+               <stops>
+                  <Stop color="#007c0a94" />
+                  <Stop color="#007c0a94" offset="0.007246376811594203" />
+                  <Stop color="#00900a" offset="0.007246376811594203" />
+                  <Stop color="#23ff3294" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </unFocusColor>
+      </JFXTextField>
+      <Label fx:id="wrongUsername" layoutX="555.0" layoutY="150.0" prefHeight="51.0" prefWidth="131.0" text="username Not Found" textFill="#ff5151" visible="false">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+   </children>
+
+</Pane>

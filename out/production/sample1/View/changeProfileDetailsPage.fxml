@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import com.jfoenix.controls.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="550.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.changeProfileDetailsPage_Controller">
+   <children>
+      <JFXTextField fx:id="name" alignment="CENTER" depthTest="ENABLE" labelFloat="true" layoutX="65.0" layoutY="130.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="51.0" prefWidth="759.0" promptText="name">
+         <focusColor>
+            <LinearGradient endX="1.0" endY="1.0" startY="1.0">
+               <stops>
+                  <Stop color="#007c0a94" />
+                  <Stop color="#007c0a94" offset="0.007246376811594203" />
+                  <Stop color="BLACK" offset="0.007246376811594203" />
+                  <Stop color="#00900a" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </focusColor>
+         <font>
+            <Font name="Segoe UI Light" size="24.0" />
+         </font>
+         <unFocusColor>
+            <LinearGradient endX="1.0" endY="1.0" startY="1.0">
+               <stops>
+                  <Stop color="WHITE" />
+                  <Stop color="WHITE" offset="0.007246376811594203" />
+                  <Stop color="#00900a" offset="0.007246376811594203" />
+                  <Stop color="#23ff32" offset="0.5034811025859619" />
+                  <Stop color="#00900a" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </unFocusColor>
+      </JFXTextField>
+      <JFXTextField fx:id="password" alignment="CENTER" depthTest="ENABLE" labelFloat="true" layoutX="65.0" layoutY="224.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="51.0" prefWidth="759.0" promptText="Password">
+         <focusColor>
+            <LinearGradient endX="1.0" endY="1.0" startY="1.0">
+               <stops>
+                  <Stop color="#007c0a94" />
+                  <Stop color="#007c0a94" offset="0.007246376811594203" />
+                  <Stop color="#0abc16" offset="0.007662835249042145" />
+                  <Stop color="BLACK" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </focusColor>
+         <font>
+            <Font name="Segoe UI Light" size="24.0" />
+         </font>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <unFocusColor>
+            <LinearGradient endX="1.0" endY="1.0" startY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color blue="1.0" green="1.0" red="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.007246376811594203">
+                     <color>
+                        <Color blue="1.0" green="1.0" red="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.007662835249042145">
+                     <color>
+                        <Color blue="0.03921568766236305" green="0.5647059082984924" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.5034811025859619">
+                     <color>
+                        <Color blue="0.19607843458652496" green="1.0" red="0.13725490868091583" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color blue="0.03921568766236305" green="0.5647059082984924" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </unFocusColor>
+      </JFXTextField>
+      <ImageView fitHeight="107.0" fitWidth="119.0" layoutX="256.0" layoutY="14.0" opacity="0.48" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Icons/icon.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="392.0" layoutY="51.0" prefHeight="30.0" prefWidth="196.0" text="change Profile Details">
+         <font>
+            <Font name="Segoe UI Light" size="20.0" />
+         </font>
+      </Label>
+      <JFXTextField fx:id="emailAddress" alignment="CENTER" depthTest="ENABLE" labelFloat="true" layoutX="44.0" layoutY="333.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="51.0" prefWidth="233.0" promptText="e-mail address">
+         <focusColor>
+            <LinearGradient endX="1.0" endY="1.0" startY="1.0">
+               <stops>
+                  <Stop color="#007c0a94" />
+                  <Stop color="#007c0a94" offset="0.007246376811594203" />
+                  <Stop color="BLACK" offset="0.007246376811594203" />
+                  <Stop color="#0abc16" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </focusColor>
+         <font>
+            <Font name="Segoe UI Light" size="24.0" />
+         </font>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <unFocusColor>
+            <LinearGradient endX="1.0" endY="1.0" startY="1.0">
+               <stops>
+                  <Stop color="WHITE" />
+                  <Stop color="WHITE" offset="0.007246376811594203" />
+                  <Stop color="#00900a" offset="0.007246376811594203" />
+                  <Stop color="#23ff32" offset="0.5034811025859619" />
+                  <Stop color="WHITE" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </unFocusColor>
+      </JFXTextField>
+      <JFXTextField fx:id="phoneNumber" alignment="CENTER" depthTest="ENABLE" labelFloat="true" layoutX="334.0" layoutY="333.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="51.0" prefWidth="233.0" promptText="phone Number">
+         <focusColor>
+            <LinearGradient endX="1.0" endY="1.0" startY="1.0">
+               <stops>
+                  <Stop color="#007c0a94" />
+                  <Stop color="#007c0a94" offset="0.007246376811594203" />
+                  <Stop color="#0abc16" offset="0.007662835249042145" />
+                  <Stop color="BLACK" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </focusColor>
+         <font>
+            <Font name="Segoe UI Light" size="24.0" />
+         </font>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <unFocusColor>
+            <LinearGradient endX="1.0" endY="1.0" startY="1.0">
+               <stops>
+                  <Stop color="WHITE" />
+                  <Stop color="WHITE" offset="0.007246376811594203" />
+                  <Stop color="#00900a" offset="0.007662835249042145" />
+                  <Stop color="#23ff32" offset="0.5034811025859619" />
+                  <Stop color="#00900a" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </unFocusColor>
+      </JFXTextField>
+
+      <JFXTextField fx:id="city" alignment="CENTER" depthTest="ENABLE" labelFloat="true" layoutX="623.0" layoutY="333.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="51.0" prefWidth="252.0" promptText="city">
+         <focusColor>
+            <LinearGradient endX="1.0" endY="1.0" startY="1.0">
+               <stops>
+                  <Stop color="#007c0a94" />
+                  <Stop color="#007c0a94" offset="0.007246376811594203" />
+                  <Stop color="BLACK" offset="0.007246376811594203" />
+                  <Stop color="#00900a" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </focusColor>
+         <font>
+            <Font name="Segoe UI Light" size="24.0" />
+         </font>
+         <unFocusColor>
+            <LinearGradient endX="1.0" endY="1.0" startY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color blue="1.0" green="1.0" red="1.0" />
+                     </color></Stop>
+                  <Stop offset="0.007246376811594201">
+                     <color>
+                        <Color blue="1.0" green="1.0" red="1.0" />
+                     </color></Stop>
+                  <Stop offset="0.007246376811594203">
+                     <color>
+                        <Color blue="1.0" green="1.0" red="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.5034811025859619">
+                     <color>
+                        <Color blue="0.19607843458652496" green="1.0" red="0.13725490868091583" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color blue="0.03921568766236305" green="0.5647059082984924" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </unFocusColor>
+      </JFXTextField>
+      <JFXButton contentDisplay="TOP" layoutX="229.0" layoutY="414.0" onAction="#changeDetails" prefHeight="58.0" prefWidth="446.0" style="-fx-background-color: #c4ffce;" text="Apply changes" textOverrun="CLIP">
+         <font>
+            <Font name="Segoe UI Light" size="20.0" />
+         </font>
+         <ripplerFill>
+            <RadialGradient centerX="0.4943181818181818" centerY="0.5922330097087378" cycleMethod="REFLECT" focusAngle="90.0" radius="0.5">
+               <stops>
+                  <Stop color="#007c0a94" />
+                  <Stop color="#73d379" offset="0.007246376811594203" />
+                  <Stop color="#ffffff94" offset="0.007246376811594203" />
+                  <Stop color="WHITE" offset="1.0" />
+               </stops>
+            </RadialGradient>
+         </ripplerFill>
+      </JFXButton>
+      <Label layoutX="165.0" layoutY="481.0" prefHeight="42.0" prefWidth="627.0" text="username can not be changed once you created your account" visible="false">
+         <font>
+            <Font name="Segoe UI Light" size="23.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop color="BLACK" />
+                  <Stop color="BLACK" offset="0.007662835249042145" />
+                  <Stop color="#008f0a" offset="0.2459612118339456" />
+                  <Stop color="#a5c6a7" offset="0.5257731958762887" />
+                  <Stop color="#008f0a" offset="0.8045977011494251" />
+                  <Stop color="BLACK" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <Label layoutX="279.0" layoutY="472.0" prefHeight="42.0" prefWidth="370.0" text="Leave a field empty if you dont want to change it">
+         <font>
+            <Font name="Segoe UI Light" size="17.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop color="BLACK" />
+                  <Stop color="BLACK" offset="0.007662835249042145" />
+                  <Stop color="#008f0a" offset="0.2459612118339456" />
+                  <Stop color="#a5c6a7" offset="0.5257731958762887" />
+                  <Stop color="#008f0a" offset="0.8045977011494251" />
+                  <Stop color="BLACK" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+
+      <Label fx:id="unvalidPassword" layoutX="319.0" layoutY="275.0" text="password does not match the requested format" textFill="#ff5151" visible="false" />
+      <Label fx:id="emailValidation" layoutX="23.0" layoutY="384.0" text="e-mail does not match the requested format" textFill="#ff5151" visible="false">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="phoneNumberValidation" layoutX="289.0" layoutY="394.0" text="phone number does not match the requested format" textFill="#ff5151" visible="false">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="enterCity" layoutX="706.0" layoutY="384.0" text="city name not valid" textFill="#ff5151" visible="false">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="enterName" layoutX="374.0" layoutY="181.0" prefHeight="17.0" prefWidth="155.0" text="enter valid name value" textFill="#ff5151" visible="false">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="42.0" fitWidth="31.0" layoutX="39.0" layoutY="50.0" onMouseClicked="#backToProfilePage" opacity="0.2" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Icons/backarrow.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

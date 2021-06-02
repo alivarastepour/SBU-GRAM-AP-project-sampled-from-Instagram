@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import com.jfoenix.controls.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="550.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.newPostPage_Controller">
+   <children>
+       <JFXTextField fx:id="title" depthTest="ENABLE" layoutX="420.0" layoutY="79.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="51.0" prefWidth="457.0" promptText="Post Title">
+           <focusColor>
+               <LinearGradient endX="1.0" endY="1.0" startY="1.0">
+                   <stops>
+                       <Stop color="#007c0a94" />
+                       <Stop color="#007c0a94" offset="0.007246376811594203" />
+                       <Stop color="BLACK" offset="0.007246376811594203" />
+                       <Stop color="#0abc16" offset="1.0" />
+                   </stops>
+               </LinearGradient>
+           </focusColor>
+           <font>
+               <Font name="Segoe UI Light" size="24.0" />
+           </font>
+           <unFocusColor>
+               <LinearGradient endX="1.0" endY="1.0" startY="1.0">
+                   <stops>
+                       <Stop color="WHITE" />
+                       <Stop color="WHITE" offset="0.007246376811594203" />
+                       <Stop color="#00900a" offset="0.007246376811594203" />
+                       <Stop color="#23ff32" offset="0.5034811025859619" />
+                       <Stop color="WHITE" offset="1.0" />
+                   </stops>
+               </LinearGradient>
+           </unFocusColor>
+           <opaqueInsets>
+               <Insets />
+           </opaqueInsets>
+       </JFXTextField>
+       <JFXTextArea fx:id="caption" layoutX="420.0" layoutY="155.0" prefHeight="241.0" prefWidth="457.0" promptText="Post Caption">
+           <focusColor>
+               <LinearGradient endX="1.0" endY="1.0" startY="1.0">
+                   <stops>
+                       <Stop color="#007c0a94" />
+                       <Stop color="#007c0a94" offset="0.007246376811594203" />
+                       <Stop color="BLACK" offset="0.007246376811594203" />
+                       <Stop color="#0abc16" offset="1.0" />
+                   </stops>
+               </LinearGradient>
+           </focusColor>
+           <font>
+               <Font name="Segoe UI Light" size="24.0" />
+           </font>
+           <unFocusColor>
+               <LinearGradient endX="1.0" endY="1.0" startY="1.0">
+                   <stops>
+                       <Stop color="WHITE" />
+                       <Stop color="WHITE" offset="0.007246376811594203" />
+                       <Stop color="#00900a" offset="0.007246376811594203" />
+                       <Stop color="#23ff32" offset="0.5034811025859619" />
+                       <Stop color="WHITE" offset="1.0" />
+                   </stops>
+               </LinearGradient>
+           </unFocusColor>
+           <opaqueInsets>
+               <Insets />
+           </opaqueInsets>
+       </JFXTextArea>
+      <ImageView fx:id="photo" fitHeight="300.0" fitWidth="397.0" layoutX="15.0" layoutY="96.0" pickOnBounds="true" preserveRatio="true" />
+       <JFXButton contentDisplay="TOP" layoutX="450.0" layoutY="453.0" onAction="#UploadPost" prefHeight="51.0" prefWidth="344.0" text="Upload post" textOverrun="CLIP">
+           <font>
+               <Font name="Segoe UI Light" size="24.0" />
+           </font>
+           <ripplerFill>
+               <RadialGradient centerX="0.4943181818181818" centerY="0.5922330097087378" cycleMethod="REFLECT" focusAngle="90.0" radius="0.5">
+                   <stops>
+                       <Stop>
+                           <color>
+                               <Color blue="0.03921568766236305" green="0.48627451062202454" opacity="0.5803921818733215" />
+                           </color></Stop>
+                       <Stop offset="0.007246376811594203">
+                           <color>
+                               <Color blue="0.4745098054409027" green="0.8274509906768799" red="0.45098039507865906" />
+                           </color></Stop>
+                       <Stop offset="0.007662835249042145">
+                           <color>
+                               <Color blue="1.0" green="1.0" opacity="0.5803921818733215" red="1.0" />
+                           </color></Stop>
+                       <Stop offset="1.0">
+                           <color>
+                               <Color blue="0.7432098984718323" green="1.0" red="0.7037037014961243" />
+                           </color></Stop>
+                   </stops>
+               </RadialGradient>
+           </ripplerFill>
+       </JFXButton>
+      <JFXButton contentDisplay="TOP" layoutX="139.0" layoutY="402.0" onAction="#uploadPhoto" prefHeight="51.0" prefWidth="148.0" text="Upload photo" textOverrun="CLIP">
+         <font>
+            <Font name="Segoe UI Light" size="19.0" />
+         </font>
+         <ripplerFill>
+            <RadialGradient centerX="0.4943181818181818" centerY="0.5922330097087378" cycleMethod="REFLECT" focusAngle="90.0" radius="0.5">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color blue="0.03921568766236305" green="0.48627451062202454" opacity="0.5803921818733215" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.007246376811594203">
+                     <color>
+                        <Color blue="0.4745098054409027" green="0.8274509906768799" red="0.45098039507865906" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.007662835249042145">
+                     <color>
+                        <Color blue="1.0" green="1.0" opacity="0.5803921818733215" red="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color blue="0.7432098984718323" green="1.0" red="0.7037037014961243" />
+                     </color>
+                  </Stop>
+               </stops>
+            </RadialGradient>
+         </ripplerFill>
+      </JFXButton>
+      <Label fx:id="titleNotEntered" layoutX="794.0" layoutY="138.0" text="enter post title" textFill="#ff5151" visible="false" />
+      <Label fx:id="captionNotEntered" layoutX="775.0" layoutY="402.0" text="enter post caption" textFill="#ff5151" visible="false" />
+      <Label fx:id="photoNotUploaded" layoutX="169.0" layoutY="445.0" text="enter post photo" textFill="#ff5151" visible="false" />
+      <ImageView fitHeight="31.0" fitWidth="42.0" layoutX="35.0" layoutY="45.0" onMouseClicked="#returnToTimeLine" opacity="0.48" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Icons/backarrow.png" />
+         </image>
+      </ImageView>
+
+   </children>
+</AnchorPane>

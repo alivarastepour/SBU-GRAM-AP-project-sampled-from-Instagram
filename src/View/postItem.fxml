@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="root" prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: white; -fx-border-color: white;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label fx:id="username" alignment="TOP_LEFT" layoutX="100.0" layoutY="18.0" prefHeight="29.0" prefWidth="306.0" text="username">
+         <font>
+            <Font name="Segoe UI Light" size="38.0" />
+         </font>
+      </Label>
+      <Label fx:id="PostTitle" alignment="TOP_LEFT" layoutX="391.0" layoutY="85.0" prefHeight="57.0" prefWidth="279.0" text="Post Ttile">
+         <font>
+            <Font name="Segoe UI Light" size="31.0" />
+         </font>
+      </Label>
+      <Label fx:id="PostCaption" alignment="TOP_LEFT" layoutX="391.0" layoutY="134.0" prefHeight="247.0" prefWidth="271.0" text="Post Caption">
+         <font>
+            <Font name="Segoe UI Light" size="19.0" />
+         </font>
+      </Label>
+      <Circle fx:id="ProfilePhoto" layoutX="54.0" layoutY="45.0" radius="31.0" stroke="WHITE" strokeLineCap="ROUND" />
+      <ImageView fx:id="comment" fitHeight="26.0" fitWidth="33.0" layoutX="337.0" layoutY="401.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Icons/Comment.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="like" fitHeight="41.0" fitWidth="26.0" layoutX="120.0" layoutY="401.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Icons/Like.png" />
+         </image>
+      </ImageView>
+      <Rectangle fx:id="postPhoto" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="283.0" layoutX="23.0" layoutY="85.0" stroke="WHITE" strokeType="INSIDE" width="368.0" />
+      <ImageView fx:id="comment1" fitHeight="41.0" fitWidth="26.0" layoutX="574.0" layoutY="401.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Icons/rePost.png" />
+         </image>
+      </ImageView>
+      <JFXButton layoutX="100.0" layoutY="31.0" onAction="#findUsername" prefHeight="29.0" prefWidth="306.0" ripplerFill="WHITE" text=" " textFill="WHITE" />
+   </children>
+</AnchorPane>

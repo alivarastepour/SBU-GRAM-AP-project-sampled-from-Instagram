@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="550.0" prefWidth="900.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.TimeLinePage_Controller">
+   <children>
+      <ImageView fx:id="directIcon" fitHeight="22.0" fitWidth="22.0" layoutX="790.0" layoutY="159.0" opacity="0.48" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Icons/direct.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="profileIcon" fitHeight="22.0" fitWidth="22.0" layoutX="790.0" layoutY="363.0" onMouseClicked="#Profile" opacity="0.48" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Icons/user.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="sigOutIcon" fitHeight="22.0" fitWidth="22.0" layoutX="790.0" layoutY="427.0" onMouseClicked="#SignOut" opacity="0.48" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Icons/logout.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="64.0" fitWidth="61.0" layoutX="749.0" layoutY="51.0" opacity="0.49" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Icons/Grayicon.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="825.0" layoutY="162.0" text="Directs" textFill="#00000099" />
+      <Label layoutX="827.0" layoutY="363.0" text="Profile" textFill="#00000098" />
+      <Label layoutX="825.0" layoutY="427.0" text="Logout" textFill="#00000098" />
+      <ImageView fitHeight="22.0" fitWidth="38.0" layoutX="789.0" layoutY="223.0" onMouseClicked="#newPost" opacity="0.48" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Icons/plus.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="820.0" layoutY="225.0" text="new post" textFill="#00000099" />
+      <ImageView fitHeight="35.0" fitWidth="22.0" layoutX="790.0" layoutY="293.0" onMouseClicked="#refresh" opacity="0.48" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Icons/refresh.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="825.0" layoutY="293.0" text="Refresh" textFill="#00000099" />
+      <Label layoutX="815.0" layoutY="69.0" text="SBU Geram" textFill="#00000099" />
+      <ListView fx:id="TimeLine" layoutX="-4.0" orientation="HORIZONTAL" prefHeight="557.0" prefWidth="704.0" style="-fx-border-color: white; -fx-border-width: 0;" />
+   </children>
+</AnchorPane>
