@@ -44,7 +44,7 @@
       </ImageView>
       <Label layoutX="783.0" layoutY="240.0" text="Refresh" textFill="#00000099" />
       <Label layoutX="786.0" layoutY="44.0" text="SBU Geram" textFill="#00000099" />
-      <ListView fx:id="TimeLine" layoutX="-4.0" orientation="HORIZONTAL" prefHeight="557.0" prefWidth="678.0" style="-fx-border-color: white; -fx-border-width: 0;" />
+      <ListView fx:id="TimeLine" layoutX="-4.0" orientation="HORIZONTAL" prefHeight="557.0" prefWidth="720.0" style="-fx-border-color: white; -fx-border-width: 0;" />
       <ImageView fitHeight="29.0" fitWidth="32.0" layoutX="745.0" layoutY="303.0" onMouseClicked="#search" opacity="0.48" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Icons/search.png" />

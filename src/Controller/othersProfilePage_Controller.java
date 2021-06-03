@@ -56,26 +56,25 @@ public class othersProfilePage_Controller {
     public void backToTimeLine(MouseEvent mouseEvent) throws IOException {
         new PageLoader().load("TimeLinePage");
     }
-    //to be completed
+    //starts a process of following
     public void follow(ActionEvent actionEvent) throws IOException {
         follow.setVisible(false);
         unfollow.setVisible(true);
         Model.othersProfileServer.FollowHandler(PostItemController.PublisherUser.getUserName(),TimeLinePage_Controller.LoggedInUsername);
     }
-    //to be completed
-    
+    //ends a process of following
     public void unfollow(ActionEvent actionEvent) throws IOException {
         follow.setVisible(true);
         unfollow.setVisible(false);
         Model.othersProfileServer.unFollowHandler(PostItemController.PublisherUser.getUserName(),TimeLinePage_Controller.LoggedInUsername);
     }
-    //to be completed
+    //starts a process of muting
     public void mute(ActionEvent actionEvent) throws IOException {
         mute.setVisible(false);
         unmute.setVisible(true);
         Model.othersProfileServer.muteHandler(PostItemController.PublisherUser.getUserName(),TimeLinePage_Controller.LoggedInUsername);
     }
-    //to be completed
+    //ends a process of muting
     public void unmute(ActionEvent actionEvent) throws IOException {
         mute.setVisible(true);
         unmute.setVisible(false);

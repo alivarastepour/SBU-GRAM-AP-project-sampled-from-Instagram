@@ -396,20 +396,39 @@ public class MainServer {
             applyChanges(y);
         }
     }
+
+    /**
+     * in this method a user Mutes another user
+     * @param muter Muter
+     * @param muted Muted
+     * @throws IOException method "apply changes" may threw IOException
+     */
     private static void muteProgress(String muter , String muted) throws IOException {
-//        findUserByUsername(muter).mutedUsers.add(findUserByUsername(muted));
         for (Model.user user : users) {
             if (user.getUserName().equals(muter)){
                 user.addMutedUser(findUserByUsername(muted));
             }
         }
-        //.............................|||||||||||||||||||||||||||||||||||||||||||||||||||
         applyChanges(muted);
         applyChanges(muter);
     }
+
+    /**
+     * if
+     * @param muter muter
+     * @param muted has already muted this user
+     * @return returns true
+     */
     private static boolean xMutesY(String muter , String muted){
         return findUserByUsername(muter).mutedUsers.contains(findUserByUsername(muted));
     }
+
+    /**
+     * in this method a user unMutes another user
+     * @param muter unMuter
+     * @param muted unMuted
+     * @throws IOException method "apply changes" may threw IOException
+     */
     private static void unmuteProgress(String muter , String muted) throws IOException {
         for (Model.user user : users) {
             if (user.getUserName().equals(muter))
@@ -418,6 +437,12 @@ public class MainServer {
         applyChanges(muted);
         applyChanges(muter);
     }
+
+    /**
+     * receives a
+     * @param username username
+     * @return and returns all post that should be in their TimeLine
+     */
     private static List<post> findPostsForUsername(String username){
         List<post> postsForUsername = new ArrayList<>();
         for (Model.post post : posts)
@@ -678,6 +703,7 @@ public class MainServer {
          }).start();
          
          new Thread(new Runnable() {
+             //this Thread handles new post Actions
              @Override
              public void run() {
                     while (true){
@@ -702,6 +728,7 @@ public class MainServer {
          }).start();
          
          new Thread(new Runnable() {
+             //this Thread returns a list of posts
              @Override
              public void run() {
                 while (true){
@@ -727,6 +754,7 @@ public class MainServer {
          }).start();
          
          new Thread(new Runnable() {
+             //this Thread handles a follow process
              @Override
              public void run() {
                 while (true){
@@ -753,6 +781,7 @@ public class MainServer {
          }).start();
 
          new Thread(new Runnable() {
+             //this Thread Checks if a user is already followed
              @Override
              public void run() {
                  while (true){
@@ -777,6 +806,7 @@ public class MainServer {
          }).start();
 
          new Thread(new Runnable() {
+             //this Thread Handles unFollowing Progress
              @Override
              public void run() {
                  while (true){
@@ -801,6 +831,7 @@ public class MainServer {
          }).start();
 
          new Thread(new Runnable() {
+             //this Thread handles muting Process
              @Override
              public void run() {
                  while (true){
@@ -824,6 +855,7 @@ public class MainServer {
          }).start();
 
          new Thread(new Runnable() {
+             //this Thread checks if a user is already muted
              @Override
              public void run() {
                  while(true){
@@ -849,6 +881,7 @@ public class MainServer {
          }).start();
 
          new Thread(new Runnable() {
+             //this Thread handles unMuting Progress
              @Override
              public void run() {
                  while (true){
@@ -872,6 +905,7 @@ public class MainServer {
          }).start();
 
          new Thread(new Runnable() {
+             //this Thread Handles search actions
              @Override
              public void run() {
                  while (true){

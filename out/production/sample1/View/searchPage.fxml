@@ -12,22 +12,47 @@
 
 <AnchorPane prefHeight="550.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.searchPage_Controller">
    <children>
-      <Label layoutX="272.0" layoutY="131.0" prefHeight="69.0" prefWidth="512.0" text="Search for users to find your friends !">
+      <Label layoutX="273.0" layoutY="67.0" prefHeight="69.0" prefWidth="512.0" text="Search for users to find your friends !">
          <font>
             <Font name="Segoe UI Light" size="28.0" />
          </font>
       </Label>
-      <ImageView fitHeight="107.0" fitWidth="119.0" layoutX="159.0" layoutY="105.0" opacity="0.48" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="107.0" fitWidth="119.0" layoutX="160.0" layoutY="41.0" opacity="0.48" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Icons/bigSerach.png" />
          </image>
       </ImageView>
-      <JFXTextField fx:id="searchBox" alignment="CENTER" focusColor="BLACK" labelFloat="true" layoutX="50.0" layoutY="260.0" prefHeight="31.0" prefWidth="800.0" promptText="search using usernames" />
-      <JFXButton layoutX="313.0" layoutY="318.0" onAction="#search" prefHeight="94.0" prefWidth="264.0" style="-fx-background-radius: 50; -fx-border-radius: 50;" text="Search">
+      <JFXTextField fx:id="searchBox" alignment="CENTER" focusColor="BLACK" labelFloat="true" layoutX="51.0" layoutY="196.0" prefHeight="31.0" prefWidth="800.0" promptText="search using usernames" />
+      <JFXButton fx:id="search" layoutX="314.0" layoutY="250.0" onAction="#search" prefHeight="94.0" prefWidth="264.0" style="-fx-background-radius: 50; -fx-border-radius: 50;" text="Search">
          <font>
             <Font name="Segoe UI Light" size="42.0" />
          </font>
       </JFXButton>
-      <Label fx:id="validUsername" layoutX="383.0" layoutY="464.0" text="username not found" textFill="#d74545" visible="false" />
+      <Label fx:id="validUsername" layoutX="383.0" layoutY="323.0" text="username not found" textFill="#d74545" visible="false" />
+      <JFXButton fx:id="follow" layoutX="197.0" layoutY="328.0" onAction="#follow" prefHeight="94.0" prefWidth="86.0" style="-fx-background-radius: 50; -fx-border-radius: 50;" text="follow" visible="false">
+         <font>
+            <Font name="Segoe UI Light" size="21.0" />
+         </font>
+      </JFXButton>
+      <JFXButton fx:id="unfollow" layoutX="183.0" layoutY="375.0" onAction="#unfollow" prefHeight="94.0" prefWidth="115.0" style="-fx-background-radius: 50; -fx-border-radius: 50;" text="unfollow" visible="false">
+         <font>
+            <Font name="Segoe UI Light" size="21.0" />
+         </font>
+      </JFXButton>
+      <JFXButton fx:id="mute" layoutX="626.0" layoutY="328.0" onAction="#mute" prefHeight="94.0" prefWidth="77.0" style="-fx-background-radius: 50; -fx-border-radius: 50;" text="mute" visible="false">
+         <font>
+            <Font name="Segoe UI Light" size="21.0" />
+         </font>
+      </JFXButton>
+      <JFXButton fx:id="unmute" layoutX="611.0" layoutY="375.0" onAction="#unmute" prefHeight="94.0" prefWidth="107.0" style="-fx-background-radius: 50; -fx-border-radius: 50;" text="unmute" visible="false">
+         <font>
+            <Font name="Segoe UI Light" size="21.0" />
+         </font>
+      </JFXButton>
+      <ImageView fitHeight="31.0" fitWidth="42.0" layoutX="45.0" layoutY="55.0" onMouseClicked="#returnToTimeLine" opacity="0.48" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Icons/backarrow.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>
