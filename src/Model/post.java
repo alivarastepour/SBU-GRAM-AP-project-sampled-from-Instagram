@@ -1,9 +1,6 @@
 package Model;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.Serializable;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +8,8 @@ import java.util.List;
  * this class allows us o create objects with specified details defined as "post"
  */
 public class post implements Serializable {
-    private static final long SerialVersionUID = 1231479614l;
+    @Serial
+    private static final long serialVersionUID = 1231479614L;
     private String title ;
     private String caption ;
     private int likes ;

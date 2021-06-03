@@ -29,11 +29,11 @@ public class TimeLinePage_Controller {
     public ListView<post> TimeLine;
     private List<post> posts = new ArrayList<>();
     public void initialize() throws IOException, ClassNotFoundException {
-        File file = new File("src/UsersInfo/loggedInUserInfo.txt");
-        Scanner scanner = new Scanner(file);
-        String user = scanner.next();
-        LoggedInUsername = user;
+//        File file = new File("src/UsersInfo/loggedInUserInfo.txt");
+//        Scanner scanner = new Scanner(file);
+//        String user = scanner.next();
         posts = TimeLineServer.TimeLineHandler();
+        LoggedInUsername = logInPage_Controller.Username;
         TimeLine.setItems(FXCollections.observableArrayList(posts));
         TimeLine.setCellFactory(TimeLine -> new PostItem());
     }

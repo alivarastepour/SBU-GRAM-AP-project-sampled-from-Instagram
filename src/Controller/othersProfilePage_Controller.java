@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.PageLoader;
+import Model.othersProfileServer;
 import com.jfoenix.controls.JFXButton;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
@@ -31,11 +32,11 @@ public class othersProfilePage_Controller {
     public JFXButton unmute;
     public JFXButton unfollow;
     public JFXButton follow;
-    
+    boolean alreadyFollowed ;
     /**
      * since most fields in this page are variables and differs from one page to another they should be initialized by the time page opens
      */
-    public void initialize(){
+    public void initialize() throws IOException {
         username.setText(PostItemController.PublisherUser.getUserName());
         name.setText(PostItemController.PublisherUser.getName());
         city.setText(PostItemController.PublisherUser.getCity());
@@ -46,7 +47,9 @@ public class othersProfilePage_Controller {
                         new Image(
                                 new ByteArrayInputStream(
                                         PostItemController.PublisherUser.getProfilePhoto()))));
-        
+        alreadyFollowed = othersProfileServer.followValidity(PostItemController.PublisherUser.getUserName(),TimeLinePage_Controller.LoggedInUsername);
+        follow.setVisible(!alreadyFollowed);
+        unfollow.setVisible(alreadyFollowed);
     }
     public void backToTimeLine(MouseEvent mouseEvent) throws IOException {
         new PageLoader().load("TimeLinePage");
@@ -60,9 +63,10 @@ public class othersProfilePage_Controller {
     }
     //to be completed
     
-    public void unfollow(ActionEvent actionEvent) {
+    public void unfollow(ActionEvent actionEvent) throws IOException {
         follow.setVisible(true);
         unfollow.setVisible(false);
+        Model.othersProfileServer.unFollowHandler(PostItemController.PublisherUser.getUserName(),TimeLinePage_Controller.LoggedInUsername);
     }
     //to be completed
     

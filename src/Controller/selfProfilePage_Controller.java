@@ -40,13 +40,16 @@ public class selfProfilePage_Controller {
      *                                to another object ; hence there is a likelihood of ClassNotFoundException to be threw
      */
     public void initialize() throws IOException, ClassNotFoundException {
-        user selfUser = selfProfileServer.selfProfileHandler();
+        user selfUser = selfProfileServer.selfProfileHandler(logInPage_Controller.Username);
         name.setText(selfUser.getName());
         username.setText(selfUser.getUserName());
         city.setText(selfUser.getCity());
         following.setText(String.valueOf(selfUser.getFollowings()));
         follower.setText(String.valueOf(selfUser.getFollowers()));
-        byte[] b = selfUser.getProfilePhoto();
+        File file = new File(selfUser.getPhotoAddress());
+        FileInputStream fileInputStream = new FileInputStream(file) ;
+        byte[] b = fileInputStream.readAllBytes();
+//        byte[] b = selfUser.getProfilePhoto();
         Image image = new Image(new ByteArrayInputStream(b));
         profilePhoto.setFill(new ImagePattern(image));
 

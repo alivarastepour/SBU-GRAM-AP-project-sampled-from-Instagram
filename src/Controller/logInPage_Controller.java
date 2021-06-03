@@ -30,6 +30,7 @@ public class logInPage_Controller {
     public Label wrongUsername;
     public JFXToggleButton togglePass;
     public JFXTextField password_show;
+    public static String Username ;
 
     public void login(ActionEvent actionEvent) throws IOException, ClassNotFoundException {
         //on action , it sends data to logInServer and base on the received data , performs proper action
@@ -49,6 +50,7 @@ public class logInPage_Controller {
         if (validUsername && validPassword ){
             wrongPass.setVisible(false);
             wrongUsername.setVisible(false);
+            Username = userName ;
             new PageLoader().load("TimeLinePage");
         }else if (validUsername && !validPassword){
             wrongUsername.setVisible(false);

@@ -23,18 +23,18 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         PageLoader.initStage(primaryStage);
-        File file = new File("src/UsersInfo/loggedInUserInfo.txt");
-        Scanner scanner = new Scanner(file);
-        String user = scanner.next();
-        System.out.println(user != null);
-        System.out.println(!user.equals(""));
-        System.out.println(!user.equals(" "));
-        if (user != null && !user.equals("") && !user.equals(" ")){
-            new PageLoader().load("TimeLinePage");
-        }
-        else{
+//        File file = new File("src/UsersInfo/loggedInUserInfo.txt");
+//        Scanner scanner = new Scanner(file);
+//        String user = scanner.next();
+//        System.out.println(user != null);
+//        System.out.println(!user.equals(""));
+//        System.out.println(!user.equals(" "));
+//        if (user != null && !user.equals("") && !user.equals(" ")){
+//            new PageLoader().load("TimeLinePage");
+//        }
+//        else{
             new PageLoader().load("loginPage");
-        }
+//        }
     }
 
     /**

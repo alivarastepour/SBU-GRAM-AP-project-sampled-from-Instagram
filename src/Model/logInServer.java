@@ -52,6 +52,6 @@ public class logInServer {
         logInObjectOutputStream.close();
         changeProfileDetailsPage_Controller.username = userName ;
         changeProfileDetailsPage_Controller.user = user ;
-        System.out.println(user.getCity());
+//        System.out.println(user.getCity());
     }
 }

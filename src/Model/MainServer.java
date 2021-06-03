@@ -34,18 +34,27 @@ public class MainServer {
         File file = new File("src/UsersInfo/users_information.txt");
         File file1 = new File("src/posts/posts.txt");
         try {
-            Scanner scanner = new Scanner(file);
-            while (scanner.hasNext()){
-                String tempString = scanner.nextLine();
-                String[] tempArray = tempString.split(" ");
-                user tempUser = new user(tempArray[0] , tempArray[1], tempArray[2] , tempArray[3] , tempArray[4] , tempArray[5] , tempArray[6] , tempArray[7] , tempArray[8]);
-                //                          name            username        pass            phone       email           city            photo
-                MainServer.users.add(tempUser) ;
-                MainServer.usernames.add(tempArray[1]) ;
-                MainServer.userPass.put(tempArray[1] , tempArray[2]) ;
-                MainServer.userPhone.put(tempArray[1] , tempArray[3]) ;
-                MainServer.userEmail.put(tempArray[1] , tempArray[4]) ;
+            FileInputStream fileInputStream1 = new FileInputStream(file);
+            ObjectInputStream objectInputStream1 = new ObjectInputStream(fileInputStream1);
+            users = (List<user>) objectInputStream1.readObject();
+            for (Model.user user : users) {
+                MainServer.usernames.add(user.getUserName());
+                MainServer.userPass.put(user.getUserName(), user.getPassword());
+                MainServer.userPhone.put(user.getUserName(), user.getPhoneNumber());
+                MainServer.userEmail.put(user.getUserName(), user.getEmail());
             }
+//            Scanner scanner = new Scanner(file);
+//            while (scanner.hasNext()){
+//                String tempString = scanner.nextLine();
+//                String[] tempArray = tempString.split(" ");
+//                user tempUser = new user(tempArray[0] , tempArray[1], tempArray[2] , tempArray[3] , tempArray[4] , tempArray[5] , tempArray[6] , tempArray[7] , tempArray[8]);
+//                //                          name            username        pass            phone       email           city            photo
+//                MainServer.users.add(tempUser) ;
+//                MainServer.usernames.add(tempArray[1]) ;
+//                MainServer.userPass.put(tempArray[1] , tempArray[2]) ;
+//                MainServer.userPhone.put(tempArray[1] , tempArray[3]) ;
+//                MainServer.userEmail.put(tempArray[1] , tempArray[4]) ;
+//            }
             FileInputStream fileInputStream = new FileInputStream(file1);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
             posts = (List<post>) objectInputStream.readObject();
@@ -159,11 +168,15 @@ public class MainServer {
         MainServer.userEmail.put(userName , email) ;
         MainServer.userPhone.put(userName , phoneNumber) ;
         File file = new File("src/UsersInfo/users_information.txt");
-        FileWriter fileWriter = new FileWriter(file , true) ;
-        Formatter formatter = new Formatter(fileWriter ) ;
-        formatter.format("%s %s %s %s %s %s %s %s %s %s" ,name , userName , password , phoneNumber , email,city
-                ,tempUser.getPhotoAddress() , tempUser.getFollowers() , tempUser.getFollowings() ,'\n');
-        formatter.flush();
+        FileOutputStream fileOutputStream = new FileOutputStream(file , false) ;
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream) ;
+        objectOutputStream.writeObject(users);
+        objectOutputStream.flush();
+//        FileWriter fileWriter = new FileWriter(file , true) ;
+//        Formatter formatter = new Formatter(fileWriter ) ;
+//        formatter.format("%s %s %s %s %s %s %s %s %s %s" ,name , userName , password , phoneNumber , email,city
+//                ,tempUser.getPhotoAddress() , tempUser.getFollowers() , tempUser.getFollowings() ,'\n');
+//        formatter.flush();
         System.out.println(userName + " joined SBU Geram at : " + CurrentDateTime.time());
     }
 
@@ -192,7 +205,7 @@ public class MainServer {
      * @param username is the username which is trying to change their password
      * @param password is the defined user's new password
      */
-    private static void changePassword(String username , String password){
+    private static void changePassword(String username , String password) throws IOException {
         for (Model.user user : users)
             if (user.getUserName().equals(username)){
                 user.setPassword(password);
@@ -206,20 +219,24 @@ public class MainServer {
      *
      * applies changes to database
      */
-    private static void applyChanges(String username){
+    private static void applyChanges(String username) throws IOException {
         File file = new File("src/UsersInfo/users_information.txt");
-        try {
-            FileWriter fileWriter = new FileWriter(file , false) ;
-            Formatter formatter = new Formatter(fileWriter);
-            for (Model.user user : users) {
-                formatter.format("%s %s %s %s %s %s %s %s %s %s",user.getName(), user.getUserName(),
-                        user.getPassword(), user.getPhoneNumber(), user.getEmail() ,user.getCity(),
-                        user.getPhotoAddress() , user.getFollowers(), user.getFollowings(), '\n');
-                formatter.flush();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        FileOutputStream fileOutputStream = new FileOutputStream(file , false);
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        objectOutputStream.writeObject(users);
+//        try {
+//            FileWriter fileWriter = new FileWriter(file , false) ;
+//            Formatter formatter = new Formatter(fileWriter);
+//            for (Model.user user : users) {
+//                formatter.format("%s %s %s %s %s %s %s %s %s %s",user.getName(), user.getUserName(),
+//                        user.getPassword(), user.getPhoneNumber(), user.getEmail() ,user.getCity(),
+//                        user.getPhotoAddress() , user.getFollowers(), user.getFollowings(), '\n');
+//                formatter.flush();
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
         
     }
 
@@ -269,19 +286,21 @@ public class MainServer {
      *
      * @param map contains all possible changes that can be done in changeProfileDetailsPage
      */
-    private static void changeProfileDetails(Map<String , String> map){
+    private static void changeProfileDetails(Map<String , String> map) throws IOException {
         String username = map.get("username");
         if (map.get("email") != null)
             for (Model.user user : users)
                 if (user.getUserName().equals(username) && validEmail(map.get("email"))){
                     user.setEmail(map.get("email"));
                     userEmail.put(map.get("username") , map.get("email"));
+                    System.out.println("user [ " + username + " ] changed their Email Address at " + CurrentDateTime.time());
                 }
         if (map.get("phoneNumber") != null)
             for (Model.user user : users)
                 if (user.getUserName().equals(username) && validPhoneNumber(map.get("phoneNumber"))){
                     user.setPhoneNumber(map.get("phoneNumber"));
                     userPhone.put(map.get("username") , map.get("phoneNumber"));
+                    System.out.println("user [ " + username + " ] changed their Phone Number at " + CurrentDateTime.time());
                 }
         if (map.get("city") != null)
             for (Model.user user : users)
@@ -314,13 +333,15 @@ public class MainServer {
      * if any change is applied to user's details, it is necessary to apply it to post's details as well
      */
     private static void read_change(){
-        if (posts.size() != 0)
+//        if (posts.size() != 0)
             for (Model.post post : posts)
                 for (Model.user user : users) {
-                    if (post.getPublisherUser().getUserName().equals(user.getUserName()))
+                    if (post.getPublisherUser().getUserName().equals(user.getUserName())){
                         post.setPublisherUser(user);
-                    if (post.getAuthorUser().getUserName().equals(user.getUserName()))
+                    }
+                    if (post.getAuthorUser().getUserName().equals(user.getUserName())){
                         post.setAuthorUser(user);
+                    }
             }
         
     }
@@ -330,19 +351,50 @@ public class MainServer {
      * @param x following
      * @param y follower
      */
-    private static void followProgress(String x , String y){
-        for (int i = 0; i < users.size(); i++) {
-            if (users.get(i).getUserName().equals(y)){
-                users.get(i).add_following();
-                users.get(i).followingsList.add(findUserByUsername(y));
+    private static void followProgress(String x , String y) throws IOException {
+        for (Model.user user : users) {
+            if (user.getUserName().equals(y)) {
+                user.add_following();
+                user.followingsList.add(findUserByUsername(x));
             }
-            if (users.get(i).getUserName().equals(x)){
-                users.get(i).add_follower();
-                users.get(i).followersList.add(findUserByUsername(x));
+            if (user.getUserName().equals(x)) {
+                user.add_follower();
+                user.followersList.add(findUserByUsername(y));
             }
         }
         applyChanges(x);
         applyChanges(y);
+    }
+
+    /**
+     * returns true if
+     * @param x x follows
+     * @param y y
+     * @return :)
+     */
+    private static boolean xFollowsY(String y , String x){
+        return findUserByUsername(y).followersList.contains(findUserByUsername(x));
+    }
+
+    /**
+     *
+     * @param x the one who is unfollowed
+     * @param y the one who unfollows
+     * @throws IOException apply change method is called;that may threw IOException
+     */
+    private static void unFollowProgress(String x ,String y) throws IOException {
+        for (Model.user user : users) {
+            if (user.getUserName().equals(y)) {
+                user.remove_following();
+                user.followingsList.remove(findUserByUsername(x));
+            }
+            if (user.getUserName().equals(x)) {
+                user.remove_follower();
+                user.followersList.remove(findUserByUsername(y));
+            }
+            applyChanges(x);
+            applyChanges(y);
+        }
     }
     /**
      * this is our running server which starts several Threads
@@ -441,7 +493,6 @@ public class MainServer {
                          DataInputStream serverPasswordRecoveryDataInputStream = new DataInputStream(PasswordRecoveryServerSocket.getInputStream());
                          DataOutputStream serverPasswordRecoveryDataOutputStream = new DataOutputStream(PasswordRecoveryServerSocket.getOutputStream());
                          String username = serverPasswordRecoveryDataInputStream.readUTF();
-                         System.out.println("password recovery user : " + username);
                          String PorE = serverPasswordRecoveryDataInputStream.readUTF();
                          boolean action = serverPasswordRecoveryDataInputStream.readBoolean();
                          boolean userPhoneExistence = false;
@@ -477,12 +528,13 @@ public class MainServer {
                          DataInputStream serverPasswordRecoveryDataInputStream = new DataInputStream(ChangePasswordServerSocket.getInputStream());
                          DataOutputStream serverPasswordRecoveryDataOutputStream = new DataOutputStream(ChangePasswordServerSocket.getOutputStream());
                          String username = serverPasswordRecoveryDataInputStream.readUTF();
-                         System.out.println("change password user name "+username);
                          String password = serverPasswordRecoveryDataInputStream.readUTF();
                          serverPasswordRecoveryDataOutputStream.writeBoolean(validPasswordFormation(password));
                          serverPasswordRecoveryDataOutputStream.flush();
-                         if (validPasswordFormation(password))
-                            changePassword(username , password);
+                         if (validPasswordFormation(password)){
+                             changePassword(username , password);
+                             System.out.println("user [ " + username + " ] changed password at " + CurrentDateTime.time());
+                         }
                          ServerChangePasswordSocket.close();
                          ChangePasswordServerSocket.close();
                          serverPasswordRecoveryDataInputStream.close();
@@ -506,6 +558,7 @@ public class MainServer {
                          String username = changePhotoDataInputStream.readUTF();
                          String Address = changePhotoDataInputStream.readUTF();
                          apply_profilePhotoChange(username , Address);
+                         System.out.println("user [ " + username + " ] changed profilePhoto at " + CurrentDateTime.time());
                          changeProfilePhotoSocket.close();
                          changeProfilePhotoServerSocket.close();
                          changePhotoDataOutputStream.close();
@@ -527,6 +580,7 @@ public class MainServer {
                          Socket SelfProfileServerSocket = ServerSelfProfileSocket.accept();
                          ObjectOutputStream ServerSelfProfileObjectOutputStream = new ObjectOutputStream(SelfProfileServerSocket.getOutputStream());
                          ObjectInputStream ServerSelfProfileObjectInputStream = new ObjectInputStream(SelfProfileServerSocket.getInputStream());
+                         read_change();
                          String username = ServerSelfProfileObjectInputStream.readUTF();
                          user selfUser = findUserByUsername(username);
                          ServerSelfProfileObjectOutputStream.writeObject(selfUser);
@@ -600,6 +654,7 @@ public class MainServer {
                             ObjectInputStream newPostObjectInputStream = new ObjectInputStream(newPostServerSocket.getInputStream());
                             post post = (Model.post) newPostObjectInputStream.readObject();
                             posts.add(post);
+                            System.out.println("user [ " + post.getPublisherUser().getUserName() + " ] added a new post " + CurrentDateTime.time());
                             add_post(post);
                             newPostSocket.close();
                             newPostServerSocket.close();
@@ -646,7 +701,10 @@ public class MainServer {
                         DataInputStream FollowDataInputStream = new DataInputStream(FollowServerSocket.getInputStream());
                         String whoIsFollowed = FollowDataInputStream.readUTF();
                         String whoIsFollowing = FollowDataInputStream.readUTF();
-                        followProgress(whoIsFollowed , whoIsFollowing) ;
+                        if (!xFollowsY(whoIsFollowed,whoIsFollowing)){
+                            followProgress(whoIsFollowed , whoIsFollowing) ;
+                            System.out.println(whoIsFollowing + " started following " + whoIsFollowed);
+                        }
                         FollowSocket.close();
                         FollowServerSocket.close();
                         FollowDataOutputStream.close();
@@ -655,6 +713,54 @@ public class MainServer {
                         e.printStackTrace();
                     }
                 }
+             }
+         }).start();
+
+         new Thread(new Runnable() {
+             @Override
+             public void run() {
+                 while (true){
+                     try {
+                         ServerSocket FollowSearchSocket = new ServerSocket(9084);
+                         Socket FollowSearchServerSocket = FollowSearchSocket.accept();
+                         DataOutputStream FollowSearchDataOutputStream = new DataOutputStream(FollowSearchServerSocket.getOutputStream());
+                         DataInputStream FollowSearchDataInputStream = new DataInputStream(FollowSearchServerSocket.getInputStream());
+                         String y = FollowSearchDataInputStream.readUTF();
+                         String x = FollowSearchDataInputStream.readUTF();
+                         FollowSearchDataOutputStream.writeBoolean(xFollowsY(y,x));
+                         FollowSearchDataOutputStream.flush();
+                         FollowSearchSocket.close();
+                         FollowSearchServerSocket.close();
+                         FollowSearchDataOutputStream.close();
+                         FollowSearchDataInputStream.close();
+                     } catch (IOException e) {
+                         e.printStackTrace();
+                     }
+                 }
+             }
+         }).start();
+
+         new Thread(new Runnable() {
+             @Override
+             public void run() {
+                 while (true){
+                     try {
+                         ServerSocket unFollowSearchSocket = new ServerSocket(9083);
+                         Socket unFollowSearchServerSocket = unFollowSearchSocket.accept();
+                         DataOutputStream unFollowSearchDataOutputStream = new DataOutputStream(unFollowSearchServerSocket.getOutputStream());
+                         DataInputStream unFollowSearchDataInputStream = new DataInputStream(unFollowSearchServerSocket.getInputStream());
+                         String y = unFollowSearchDataInputStream.readUTF();
+                         String x = unFollowSearchDataInputStream.readUTF();
+                         unFollowProgress(y,x);
+                         System.out.println(x + " unfollowed " + y);
+                         unFollowSearchSocket.close();
+                         unFollowSearchServerSocket.close();
+                         unFollowSearchDataOutputStream.close();
+                         unFollowSearchDataInputStream.close();
+                     } catch (IOException e) {
+                         e.printStackTrace();
+                     }
+                 }
              }
          }).start();
     }

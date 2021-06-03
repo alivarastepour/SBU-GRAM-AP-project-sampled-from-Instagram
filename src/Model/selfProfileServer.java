@@ -21,11 +21,11 @@ public class selfProfileServer {
      * @throws IOException loggedInUserInfo.txt may not be found
      * @throws ClassNotFoundException readObject Method of selfProfileObjectInputStream may produce ClassNotFoundException
      */
-    public static user selfProfileHandler() throws IOException, ClassNotFoundException {
-        File file = new File("src/UsersInfo/loggedInUserInfo.txt");
-        FileReader fileReader = new FileReader(file);
-        Scanner scanner = new Scanner(fileReader);
-        username = scanner.next();
+    public static user selfProfileHandler(String username) throws IOException, ClassNotFoundException {
+//        File file = new File("src/UsersInfo/loggedInUserInfo.txt");
+//        FileReader fileReader = new FileReader(file);
+//        Scanner scanner = new Scanner(fileReader);
+//        username = scanner.next();
         Socket selfProfileSocket = new Socket("127.0.0.1" , 9089);
         ObjectOutputStream selfProfileObjectOutputStream = new ObjectOutputStream(selfProfileSocket.getOutputStream());
         ObjectInputStream selfProfileObjectInputStream = new ObjectInputStream(selfProfileSocket.getInputStream());

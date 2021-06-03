@@ -25,4 +25,31 @@ public class othersProfileServer {
         followDataOutputStream.close();
         followDataInputStream.close();
     }
+    public static boolean followValidity(String y , String x) throws IOException {
+        Socket followSocket = new Socket("127.0.0.1" , 9084);
+        DataOutputStream followDataOutputStream = new DataOutputStream(followSocket.getOutputStream());
+        DataInputStream followDataInputStream = new DataInputStream(followSocket.getInputStream());
+        followDataOutputStream.writeUTF(y);
+        followDataOutputStream.flush();
+        followDataOutputStream.writeUTF(x);
+        followDataOutputStream.flush();
+        boolean condition =  followDataInputStream.readBoolean();
+        followSocket.close();
+        followDataOutputStream.close();
+        followDataInputStream.close();
+        return condition ;
+    }
+    public static void unFollowHandler(String y , String x) throws IOException {
+        Socket unFollowSocket = new Socket("127.0.0.1" , 9083);
+        DataOutputStream unFollowDataOutputStream = new DataOutputStream(unFollowSocket.getOutputStream());
+        DataInputStream unFollowDataInputStream = new DataInputStream(unFollowSocket.getInputStream());
+        unFollowDataOutputStream.writeUTF(y);
+        unFollowDataOutputStream.flush();
+        unFollowDataOutputStream.writeUTF(x);
+        unFollowDataOutputStream.flush();
+        unFollowSocket.close();
+        unFollowDataOutputStream.close();
+        unFollowDataInputStream.close();
+
+    }
 }

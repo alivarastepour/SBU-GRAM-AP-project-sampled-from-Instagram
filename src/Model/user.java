@@ -8,6 +8,8 @@ import java.util.List;
  * this class is used to build Object so called " user " as individuals who use tha app
  */
 public class user implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 5893609486094L;
     private String name ;
     private String city ;
     private String userName ;
@@ -125,9 +127,11 @@ public class user implements Serializable {
     public void add_follower(){
         this.followers++;
     }
-    public void add_following(){
-        this.followings++;
+    public void add_following(){ this.followings++;}
+    public void remove_follower(){
+        this.followers--;
     }
+    public void remove_following(){ this.followings--;}
     
     public List<user> getFollowersList() {
         return followersList;
