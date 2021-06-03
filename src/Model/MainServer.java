@@ -396,6 +396,37 @@ public class MainServer {
             applyChanges(y);
         }
     }
+    private static void muteProgress(String muter , String muted) throws IOException {
+//        findUserByUsername(muter).mutedUsers.add(findUserByUsername(muted));
+        for (Model.user user : users) {
+            if (user.getUserName().equals(muter)){
+                user.addMutedUser(findUserByUsername(muted));
+            }
+        }
+        //.............................|||||||||||||||||||||||||||||||||||||||||||||||||||
+        applyChanges(muted);
+        applyChanges(muter);
+    }
+    private static boolean xMutesY(String muter , String muted){
+        return findUserByUsername(muter).mutedUsers.contains(findUserByUsername(muted));
+    }
+    private static void unmuteProgress(String muter , String muted) throws IOException {
+        for (Model.user user : users) {
+            if (user.getUserName().equals(muter))
+                user.removeMutedUser(findUserByUsername(muted));
+        }
+        applyChanges(muted);
+        applyChanges(muter);
+    }
+    private static List<post> findPostsForUsername(String username){
+        List<post> postsForUsername = new ArrayList<>();
+        for (Model.post post : posts)
+            if (!findUserByUsername(username).getMutedUsers().contains(post.getPublisherUser())
+                    && (post.getPublisherUser().getFollowersList().contains(findUserByUsername(username))
+                    || post.getPublisherUser().getUserName().equals(username) ))
+                postsForUsername.add(post);
+        return postsForUsername ;
+    }
     /**
      * this is our running server which starts several Threads
      * each Thread does a particular job
@@ -409,6 +440,9 @@ public class MainServer {
                 while (true){
                     try {
                         getUsersInformation();
+                        for (user value : users) {
+                            value.getMutedUsers().clear();
+                        }
                         ServerSocket ServerLogInSocket = new ServerSocket(9094);
                         Socket logInServerSocket = ServerLogInSocket.accept();
                         ObjectOutputStream ServerLogInObjectOutputStream = new ObjectOutputStream(logInServerSocket.getOutputStream());
@@ -677,7 +711,9 @@ public class MainServer {
                         ObjectOutputStream TimeLineObjectOutputStream = new ObjectOutputStream(TimeLineSocketServerSocket.getOutputStream());
                         ObjectInputStream TimeLineObjectInputStream = new ObjectInputStream(TimeLineSocketServerSocket.getInputStream());
                         read_change();
-                        TimeLineObjectOutputStream.writeObject(posts);
+                        String username = TimeLineObjectInputStream.readUTF();
+                        List<post> postsForUsername = findPostsForUsername(username);
+                        TimeLineObjectOutputStream.writeObject(postsForUsername);
                         TimeLineObjectOutputStream.flush();
                         TimeLineSocket.close();
                         TimeLineSocketServerSocket.close();
@@ -745,18 +781,89 @@ public class MainServer {
              public void run() {
                  while (true){
                      try {
-                         ServerSocket unFollowSearchSocket = new ServerSocket(9083);
-                         Socket unFollowSearchServerSocket = unFollowSearchSocket.accept();
-                         DataOutputStream unFollowSearchDataOutputStream = new DataOutputStream(unFollowSearchServerSocket.getOutputStream());
-                         DataInputStream unFollowSearchDataInputStream = new DataInputStream(unFollowSearchServerSocket.getInputStream());
-                         String y = unFollowSearchDataInputStream.readUTF();
-                         String x = unFollowSearchDataInputStream.readUTF();
+                         ServerSocket unFollowSocket = new ServerSocket(9083);
+                         Socket unFollowServerSocket = unFollowSocket.accept();
+                         DataOutputStream unFollowDataOutputStream = new DataOutputStream(unFollowServerSocket.getOutputStream());
+                         DataInputStream unFollowDataInputStream = new DataInputStream(unFollowServerSocket.getInputStream());
+                         String y = unFollowDataInputStream.readUTF();
+                         String x = unFollowDataInputStream.readUTF();
                          unFollowProgress(y,x);
                          System.out.println(x + " unfollowed " + y);
-                         unFollowSearchSocket.close();
-                         unFollowSearchServerSocket.close();
-                         unFollowSearchDataOutputStream.close();
-                         unFollowSearchDataInputStream.close();
+                         unFollowSocket.close();
+                         unFollowServerSocket.close();
+                         unFollowDataOutputStream.close();
+                         unFollowDataInputStream.close();
+                     } catch (IOException e) {
+                         e.printStackTrace();
+                     }
+                 }
+             }
+         }).start();
+
+         new Thread(new Runnable() {
+             @Override
+             public void run() {
+                 while (true){
+                     try {
+                         ServerSocket muteSocket = new ServerSocket(9082);
+                         Socket muteServerSocket = muteSocket.accept();
+                         DataOutputStream muteDataOutputStream = new DataOutputStream(muteServerSocket.getOutputStream());
+                         DataInputStream muteDataInputStream = new DataInputStream(muteServerSocket.getInputStream());
+                         String muter = muteDataInputStream.readUTF();
+                         String muted = muteDataInputStream.readUTF();
+                         muteProgress(muter , muted);
+                         muteSocket.close();
+                         muteServerSocket.close();
+                         muteDataOutputStream.close();
+                         muteDataInputStream.close();
+                     } catch (IOException e) {
+                         e.printStackTrace();
+                     }
+                 }
+             }
+         }).start();
+
+         new Thread(new Runnable() {
+             @Override
+             public void run() {
+                 while(true){
+                     try {
+                         ServerSocket muteSearchSocket = new ServerSocket(45554);
+                         Socket muteSearchServerSocket = muteSearchSocket.accept();
+                         DataOutputStream muteSearchDataOutputStream = new DataOutputStream(muteSearchServerSocket.getOutputStream());
+                         DataInputStream muteSearchDataInputStream = new DataInputStream(muteSearchServerSocket.getInputStream());
+                         String muted = muteSearchDataInputStream.readUTF();
+                         String muter = muteSearchDataInputStream.readUTF();
+                         muteSearchDataOutputStream.writeBoolean(xMutesY(muter , muted));
+                         muteSearchDataOutputStream.flush();
+                         muteSearchSocket.close();
+                         muteSearchServerSocket.close();
+                         muteSearchDataOutputStream.close();
+                         muteSearchDataInputStream.close();
+                     } catch (IOException e) {
+                         e.printStackTrace();
+                     }
+                 }
+
+             }
+         }).start();
+
+         new Thread(new Runnable() {
+             @Override
+             public void run() {
+                 while (true){
+                     try {
+                         ServerSocket unmuteSocket = new ServerSocket(9080);
+                         Socket unmuteServerSocket = unmuteSocket.accept();
+                         DataOutputStream unmuteDataOutputStream = new DataOutputStream(unmuteServerSocket.getOutputStream());
+                         DataInputStream unmuteDataInputStream = new DataInputStream(unmuteServerSocket.getInputStream());
+                         String unmuter = unmuteDataInputStream.readUTF();
+                         String unmuted = unmuteDataInputStream.readUTF();
+                         unmuteProgress(unmuter , unmuted);
+                         unmuteSocket.close();
+                         unmuteServerSocket.close();
+                         unmuteDataOutputStream.close();
+                         unmuteDataInputStream.close();
                      } catch (IOException e) {
                          e.printStackTrace();
                      }

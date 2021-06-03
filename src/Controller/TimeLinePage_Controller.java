@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.Predicate;
 
 /**
  <h1>TimeLinePage_Controller </h1>
@@ -29,11 +30,8 @@ public class TimeLinePage_Controller {
     public ListView<post> TimeLine;
     private List<post> posts = new ArrayList<>();
     public void initialize() throws IOException, ClassNotFoundException {
-//        File file = new File("src/UsersInfo/loggedInUserInfo.txt");
-//        Scanner scanner = new Scanner(file);
-//        String user = scanner.next();
-        posts = TimeLineServer.TimeLineHandler();
         LoggedInUsername = logInPage_Controller.Username;
+        posts = TimeLineServer.TimeLineHandler(LoggedInUsername);
         TimeLine.setItems(FXCollections.observableArrayList(posts));
         TimeLine.setCellFactory(TimeLine -> new PostItem());
     }

@@ -14,10 +14,12 @@ import java.util.List;
  @since 9/3/1400
  */
 public class TimeLineServer {
-    public static List<post> TimeLineHandler() throws IOException, ClassNotFoundException {
+    public static List<post> TimeLineHandler(String LoggedInUsername) throws IOException, ClassNotFoundException {
         Socket TimeLineSocket = new Socket("127.0.0.1" , 9086);
         ObjectOutputStream TimeLineObjectOutputStream = new ObjectOutputStream(TimeLineSocket.getOutputStream());
         ObjectInputStream TimeLineObjectInputStream = new ObjectInputStream(TimeLineSocket.getInputStream());
+        TimeLineObjectOutputStream.writeUTF(LoggedInUsername);
+        TimeLineObjectOutputStream.flush();
         List<post> posts = (List<post>) TimeLineObjectInputStream.readObject();
         TimeLineSocket.close();
         TimeLineObjectOutputStream.close();

@@ -52,7 +52,6 @@ public class PostItemController {
     }
     public void findUsername(ActionEvent actionEvent) throws IOException {
         PublisherUser = post.getPublisherUser();
-        System.out.println(PublisherUser.getUserName());
         AuthorUser = post.getAuthorUser();
         System.out.println(AuthorUser.getUserName());
         if (TimeLinePage_Controller.LoggedInUsername.equals(PublisherUser.getUserName()))

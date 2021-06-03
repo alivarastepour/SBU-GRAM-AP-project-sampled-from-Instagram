@@ -15,7 +15,7 @@
             <Font name="Segoe UI Light" size="38.0" />
          </font>
       </Label>
-      <Label fx:id="PostTitle" alignment="TOP_LEFT" layoutX="391.0" layoutY="85.0" prefHeight="57.0" prefWidth="279.0" text="Post Ttile">
+      <Label fx:id="PostTitle" alignment="TOP_LEFT" layoutX="391.0" layoutY="85.0" prefHeight="57.0" prefWidth="289.0" text="Post Ttile">
          <font>
             <Font name="Segoe UI Light" size="31.0" />
          </font>
@@ -42,6 +42,6 @@
             <Image url="@Icons/rePost.png" />
          </image>
       </ImageView>
-      <JFXButton layoutX="100.0" layoutY="31.0" onAction="#findUsername" prefHeight="29.0" prefWidth="306.0" ripplerFill="WHITE" text=" " textFill="WHITE" />
+      <JFXButton layoutX="100.0" layoutY="31.0" onAction="#findUsername" prefHeight="31.0" prefWidth="561.0" ripplerFill="WHITE" text=" " textFill="WHITE" />
    </children>
 </AnchorPane>

@@ -16,14 +16,26 @@ public class user implements Serializable {
     private String password ;
     private String phoneNumber;
     private String email ;
-    int followings ;
-    int followers ;
-    String PhotoAddress ;
+    private int followings ;
+    private int followers ;
+    private String PhotoAddress ;
     private byte[] profilePhoto ;
     List<user> followersList = new ArrayList<>();
     List<user> followingsList = new ArrayList<>();
+    List<user> mutedUsers = new ArrayList<>();
     public String getName() {
         return name;
+    }
+
+    public List<user> getMutedUsers() {
+        return mutedUsers;
+    }
+    public void addMutedUser(user muted){
+        mutedUsers.add(muted);
+        System.out.println(this.getUserName() + " muted " + muted);
+    }
+    public void removeMutedUser(user muted){
+        mutedUsers.remove(muted);
     }
 
     public byte[] getProfilePhoto() {

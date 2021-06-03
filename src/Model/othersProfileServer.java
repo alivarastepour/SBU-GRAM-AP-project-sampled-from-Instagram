@@ -50,6 +50,43 @@ public class othersProfileServer {
         unFollowSocket.close();
         unFollowDataOutputStream.close();
         unFollowDataInputStream.close();
-
+    }
+    public static void muteHandler(String muted , String muter) throws IOException {
+        Socket muteSocket = new Socket("127.0.0.1" , 9082);
+        DataOutputStream muteDataOutputStream = new DataOutputStream(muteSocket.getOutputStream());
+        DataInputStream muteDataInputStream = new DataInputStream(muteSocket.getInputStream());
+        muteDataOutputStream.writeUTF(muter);
+        muteDataOutputStream.flush();
+        muteDataOutputStream.writeUTF(muted);
+        muteDataOutputStream.flush();
+        muteSocket.close();
+        muteDataOutputStream.close();
+        muteDataInputStream.close();
+    }
+    public static boolean muteValidity(String muted , String muter) throws IOException {
+        Socket muteSocket = new Socket("127.0.0.1" , 45554);
+        DataOutputStream muteDataOutputStream = new DataOutputStream(muteSocket.getOutputStream());
+        DataInputStream muteDataInputStream = new DataInputStream(muteSocket.getInputStream());
+        muteDataOutputStream.writeUTF(muted);
+        muteDataOutputStream.flush();
+        muteDataOutputStream.writeUTF(muter);
+        muteDataOutputStream.flush();
+        boolean condition = muteDataInputStream.readBoolean();
+        muteSocket.close();
+        muteDataOutputStream.close();
+        muteDataInputStream.close();
+        return condition ;
+    }
+    public static void unMuteHandler(String unmuted , String unmuter) throws IOException {
+        Socket muteSocket = new Socket("127.0.0.1" , 9080);
+        DataOutputStream muteDataOutputStream = new DataOutputStream(muteSocket.getOutputStream());
+        DataInputStream muteDataInputStream = new DataInputStream(muteSocket.getInputStream());
+        muteDataOutputStream.writeUTF(unmuter);
+        muteDataOutputStream.flush();
+        muteDataOutputStream.writeUTF(unmuted);
+        muteDataOutputStream.flush();
+        muteSocket.close();
+        muteDataOutputStream.close();
+        muteDataInputStream.close();
     }
 }

@@ -26,13 +26,12 @@ public class othersProfilePage_Controller {
     public Label following;
     public Label follower;
     public Circle profilePhoto;
-    public JFXButton unblock;
-    public JFXButton block;
     public JFXButton mute;
     public JFXButton unmute;
     public JFXButton unfollow;
     public JFXButton follow;
     boolean alreadyFollowed ;
+    boolean alreadyMuted ;
     /**
      * since most fields in this page are variables and differs from one page to another they should be initialized by the time page opens
      */
@@ -48,12 +47,14 @@ public class othersProfilePage_Controller {
                                 new ByteArrayInputStream(
                                         PostItemController.PublisherUser.getProfilePhoto()))));
         alreadyFollowed = othersProfileServer.followValidity(PostItemController.PublisherUser.getUserName(),TimeLinePage_Controller.LoggedInUsername);
+        alreadyMuted = othersProfileServer.muteValidity(PostItemController.PublisherUser.getUserName(),TimeLinePage_Controller.LoggedInUsername);
         follow.setVisible(!alreadyFollowed);
         unfollow.setVisible(alreadyFollowed);
+        mute.setVisible(alreadyFollowed && !alreadyMuted);
+        unmute.setVisible(alreadyFollowed && alreadyMuted);
     }
     public void backToTimeLine(MouseEvent mouseEvent) throws IOException {
         new PageLoader().load("TimeLinePage");
-    
     }
     //to be completed
     public void follow(ActionEvent actionEvent) throws IOException {
@@ -69,27 +70,15 @@ public class othersProfilePage_Controller {
         Model.othersProfileServer.unFollowHandler(PostItemController.PublisherUser.getUserName(),TimeLinePage_Controller.LoggedInUsername);
     }
     //to be completed
-    
-    public void block(ActionEvent actionEvent) {
-        block.setVisible(false);
-        unblock.setVisible(true);
-    }
-    //to be completed
-    
-    public void unblock(ActionEvent actionEvent) {
-        block.setVisible(true);
-        unblock.setVisible(false);
-    }
-    //to be completed
-    
-    public void mute(ActionEvent actionEvent) {
+    public void mute(ActionEvent actionEvent) throws IOException {
         mute.setVisible(false);
         unmute.setVisible(true);
+        Model.othersProfileServer.muteHandler(PostItemController.PublisherUser.getUserName(),TimeLinePage_Controller.LoggedInUsername);
     }
     //to be completed
-    
-    public void unmute(ActionEvent actionEvent) {
+    public void unmute(ActionEvent actionEvent) throws IOException {
         mute.setVisible(true);
         unmute.setVisible(false);
+        Model.othersProfileServer.unMuteHandler(PostItemController.PublisherUser.getUserName(),TimeLinePage_Controller.LoggedInUsername);
     }
 }
