@@ -51,4 +51,8 @@ public class TimeLinePage_Controller {
     public void refresh(MouseEvent mouseEvent) throws IOException {
         new PageLoader().load("TimeLinePage");
     }
+
+    public void search(MouseEvent mouseEvent) throws IOException {
+        new PageLoader().load("searchPage");
+    }
 }

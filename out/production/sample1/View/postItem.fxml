@@ -42,6 +42,6 @@
             <Image url="@Icons/rePost.png" />
          </image>
       </ImageView>
-      <JFXButton layoutX="100.0" layoutY="31.0" onAction="#findUsername" prefHeight="31.0" prefWidth="561.0" ripplerFill="WHITE" text=" " textFill="WHITE" />
+      <JFXButton layoutX="100.0" layoutY="31.0" onAction="#findUsername" prefHeight="55.0" prefWidth="579.0" ripplerFill="WHITE" text=" " textFill="WHITE" />
    </children>
 </AnchorPane>

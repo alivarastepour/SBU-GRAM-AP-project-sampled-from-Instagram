@@ -870,5 +870,31 @@ public class MainServer {
                  }
              }
          }).start();
+
+         new Thread(new Runnable() {
+             @Override
+             public void run() {
+                 while (true){
+                     try {
+                         ServerSocket searchSocket = new ServerSocket(9079);
+                         Socket searchServerSocket = searchSocket.accept();
+                         ObjectOutputStream searchObjectOutputStream = new ObjectOutputStream(searchServerSocket.getOutputStream());
+                         ObjectInputStream searchObjectInputStream = new ObjectInputStream(searchServerSocket.getInputStream());
+                         String username = searchObjectInputStream.readUTF();
+                         if (findUserByUsername(username) != null)
+                            searchObjectOutputStream.writeObject(findUserByUsername(username));
+                         else
+                             searchObjectOutputStream.writeObject(null);
+                         searchObjectOutputStream.flush();
+                         searchSocket.close();
+                         searchServerSocket.close();
+                         searchObjectOutputStream.close();
+                         searchObjectInputStream.close();
+                     } catch (IOException e) {
+                         e.printStackTrace();
+                     }
+                 }
+             }
+         }).start();
     }
 }
