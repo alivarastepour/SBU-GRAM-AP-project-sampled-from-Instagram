@@ -14,10 +14,12 @@ public class post implements Serializable {
     private String caption ;
     private int likes ;
     private List<String > commentList = new ArrayList<>();
+    public List<String> likeUsernames ;
     private user authorUser ;
     private user publisherUser ;
     private String photoAddress ;
     private byte[] photo ;
+    private long time ;
     
     public post(String title, String caption,String photoAddress ,  user authorUser, user publisherUser) throws IOException {
         this.title = title;
@@ -28,6 +30,60 @@ public class post implements Serializable {
         File file = new File(photoAddress);
         FileInputStream fileInputStream = new FileInputStream(file) ;
         photo = fileInputStream.readAllBytes();
+        time = System.currentTimeMillis() ;
+        likes = 0 ;
+        likeUsernames = new ArrayList<>();
+    }
+    
+    public long getTime() {
+        return time;
+    }
+    
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+    
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    public void addLike(user user){
+        this.likes++;
+//        this.likeUsers.add(user);
+    }
+    public void removeLike(user user){
+        this.likes--;
+//        this.likeUsers.remove(user);
+    }
+    public void setCaption(String caption) {
+        this.caption = caption;
+    }
+    
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+    
+    public void setCommentList(List<String> commentList) {
+        this.commentList = commentList;
+    }
+    
+    public List<String> getLikeUsers() {
+        return likeUsernames;
+    }
+    
+    public void setLikeUsers(List<String> likeUsers) {
+        this.likeUsernames = likeUsers;
+    }
+    
+    public void setPhotoAddress(String photoAddress) {
+        this.photoAddress = photoAddress;
+    }
+    
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
+    }
+    
+    public void setTime(long time) {
+        this.time = time;
     }
     
     public String getTitle() {

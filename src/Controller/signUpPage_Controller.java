@@ -65,7 +65,7 @@ public class signUpPage_Controller {
 
         uploadedPhoto
                 .setVisible(profilePhotoAddress == null);
-        if (profilePhotoAddress != null) {
+        if (profilePhotoAddress != null && !nameField.getText().isBlank()) {
             Model.signUpServer.signUpHandler(
                     name, userName, password, phoneNumber, email, city, profilePhotoAddress.toString()
             );

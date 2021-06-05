@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * <h1>MainServer</h1>
@@ -172,11 +173,6 @@ public class MainServer {
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream) ;
         objectOutputStream.writeObject(users);
         objectOutputStream.flush();
-//        FileWriter fileWriter = new FileWriter(file , true) ;
-//        Formatter formatter = new Formatter(fileWriter ) ;
-//        formatter.format("%s %s %s %s %s %s %s %s %s %s" ,name , userName , password , phoneNumber , email,city
-//                ,tempUser.getPhotoAddress() , tempUser.getFollowers() , tempUser.getFollowings() ,'\n');
-//        formatter.flush();
         System.out.println(userName + " joined SBU Geram at : " + CurrentDateTime.time());
     }
 
@@ -450,7 +446,55 @@ public class MainServer {
                     && (post.getPublisherUser().getFollowersList().contains(findUserByUsername(username))
                     || post.getPublisherUser().getUserName().equals(username) ))
                 postsForUsername.add(post);
+        postsForUsername = postsForUsername
+                                        .stream()
+                                        .sorted((a , b) -> Math.toIntExact(b.getTime() - a.getTime()))
+                                        .collect(Collectors.toList());
         return postsForUsername ;
+    }
+    
+    /**
+     * searches if
+     * @param post this post
+     * @param username is liked by this username.
+     * @return and returns true if so
+     */
+    private static boolean searchLikes(post post , String username){
+        read_change();
+        if (post.likeUsernames != null)
+            return post.likeUsernames.contains(username);
+        else
+            return false;
+    }
+    
+    /**
+     *
+     * @param username this user adds a
+     * @param post like to this post
+     * @throws IOException add_post method may threw IOException
+     */
+    private static void addLike(post post , String username) throws IOException {
+        for (Model.post value : posts)
+            if (post.getCaption().equals(value.getCaption())) {
+                value.likeUsernames.add(username);
+                value.addLike(findUserByUsername(username));
+            }
+        add_post(post);
+    }
+    
+    /**
+     *
+     * @param username this user removes a
+     * @param post like from this post
+     * @throws IOException add_post method may threw IOException
+     */
+    private static void removeLike(post post , String username) throws IOException {
+        for (Model.post value : posts)
+            if (post.getCaption().equals(value.getCaption())) {
+                value.likeUsernames.remove(username);
+                value.removeLike(findUserByUsername(username));
+            }
+        add_post(post);
     }
     /**
      * this is our running server which starts several Threads
@@ -465,9 +509,6 @@ public class MainServer {
                 while (true){
                     try {
                         getUsersInformation();
-                        for (user value : users) {
-                            value.getMutedUsers().clear();
-                        }
                         ServerSocket ServerLogInSocket = new ServerSocket(9094);
                         Socket logInServerSocket = ServerLogInSocket.accept();
                         ObjectOutputStream ServerLogInObjectOutputStream = new ObjectOutputStream(logInServerSocket.getOutputStream());
@@ -930,5 +971,82 @@ public class MainServer {
                  }
              }
          }).start();
+         
+         new Thread(new Runnable() {
+             //this Thread searches for post like's
+             @Override
+             public void run() {
+                 while (true){
+                     try {
+                         ServerSocket searchLikesSocket = new ServerSocket(9078);
+                         Socket searchLikesServerSocket = searchLikesSocket.accept();
+                         ObjectOutputStream searchLikesObjectOutputStream = new ObjectOutputStream(searchLikesServerSocket.getOutputStream());
+                         ObjectInputStream searchLikesObjectInputStream = new ObjectInputStream(searchLikesServerSocket.getInputStream());
+                         post post = (Model.post) searchLikesObjectInputStream.readObject();
+                         String username = searchLikesObjectInputStream.readUTF();
+                         read_change();
+                         boolean condition = searchLikes(post , username);
+                         searchLikesObjectOutputStream.writeBoolean(condition);
+                         searchLikesObjectOutputStream.flush();
+                         searchLikesSocket.close();
+                         searchLikesServerSocket.close();
+                         searchLikesObjectOutputStream.close();
+                         searchLikesObjectInputStream.close();
+                     } catch (IOException | ClassNotFoundException e) {
+                         e.printStackTrace();
+                     }
+                 }
+             }
+         }).start();
+         
+         new Thread(new Runnable() {
+             //this Thread handles adding like progress
+             @Override
+             public void run() {
+                while (true){
+                    try {
+                        ServerSocket addLikeSocket = new ServerSocket(9077);
+                        Socket addLikeServerSocket = addLikeSocket.accept();
+                        ObjectOutputStream searchLikesObjectOutputStream = new ObjectOutputStream(addLikeServerSocket.getOutputStream());
+                        ObjectInputStream searchLikesObjectInputStream = new ObjectInputStream(addLikeServerSocket.getInputStream());
+                        post post = (Model.post) searchLikesObjectInputStream.readObject();
+                        String username = searchLikesObjectInputStream.readUTF();
+                        addLike(post , username);
+                        System.out.println(username + " liked a post by "  + post.getPublisherUser().getUserName());
+                        addLikeSocket.close();
+                        addLikeServerSocket.close();
+                        searchLikesObjectOutputStream.close();
+                        searchLikesObjectInputStream.close();
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+             }
+         }).start();
+    
+        new Thread(new Runnable() {
+            //this thread handles removing like progress
+            @Override
+            public void run() {
+                while (true){
+                    try {
+                        ServerSocket removeLikeSocket = new ServerSocket(9076);
+                        Socket removeLikeServerSocket = removeLikeSocket.accept();
+                        ObjectOutputStream searchLikesObjectOutputStream = new ObjectOutputStream(removeLikeServerSocket.getOutputStream());
+                        ObjectInputStream searchLikesObjectInputStream = new ObjectInputStream(removeLikeServerSocket.getInputStream());
+                        post post = (Model.post) searchLikesObjectInputStream.readObject();
+                        String username = searchLikesObjectInputStream.readUTF();
+                        removeLike(post , username);
+                        System.out.println(username + " removed a like from post by "  + post.getPublisherUser().getUserName());
+                        removeLikeSocket.close();
+                        removeLikeServerSocket.close();
+                        searchLikesObjectOutputStream.close();
+                        searchLikesObjectInputStream.close();
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
 }

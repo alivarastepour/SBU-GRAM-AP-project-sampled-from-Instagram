@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.*?>
-<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="root" prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: white; -fx-border-color: white;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="root" prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: white; -fx-border-color: white;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label fx:id="username" alignment="TOP_LEFT" layoutX="100.0" layoutY="18.0" prefHeight="29.0" prefWidth="306.0" text="username">
          <font>
@@ -43,5 +42,13 @@
          </image>
       </ImageView>
       <JFXButton layoutX="100.0" layoutY="31.0" onAction="#findUsername" prefHeight="55.0" prefWidth="579.0" ripplerFill="WHITE" text=" " textFill="WHITE" />
+      <JFXButton fx:id="addLike" layoutX="114.0" layoutY="397.0" onAction="#addLike" prefHeight="34.0" prefWidth="38.0" ripplerFill="WHITE" text=" " textFill="WHITE" />
+      <ImageView fx:id="liked" fitHeight="41.0" fitWidth="26.0" layoutX="120.0" layoutY="401.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@Icons/liked.png" />
+         </image>
+      </ImageView>
+      <JFXButton fx:id="removeLike" layoutX="114.0" layoutY="397.0" onAction="#removeLike" prefHeight="34.0" prefWidth="38.0" ripplerFill="WHITE" text=" " textFill="WHITE" visible="false" />
+      <Label fx:id="numOfLikes" layoutX="152.0" layoutY="401.0" prefHeight="26.0" prefWidth="38.0" />
    </children>
 </AnchorPane>
