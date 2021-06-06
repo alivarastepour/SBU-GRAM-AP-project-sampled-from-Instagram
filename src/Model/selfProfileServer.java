@@ -2,7 +2,6 @@ package Model;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Scanner;
 
 /**
  * <h1>selfProfileServer</h1>
@@ -22,10 +21,6 @@ public class selfProfileServer {
      * @throws ClassNotFoundException readObject Method of selfProfileObjectInputStream may produce ClassNotFoundException
      */
     public static user selfProfileHandler(String username) throws IOException, ClassNotFoundException {
-//        File file = new File("src/UsersInfo/loggedInUserInfo.txt");
-//        FileReader fileReader = new FileReader(file);
-//        Scanner scanner = new Scanner(fileReader);
-//        username = scanner.next();
         Socket selfProfileSocket = new Socket("127.0.0.1" , 9089);
         ObjectOutputStream selfProfileObjectOutputStream = new ObjectOutputStream(selfProfileSocket.getOutputStream());
         ObjectInputStream selfProfileObjectInputStream = new ObjectInputStream(selfProfileSocket.getInputStream());
@@ -55,6 +50,17 @@ public class selfProfileServer {
         ChangeProfilePhotoSocket.close();
         ChangePhotoDataOutputStream.close();
         ChangePhotoDataInputStream.close();
+    }
+    public static void deleteAccount(String username) throws IOException {
+        Socket deleteAccSocket = new Socket("127.0.0.1", 9075);
+        DataOutputStream deleteAccDataOutputStream = new DataOutputStream(deleteAccSocket.getOutputStream());
+        DataInputStream deleteAccDataInputStream = new DataInputStream(deleteAccSocket.getInputStream());
+        deleteAccDataOutputStream.writeUTF(username);
+        deleteAccDataOutputStream.flush();
+        deleteAccSocket.close();
+        deleteAccDataOutputStream.close();
+        deleteAccDataInputStream.close();
+        
     }
 }
 

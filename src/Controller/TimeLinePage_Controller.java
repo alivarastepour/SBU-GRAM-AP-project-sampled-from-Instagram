@@ -4,6 +4,7 @@ import Model.PageLoader;
 import Model.TimeLineServer;
 import Model.post;
 import javafx.collections.FXCollections;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -28,12 +29,16 @@ import java.util.function.Predicate;
 public class TimeLinePage_Controller {
     public static String LoggedInUsername ;
     public ListView<post> TimeLine;
+    public Label greet;
+    public Label greet1;
     private List<post> posts = new ArrayList<>();
     public void initialize() throws IOException, ClassNotFoundException {
         LoggedInUsername = logInPage_Controller.Username;
         posts = TimeLineServer.TimeLineHandler(LoggedInUsername);
         TimeLine.setItems(FXCollections.observableArrayList(posts));
         TimeLine.setCellFactory(TimeLine -> new PostItem());
+        greet.setVisible(posts.size() == 0);
+        greet1.setVisible(posts.size() == 0);
     }
     
     public void Profile(MouseEvent mouseEvent) throws IOException {

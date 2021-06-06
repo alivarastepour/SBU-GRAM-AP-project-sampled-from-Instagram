@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.effect.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
@@ -51,5 +52,15 @@
          </image>
       </ImageView>
       <Label layoutX="783.0" layoutY="303.0" text="Serach" textFill="#00000099" />
+      <Label fx:id="greet" layoutX="280.0" layoutY="199.0" text="no post here !" visible="false">
+         <font>
+            <Font name="Segoe UI Light" size="33.0" />
+         </font>
+      </Label>
+      <Label fx:id="greet1" layoutX="113.0" layoutY="249.0" prefHeight="49.0" prefWidth="528.0" text="Search for friends and follow them to see their updates" visible="false">
+         <font>
+            <Font name="Segoe UI Light" size="23.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

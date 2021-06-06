@@ -3,6 +3,7 @@ package Controller;
 import Model.PageLoader;
 import Model.selfProfileServer;
 import Model.user;
+import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -71,5 +72,10 @@ public class selfProfilePage_Controller {
     
     public void changeProfileDetails(MouseEvent mouseEvent) throws IOException {
         new PageLoader().load("changeProfileDetailsPage");
+    }
+    
+    public void deleteAcc(ActionEvent actionEvent) throws IOException {
+        selfProfileServer.deleteAccount(username.getText());
+        new PageLoader().load("loginPage");
     }
 }

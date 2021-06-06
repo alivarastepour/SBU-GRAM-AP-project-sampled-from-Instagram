@@ -31,6 +31,11 @@ public class PostItemController {
     public JFXButton addLike ;
     public JFXButton removeLike ;
     public Label numOfLikes ;
+    public Label time ;
+    public Label numOfRePost ;
+    public Label repostLabel ;
+    public Label repostname ;
+    public JFXButton repostButton ;
 
     //each list item will have its exclusive controller in runtime so we set the controller as we load the fxml
     public PostItemController(post post) throws IOException {
@@ -45,14 +50,21 @@ public class PostItemController {
         liked.setVisible(condition);
         addLike.setVisible(!condition);
         removeLike.setVisible(condition);
+        time.setText(post.getFormattedTime());
         numOfLikes.setText(String.valueOf(post.getLikes()));
-        username.setText(post.getAuthorUser().getUserName());
+        username.setText(post.getPublisherUser().getUserName());
         PostTitle.setText(post.getTitle());
         PostCaption.setText(post.getCaption());
         Image image = new Image(new ByteArrayInputStream(post.getPublisherUser().getProfilePhoto()));
         ProfilePhoto.setFill(new ImagePattern(image));
         Image image1 = new Image(new ByteArrayInputStream(post.getPhoto()));
         postPhoto.setFill(new ImagePattern(image1));
+        repostLabel.setVisible(!post.getPublisherUser().getUserName().equals(post.getAuthorUser().getUserName()));
+        if (repostLabel.isVisible())
+            repostname.setText(post.getAuthorUser().getUserName());
+        repostButton.setVisible(!TimeLinePage_Controller.LoggedInUsername.equals(post.getPublisherUser().getUserName())&&
+                !TimeLinePage_Controller.LoggedInUsername.equals(post.getAuthorUser().getUserName()));
+        numOfRePost.setText(String.valueOf(post.getReposts()));
         return root;
     }
     //its important to know if the target profile belongs to the logged in user or others
@@ -80,5 +92,8 @@ public class PostItemController {
         liked.setVisible(false);
         addLike.setVisible(true);
         removeLike.setVisible(false);
+    }
+    public void repost(ActionEvent actionEvent) throws IOException {
+        Model.rePostServer.rePostHandler(TimeLinePage_Controller.LoggedInUsername , post);
     }
 }

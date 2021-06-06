@@ -32,6 +32,7 @@ public class MainServer {
      */
     private static void getUsersInformation(){
         users.clear();
+        usernames.clear();
         File file = new File("src/UsersInfo/users_information.txt");
         File file1 = new File("src/posts/posts.txt");
         try {
@@ -44,18 +45,6 @@ public class MainServer {
                 MainServer.userPhone.put(user.getUserName(), user.getPhoneNumber());
                 MainServer.userEmail.put(user.getUserName(), user.getEmail());
             }
-//            Scanner scanner = new Scanner(file);
-//            while (scanner.hasNext()){
-//                String tempString = scanner.nextLine();
-//                String[] tempArray = tempString.split(" ");
-//                user tempUser = new user(tempArray[0] , tempArray[1], tempArray[2] , tempArray[3] , tempArray[4] , tempArray[5] , tempArray[6] , tempArray[7] , tempArray[8]);
-//                //                          name            username        pass            phone       email           city            photo
-//                MainServer.users.add(tempUser) ;
-//                MainServer.usernames.add(tempArray[1]) ;
-//                MainServer.userPass.put(tempArray[1] , tempArray[2]) ;
-//                MainServer.userPhone.put(tempArray[1] , tempArray[3]) ;
-//                MainServer.userEmail.put(tempArray[1] , tempArray[4]) ;
-//            }
             FileInputStream fileInputStream = new FileInputStream(file1);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
             posts = (List<post>) objectInputStream.readObject();
@@ -220,20 +209,6 @@ public class MainServer {
         FileOutputStream fileOutputStream = new FileOutputStream(file , false);
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
         objectOutputStream.writeObject(users);
-//        try {
-//            FileWriter fileWriter = new FileWriter(file , false) ;
-//            Formatter formatter = new Formatter(fileWriter);
-//            for (Model.user user : users) {
-//                formatter.format("%s %s %s %s %s %s %s %s %s %s",user.getName(), user.getUserName(),
-//                        user.getPassword(), user.getPhoneNumber(), user.getEmail() ,user.getCity(),
-//                        user.getPhotoAddress() , user.getFollowers(), user.getFollowings(), '\n');
-//                formatter.flush();
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-        
     }
 
     /**
@@ -496,6 +471,32 @@ public class MainServer {
             }
         add_post(post);
     }
+    
+    /**
+     * receives a username as parameter and removes it's user from all lists
+     * @param username
+     * @throws IOException line 483, 491, 494 may threw IOException
+     */
+    private static void delete_account(String username) throws IOException {
+        System.out.println(users.size());
+        users.remove(findUserByUsername(username));
+        applyChanges(username);
+        usernames = usernames.stream().filter(a -> !a.equals(username)).collect(Collectors.toList());
+        userPass.remove(username);
+        userEmail.remove(username);
+        userPhone.remove(username);
+        for (int i = 0; i < posts.size(); i++){
+            if (posts.get(i).getAuthorUser().getUserName().equals(username)){
+                posts.remove(i);
+                add_post(new post());
+            }
+            if (posts.get(i).getPublisherUser().getUserName().equals(username)){
+                posts.remove(i);
+                add_post(new post());
+            }
+        }
+        System.out.println(users.size());
+    }
     /**
      * this is our running server which starts several Threads
      * each Thread does a particular job
@@ -515,7 +516,12 @@ public class MainServer {
                         ObjectInputStream ServeLogInObjectInputStream = new ObjectInputStream(logInServerSocket.getInputStream());
                         String username = ServeLogInObjectInputStream.readUTF();
                         String password = ServeLogInObjectInputStream.readUTF();
-                        boolean validUser = usernames.contains(username) ;
+                        boolean validUser = false ;
+                        for (user value : users)
+                            if (value.getUserName().equals(username)) {
+                                validUser = true;
+                                break;
+                            }
                         boolean validPassword = false ;
                         if (usernames.contains(username))
                             validPassword = userPass.get(username).equals(password) ;
@@ -528,6 +534,13 @@ public class MainServer {
                         user user = findUserByUsername(username);
                         ServerLogInObjectOutputStream.writeObject(user);
                         ServerLogInObjectOutputStream.flush();
+                        for (int i = 0; i < usernames.size()  ; i++) {
+                            System.out.println(usernames.get(i));
+                        }
+                        System.out.println("----==-------");
+                        for (int i = 0; i < users.size(); i++) {
+                            System.out.println(users.get(i).getUserName());
+                        }
                         ServerLogInSocket.close();
                         logInServerSocket.close();
                         ServeLogInObjectInputStream.close();
@@ -1042,6 +1055,60 @@ public class MainServer {
                         removeLikeServerSocket.close();
                         searchLikesObjectOutputStream.close();
                         searchLikesObjectInputStream.close();
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+        
+        new Thread(new Runnable() {
+            //this Thread removes a user's acc
+            @Override
+            public void run() {
+                while (true){
+                    try {
+                        ServerSocket deleteAccSocket = new ServerSocket(9075);
+                        Socket deleteAccServerSocket = deleteAccSocket.accept();
+                        DataOutputStream deleteAccDataOutputStream = new DataOutputStream(deleteAccServerSocket.getOutputStream());
+                        DataInputStream deleteAccDataInputStream = new DataInputStream(deleteAccServerSocket.getInputStream());
+                        String username = deleteAccDataInputStream.readUTF();
+                        delete_account(username);
+                        deleteAccSocket.close();
+                        deleteAccServerSocket.close();
+                        deleteAccDataOutputStream.close();
+                        deleteAccDataInputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+        
+        new Thread(new Runnable() {
+            //this Thread handles reposting actions
+            @Override
+            public void run() {
+                while (true){
+                    try {
+                        ServerSocket rePostSocket = new ServerSocket(9074);
+                        Socket rePostServerSocket = rePostSocket.accept();
+                        ObjectOutputStream rePostObjectOutputStream = new ObjectOutputStream(rePostServerSocket.getOutputStream());
+                        ObjectInputStream rePostObjectInputStream = new ObjectInputStream(rePostServerSocket.getInputStream());
+                        post post = (Model.post) rePostObjectInputStream.readObject();
+                        user user = findUserByUsername(rePostObjectInputStream.readUTF());
+                        post.setPublisherUser(user);
+                        post.setTime(System.currentTimeMillis());
+                        post.setFormattedTime(CurrentDateTime.time());
+                        for (Model.post value : posts)
+                            if (value.getAuthorUser().getUserName().equals(post.getAuthorUser().getUserName()))
+                                value.addReposts();
+                        posts.add(post);
+                        add_post(post);
+                        rePostSocket.close();
+                        rePostServerSocket.close();
+                        rePostObjectOutputStream.close();
+                        rePostObjectInputStream.close();
                     } catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();
                     }

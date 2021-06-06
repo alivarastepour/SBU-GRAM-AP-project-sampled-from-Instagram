@@ -13,6 +13,7 @@ public class post implements Serializable {
     private String title ;
     private String caption ;
     private int likes ;
+    private int reposts ;
     private List<String > commentList = new ArrayList<>();
     public List<String> likeUsernames ;
     private user authorUser ;
@@ -20,6 +21,7 @@ public class post implements Serializable {
     private String photoAddress ;
     private byte[] photo ;
     private long time ;
+    private String FormattedTime;
     
     public post(String title, String caption,String photoAddress ,  user authorUser, user publisherUser) throws IOException {
         this.title = title;
@@ -33,6 +35,28 @@ public class post implements Serializable {
         time = System.currentTimeMillis() ;
         likes = 0 ;
         likeUsernames = new ArrayList<>();
+        FormattedTime = CurrentDateTime.time();
+    }
+    public post(){}
+    
+    public int getReposts() {
+        return reposts;
+    }
+    
+    public List<String> getLikeUsernames() {
+        return likeUsernames;
+    }
+    
+    public void addReposts() {
+        this.reposts++;
+    }
+    
+    public void setFormattedTime(String formattedTime) {
+        FormattedTime = formattedTime;
+    }
+    
+    public String getFormattedTime() {
+        return FormattedTime;
     }
     
     public long getTime() {

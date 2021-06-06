@@ -114,5 +114,6 @@
 
       </JFXButton>
       <JFXButton layoutX="197.0" layoutY="293.0" onMouseClicked="#changeProfileDetails" text="edit profile" />
+      <JFXButton layoutX="185.0" layoutY="318.0" onAction="#deleteAcc" text="Delete Account" />
    </children>
 </AnchorPane>
