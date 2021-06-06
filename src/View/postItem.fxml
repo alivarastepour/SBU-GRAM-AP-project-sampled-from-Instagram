@@ -72,5 +72,7 @@
             <Font size="16.0" />
          </font>
       </Label>
+      <JFXButton layoutX="181.0" layoutY="374.0" onAction="#comment" prefHeight="55.0" prefWidth="52.0" text=" " />
+      <Label fx:id="numOfComments" layoutX="225.0" layoutY="387.0" />
    </children>
 </AnchorPane>

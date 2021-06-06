@@ -14,7 +14,7 @@ public class post implements Serializable {
     private String caption ;
     private int likes ;
     private int reposts ;
-    private List<String > commentList = new ArrayList<>();
+    private List<comment> comments = new ArrayList<>();
     public List<String> likeUsernames ;
     private user authorUser ;
     private user publisherUser ;
@@ -41,6 +41,22 @@ public class post implements Serializable {
     
     public int getReposts() {
         return reposts;
+    }
+    
+    public void setReposts(int reposts) {
+        this.reposts = reposts;
+    }
+    
+    public List<comment> getComments() {
+        return comments;
+    }
+    
+    public void setComments(List<comment> comments) {
+        this.comments = comments;
+    }
+    
+    public void setLikeUsernames(List<String> likeUsernames) {
+        this.likeUsernames = likeUsernames;
     }
     
     public List<String> getLikeUsernames() {
@@ -72,11 +88,9 @@ public class post implements Serializable {
     }
     public void addLike(user user){
         this.likes++;
-//        this.likeUsers.add(user);
     }
     public void removeLike(user user){
         this.likes--;
-//        this.likeUsers.remove(user);
     }
     public void setCaption(String caption) {
         this.caption = caption;
@@ -84,10 +98,6 @@ public class post implements Serializable {
     
     public void setLikes(int likes) {
         this.likes = likes;
-    }
-    
-    public void setCommentList(List<String> commentList) {
-        this.commentList = commentList;
     }
     
     public List<String> getLikeUsers() {
@@ -122,10 +132,6 @@ public class post implements Serializable {
         return likes;
     }
     
-    public List<String> getCommentList() {
-        return commentList;
-    }
-    
     public user getAuthorUser() {
         return authorUser;
     }
@@ -149,5 +155,7 @@ public class post implements Serializable {
     public void setPublisherUser(user publisherUser) {
         this.publisherUser = publisherUser;
     }
-
+    public void addComment(comment comment){
+        this.comments.add(comment);
+    }
 }

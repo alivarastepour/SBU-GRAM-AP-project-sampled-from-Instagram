@@ -8,7 +8,7 @@ import java.io.IOException;
 /**
  * if i would have known what does this class do , i would have written it myself so ask description from author
  * @author niloufar MJ
- * @since 6/1/2021
+ * @since 6/7/2021
  */
 public class PostItem extends ListCell<post> {
 
@@ -18,7 +18,7 @@ public class PostItem extends ListCell<post> {
         if (post != null) {
             try {
                 setGraphic(new PostItemController(post).init());
-            } catch (IOException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }

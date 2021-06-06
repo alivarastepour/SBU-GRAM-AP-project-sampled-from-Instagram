@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.PageLoader;
+import Model.comment;
 import Model.post;
 import Model.user;
 import com.jfoenix.controls.JFXButton;
@@ -14,6 +15,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.List;
 
 public class PostItemController {
     public AnchorPane root;
@@ -35,7 +37,9 @@ public class PostItemController {
     public Label numOfRePost ;
     public Label repostLabel ;
     public Label repostname ;
+    public Label numOfComments ; ;
     public JFXButton repostButton ;
+    public static post currentPost ;
 
     //each list item will have its exclusive controller in runtime so we set the controller as we load the fxml
     public PostItemController(post post) throws IOException {
@@ -44,13 +48,15 @@ public class PostItemController {
     }
 
     //this anchor pane is returned to be set as the list view item
-    public AnchorPane init() throws IOException {
+    public AnchorPane init() throws IOException, ClassNotFoundException {
         boolean condition = Model.likeServer.searchLikes(post , TimeLinePage_Controller.LoggedInUsername);
+        List<Model.comment> list = Model.commentServer.commentsHandler(post);
         like.setVisible(!condition);
         liked.setVisible(condition);
         addLike.setVisible(!condition);
         removeLike.setVisible(condition);
         time.setText(post.getFormattedTime());
+        numOfComments.setText(String.valueOf(list.size()));
         numOfLikes.setText(String.valueOf(post.getLikes()));
         username.setText(post.getPublisherUser().getUserName());
         PostTitle.setText(post.getTitle());
@@ -71,7 +77,6 @@ public class PostItemController {
     public void findUsername(ActionEvent actionEvent) throws IOException {
         PublisherUser = post.getPublisherUser();
         AuthorUser = post.getAuthorUser();
-        System.out.println(AuthorUser.getUserName());
         if (TimeLinePage_Controller.LoggedInUsername.equals(PublisherUser.getUserName()))
             new PageLoader().load("selfProfilePage");
         else
@@ -93,7 +98,13 @@ public class PostItemController {
         addLike.setVisible(true);
         removeLike.setVisible(false);
     }
+    //reposts a post
     public void repost(ActionEvent actionEvent) throws IOException {
         Model.rePostServer.rePostHandler(TimeLinePage_Controller.LoggedInUsername , post);
+    }
+    //adds a comment
+    public void comment(ActionEvent actionEvent) throws IOException {
+        currentPost = post ;
+        new PageLoader().load("commentPage");
     }
 }

@@ -474,11 +474,10 @@ public class MainServer {
     
     /**
      * receives a username as parameter and removes it's user from all lists
-     * @param username
+     * @param username user who is trying to delete account
      * @throws IOException line 483, 491, 494 may threw IOException
      */
     private static void delete_account(String username) throws IOException {
-        System.out.println(users.size());
         users.remove(findUserByUsername(username));
         applyChanges(username);
         usernames = usernames.stream().filter(a -> !a.equals(username)).collect(Collectors.toList());
@@ -495,7 +494,33 @@ public class MainServer {
                 add_post(new post());
             }
         }
-        System.out.println(users.size());
+    }
+    
+    /**
+     * returns list of comments for particular post
+     * @param post particular post
+     * @return list of comments
+     */
+    private static List<comment> findCommentsForPost(post post){
+        List<comment> list = new ArrayList<>();
+        for (Model.post value : posts)
+            if (value.getCaption().equals(post.getCaption()))
+                list = value.getComments();
+        return list ;
+    }
+    
+    /**
+     * adds a particular comment to particular post
+     * @param comment particular comment
+     * @param post particular post
+     * @throws IOException add_post method may threw IOException inside
+     */
+    private static void addCommentToPost(comment comment , post post) throws IOException {
+        for (Model.post value : posts) {
+            if (value.getCaption().equals(post.getCaption()))
+                value.addComment(comment);
+        }
+        add_post(post);
     }
     /**
      * this is our running server which starts several Threads
@@ -534,13 +559,6 @@ public class MainServer {
                         user user = findUserByUsername(username);
                         ServerLogInObjectOutputStream.writeObject(user);
                         ServerLogInObjectOutputStream.flush();
-                        for (int i = 0; i < usernames.size()  ; i++) {
-                            System.out.println(usernames.get(i));
-                        }
-                        System.out.println("----==-------");
-                        for (int i = 0; i < users.size(); i++) {
-                            System.out.println(users.get(i).getUserName());
-                        }
                         ServerLogInSocket.close();
                         logInServerSocket.close();
                         ServeLogInObjectInputStream.close();
@@ -872,7 +890,7 @@ public class MainServer {
                          String y = unFollowDataInputStream.readUTF();
                          String x = unFollowDataInputStream.readUTF();
                          unFollowProgress(y,x);
-                         System.out.println(x + " unfollowed " + y);
+                         System.out.println(x + " unfollowed " + y + " at " + CurrentDateTime.time());
                          unFollowSocket.close();
                          unFollowServerSocket.close();
                          unFollowDataOutputStream.close();
@@ -897,6 +915,7 @@ public class MainServer {
                          String muter = muteDataInputStream.readUTF();
                          String muted = muteDataInputStream.readUTF();
                          muteProgress(muter , muted);
+                         System.out.println(muter + " muted " + muted + " at " + CurrentDateTime.time());
                          muteSocket.close();
                          muteServerSocket.close();
                          muteDataOutputStream.close();
@@ -947,6 +966,7 @@ public class MainServer {
                          String unmuter = unmuteDataInputStream.readUTF();
                          String unmuted = unmuteDataInputStream.readUTF();
                          unmuteProgress(unmuter , unmuted);
+                         System.out.println(unmuter + " unmuted " + unmuted + " at " + CurrentDateTime.time());
                          unmuteSocket.close();
                          unmuteServerSocket.close();
                          unmuteDataOutputStream.close();
@@ -1025,7 +1045,7 @@ public class MainServer {
                         post post = (Model.post) searchLikesObjectInputStream.readObject();
                         String username = searchLikesObjectInputStream.readUTF();
                         addLike(post , username);
-                        System.out.println(username + " liked a post by "  + post.getPublisherUser().getUserName());
+                        System.out.println(username + " liked a post by "  + post.getPublisherUser().getUserName() + " at " + CurrentDateTime.time());
                         addLikeSocket.close();
                         addLikeServerSocket.close();
                         searchLikesObjectOutputStream.close();
@@ -1050,7 +1070,7 @@ public class MainServer {
                         post post = (Model.post) searchLikesObjectInputStream.readObject();
                         String username = searchLikesObjectInputStream.readUTF();
                         removeLike(post , username);
-                        System.out.println(username + " removed a like from post by "  + post.getPublisherUser().getUserName());
+                        System.out.println(username + " removed a like from post by "  + post.getPublisherUser().getUserName() + " at " + CurrentDateTime.time());
                         removeLikeSocket.close();
                         removeLikeServerSocket.close();
                         searchLikesObjectOutputStream.close();
@@ -1074,6 +1094,7 @@ public class MainServer {
                         DataInputStream deleteAccDataInputStream = new DataInputStream(deleteAccServerSocket.getInputStream());
                         String username = deleteAccDataInputStream.readUTF();
                         delete_account(username);
+                        System.out.println(username + " deleted their account at " + CurrentDateTime.time());
                         deleteAccSocket.close();
                         deleteAccServerSocket.close();
                         deleteAccDataOutputStream.close();
@@ -1105,10 +1126,61 @@ public class MainServer {
                                 value.addReposts();
                         posts.add(post);
                         add_post(post);
+                        System.out.println(user.getUserName() + " reposted a post from " + post.getAuthorUser().getUserName() + " at :" +CurrentDateTime.time());
                         rePostSocket.close();
                         rePostServerSocket.close();
                         rePostObjectOutputStream.close();
                         rePostObjectInputStream.close();
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+        
+        new Thread(new Runnable() {
+            //this Thread loads previous comments
+            @Override
+            public void run() {
+                while (true){
+                    try {
+                        ServerSocket commentsSocket = new ServerSocket(9073);
+                        Socket commentsServerSocket = commentsSocket.accept();
+                        ObjectOutputStream objectOutputStream = new ObjectOutputStream(commentsServerSocket.getOutputStream());
+                        ObjectInputStream objectInputStream = new ObjectInputStream(commentsServerSocket.getInputStream());
+                        post post = (Model.post) objectInputStream.readObject();
+                        List<comment> commentList = findCommentsForPost(post);
+                        objectOutputStream.writeObject(commentList);
+                        objectOutputStream.flush();
+                        commentsServerSocket.close();
+                        objectOutputStream.close();
+                        commentsSocket.close();
+                        objectInputStream.close();
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+        
+        new Thread(new Runnable() {
+            //this Thread handles comment adding progress
+            @Override
+            public void run() {
+                while (true){
+                    try {
+                        ServerSocket commentsSocket = new ServerSocket(9072);
+                        Socket commentsServerSocket = commentsSocket.accept();
+                        ObjectOutputStream objectOutputStream = new ObjectOutputStream(commentsServerSocket.getOutputStream());
+                        ObjectInputStream objectInputStream = new ObjectInputStream(commentsServerSocket.getInputStream());
+                        comment comment = (Model.comment) objectInputStream.readObject();
+                        post post = (Model.post) objectInputStream.readObject();
+                        addCommentToPost(comment , post) ;
+                        System.out.println(comment.getAuthor() + " added a new comment to " + post.getAuthorUser().getUserName() + "'s post : " + comment.getComment() + " at " + CurrentDateTime.time());
+                        commentsSocket.close();
+                        commentsServerSocket.close();
+                        objectOutputStream.close();
+                        objectInputStream.close();
                     } catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();
                     }
