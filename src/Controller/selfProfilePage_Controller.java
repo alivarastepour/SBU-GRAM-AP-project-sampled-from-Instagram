@@ -50,10 +50,8 @@ public class selfProfilePage_Controller {
         File file = new File(selfUser.getPhotoAddress());
         FileInputStream fileInputStream = new FileInputStream(file) ;
         byte[] b = fileInputStream.readAllBytes();
-//        byte[] b = selfUser.getProfilePhoto();
         Image image = new Image(new ByteArrayInputStream(b));
         profilePhoto.setFill(new ImagePattern(image));
-
     }
 
     public void backToTimeLine(MouseEvent mouseEvent) throws IOException {
@@ -77,5 +75,9 @@ public class selfProfilePage_Controller {
     public void deleteAcc(ActionEvent actionEvent) throws IOException {
         selfProfileServer.deleteAccount(username.getText());
         new PageLoader().load("loginPage");
+    }
+
+    public void selfPosts(ActionEvent actionEvent) throws IOException {
+        new PageLoader().load("selfPostsPage");
     }
 }

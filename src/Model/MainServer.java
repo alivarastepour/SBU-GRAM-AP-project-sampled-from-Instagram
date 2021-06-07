@@ -480,7 +480,11 @@ public class MainServer {
     private static void delete_account(String username) throws IOException {
         users.remove(findUserByUsername(username));
         applyChanges(username);
-        usernames = usernames.stream().filter(a -> !a.equals(username)).collect(Collectors.toList());
+        for (int i = 0; i < usernames.size(); i++) {
+            if (usernames.get(i).equals(username))
+                usernames.remove(i);
+        }
+//        usernames = usernames.stream().filter(a -> !a.equals(username)).collect(Collectors.toList());
         userPass.remove(username);
         userEmail.remove(username);
         userPhone.remove(username);
@@ -1171,17 +1175,42 @@ public class MainServer {
                     try {
                         ServerSocket commentsSocket = new ServerSocket(9072);
                         Socket commentsServerSocket = commentsSocket.accept();
-                        ObjectOutputStream objectOutputStream = new ObjectOutputStream(commentsServerSocket.getOutputStream());
-                        ObjectInputStream objectInputStream = new ObjectInputStream(commentsServerSocket.getInputStream());
-                        comment comment = (Model.comment) objectInputStream.readObject();
-                        post post = (Model.post) objectInputStream.readObject();
+                        ObjectOutputStream commentsObjectOutputStream = new ObjectOutputStream(commentsServerSocket.getOutputStream());
+                        ObjectInputStream commentsObjectInputStream = new ObjectInputStream(commentsServerSocket.getInputStream());
+                        comment comment = (Model.comment) commentsObjectInputStream.readObject();
+                        post post = (Model.post) commentsObjectInputStream.readObject();
                         addCommentToPost(comment , post) ;
                         System.out.println(comment.getAuthor() + " added a new comment to " + post.getAuthorUser().getUserName() + "'s post : " + comment.getComment() + " at " + CurrentDateTime.time());
                         commentsSocket.close();
                         commentsServerSocket.close();
-                        objectOutputStream.close();
-                        objectInputStream.close();
+                        commentsObjectOutputStream.close();
+                        commentsObjectInputStream.close();
                     } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+
+        new Thread(new Runnable() {
+            //this Thread searches for self user posts(to show in profilePage)
+            @Override
+            public void run() {
+                while (true){
+                    try {
+                        ServerSocket selfPostsSocket = new ServerSocket(9071);
+                        Socket selfPostsServerSocket = selfPostsSocket.accept();
+                        ObjectOutputStream selfPostsObjectOutputStream = new ObjectOutputStream(selfPostsServerSocket.getOutputStream());
+                        ObjectInputStream selfPostsObjectInputStream = new ObjectInputStream(selfPostsServerSocket.getInputStream());
+                        String username = selfPostsObjectInputStream.readUTF();
+                        List<post> postList = posts.stream().filter(a->a.getPublisherUser().getUserName().equals(username)).collect(Collectors.toList());
+                        selfPostsObjectOutputStream.writeObject(postList);
+                        selfPostsObjectOutputStream.flush();
+                        selfPostsSocket.close();
+                        selfPostsServerSocket.close();
+                        selfPostsObjectOutputStream.close();
+                        selfPostsObjectInputStream.close();
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }

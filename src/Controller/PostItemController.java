@@ -40,6 +40,7 @@ public class PostItemController {
     public Label numOfComments ; ;
     public JFXButton repostButton ;
     public static post currentPost ;
+    public static String user;
 
     //each list item will have its exclusive controller in runtime so we set the controller as we load the fxml
     public PostItemController(post post) throws IOException {
@@ -59,6 +60,7 @@ public class PostItemController {
         numOfComments.setText(String.valueOf(list.size()));
         numOfLikes.setText(String.valueOf(post.getLikes()));
         username.setText(post.getPublisherUser().getUserName());
+        user = post.getPublisherUser().getUserName();
         PostTitle.setText(post.getTitle());
         PostCaption.setText(post.getCaption());
         Image image = new Image(new ByteArrayInputStream(post.getPublisherUser().getProfilePhoto()));

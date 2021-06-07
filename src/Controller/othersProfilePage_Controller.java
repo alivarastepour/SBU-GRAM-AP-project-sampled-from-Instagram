@@ -80,4 +80,7 @@ public class othersProfilePage_Controller {
         unmute.setVisible(false);
         Model.othersProfileServer.unMuteHandler(PostItemController.PublisherUser.getUserName(),TimeLinePage_Controller.LoggedInUsername);
     }
+    public void selfPosts(ActionEvent actionEvent) throws IOException {
+        new PageLoader().load("othersPostsPage");
+    }
 }

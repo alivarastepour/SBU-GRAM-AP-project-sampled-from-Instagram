@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import com.jfoenix.controls.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
@@ -8,7 +9,7 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="550.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.selfProfilePage_Controller">
+<AnchorPane prefHeight="550.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.selfProfilePage_Controller">
    <children>
       <Label fx:id="username" layoutX="394.0" layoutY="50.0" prefHeight="54.0" prefWidth="391.0">
          <font>
@@ -67,7 +68,7 @@
                   <Stop color="BLACK" />
                   <Stop color="#008f0a" offset="0.007246376811594203" />
                   <Stop color="BLACK" offset="0.007246376811594203" />
-                  <Stop color="#008f0a" offset="0.5512929809605005" />
+                  <Stop color="#008f0a" offset="0.5440466041489063" />
                   <Stop color="#a5c6a7" offset="1.0" />
                </stops>
             </LinearGradient>
@@ -111,9 +112,57 @@
          </image>
       </ImageView>
       <JFXButton layoutX="170.0" layoutY="268.0" onMouseClicked="#changeProfilePhoto" text="change Profile photo">
-
+         <textFill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop color="BLACK" />
+                  <Stop color="#008f0a" offset="0.007246376811594203" />
+                  <Stop color="BLACK" offset="0.007246376811594203" />
+                  <Stop color="#008f0a" offset="0.5440466041489063" />
+                  <Stop color="#a5c6a7" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </textFill></JFXButton>
+      <JFXButton layoutX="197.0" layoutY="293.0" onMouseClicked="#changeProfileDetails" text="edit profile">
+         <textFill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop color="BLACK" />
+                  <Stop color="#008f0a" offset="0.007246376811594203" />
+                  <Stop color="BLACK" offset="0.007246376811594203" />
+                  <Stop color="#008f0a" offset="0.5440466041489063" />
+                  <Stop color="#a5c6a7" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </textFill></JFXButton>
+      <JFXButton layoutX="185.0" layoutY="318.0" onAction="#deleteAcc" text="Delete Account">
+         <textFill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop color="BLACK" />
+                  <Stop color="#008f0a" offset="0.5157715260017051" />
+                  <Stop color="#a5c6a7" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </textFill></JFXButton>
+      <JFXButton layoutX="296.0" layoutY="444.0" onAction="#selfPosts" text="view all posts from this user">
+         <textFill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop color="BLACK" />
+                  <Stop color="#008f0a" offset="0.5157715260017051" />
+                  <Stop color="#a5c6a7" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </textFill>
+         <font>
+            <Font size="24.0" />
+         </font>
       </JFXButton>
-      <JFXButton layoutX="197.0" layoutY="293.0" onMouseClicked="#changeProfileDetails" text="edit profile" />
-      <JFXButton layoutX="185.0" layoutY="318.0" onAction="#deleteAcc" text="Delete Account" />
+      <ImageView fitHeight="34.0" fitWidth="47.0" layoutX="274.0" layoutY="456.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Icons/692571761574330935-64.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>
