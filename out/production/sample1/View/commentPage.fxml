@@ -3,17 +3,18 @@
 <?import com.jfoenix.controls.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
 <AnchorPane prefHeight="550.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.commentPage_Controller">
    <children>
       <JFXListView fx:id="commentsListView" prefHeight="316.0" prefWidth="900.0" />
-      <Label fx:id="no_c1" layoutX="263.0" layoutY="126.0" text="be the first one to comment">
+      <Label fx:id="no_c1" layoutX="263.0" layoutY="126.0" text="be the first one to comment" textFill="#82c440">
          <font>
             <Font name="Segoe UI Light" size="32.0" />
          </font>
       </Label>
-      <Label fx:id="no_c" layoutX="323.0" layoutY="79.0" text="no comment here..">
+      <Label fx:id="no_c" layoutX="323.0" layoutY="79.0" text="no comment here.." textFill="#82c440">
          <font>
             <Font name="Segoe UI Light" size="32.0" />
          </font>
@@ -22,11 +23,53 @@
          <font>
             <Font name="Segoe UI Light" size="27.0" />
          </font>
+         <textFill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.5129359718766047">
+                     <color>
+                        <Color green="0.5607843399047852" blue="0.03921568766236305" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.6470588445663452" green="0.7764706015586853" blue="0.6549019813537598" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
       </Label>
       <Label layoutX="14.0" layoutY="343.0" text="comment as : ">
          <font>
             <Font name="Segoe UI Light" size="16.0" />
          </font>
+         <textFill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.5189003436426117">
+                     <color>
+                        <Color green="0.5607843399047852" blue="0.03921568766236305" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.6470588445663452" green="0.7764706015586853" blue="0.6549019813537598" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
       </Label>
       <JFXTextArea fx:id="comment" focusColor="BLACK" layoutX="17.0" layoutY="375.0" prefHeight="95.0" prefWidth="789.0" promptText="write your comment...." unFocusColor="WHITE">
          <font>

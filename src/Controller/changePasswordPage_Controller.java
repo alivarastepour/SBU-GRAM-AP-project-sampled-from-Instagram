@@ -33,7 +33,6 @@ public class changePasswordPage_Controller {
         boolean validPassword = Model.changePasswordServer.isValidPassword();
         passwordValidation.setVisible(!validPassword);
         if (newPassword.equals(newPasswordRepeat)){
-            System.out.println("possible wrong user name: " + username);
             Model.changePasswordServer.changePasswordHandler(username , newPassword);
             new PageLoader().load("logInPage");
         }

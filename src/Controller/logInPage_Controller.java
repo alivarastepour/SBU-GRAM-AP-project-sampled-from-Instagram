@@ -59,6 +59,8 @@ public class logInPage_Controller {
             wrongPass.setVisible(false);
             wrongUsername.setVisible(true);
         }
+        validPassword = false;
+        validUsername = false ;
     }
 
     public void showPassword(ActionEvent actionEvent) {

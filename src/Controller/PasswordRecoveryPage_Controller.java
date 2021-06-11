@@ -57,8 +57,6 @@ public class PasswordRecoveryPage_Controller {
             phoneNumber = this.phoneNumber.getText();
         }else
             email = this.emailAddress.getText();
-        System.out.println("possiblw wrong 1" + username);
-//        passwordRecoveryPageServer.username = username ;
         Model.passwordRecoveryPageServer.passwordRecoveryHandler(username , email , phoneNumber , finalChoose ) ;
         boolean RecoverValidity = passwordRecoveryPageServer.isValidInfo();
         if (RecoverValidity)
