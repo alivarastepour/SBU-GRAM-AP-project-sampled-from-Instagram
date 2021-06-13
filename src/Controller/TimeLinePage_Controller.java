@@ -6,17 +6,11 @@ import Model.post;
 import javafx.collections.FXCollections;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-import java.util.function.Predicate;
+
 
 /**
  <h1>TimeLinePage_Controller </h1>
@@ -59,5 +53,9 @@ public class TimeLinePage_Controller {
 
     public void search(MouseEvent mouseEvent) throws IOException {
         new PageLoader().load("searchPage");
+    }
+
+    public void directs(MouseEvent mouseEvent) throws IOException {
+        new PageLoader().load("allDirectsPage");
     }
 }

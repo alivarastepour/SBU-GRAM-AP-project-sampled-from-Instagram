@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="550.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.allDirectsPage_Controller">
+   <children>
+      <ListView fx:id="allDirects" layoutX="359.0" prefHeight="550.0" prefWidth="535.0" />
+      <ImageView fx:id="directIcon" fitHeight="38.0" fitWidth="33.0" layoutX="106.0" layoutY="223.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Icons/iconfinder-32%20(6).png" />
+         </image>
+      </ImageView>
+      <Label layoutX="139.0" layoutY="229.0" text="SBU GERAM Directs" textFill="#82c440" />
+      <Label layoutX="63.0" layoutY="275.0" text="a safe and easy way to chat with your friends" textFill="#82c440" />
+      <Label fx:id="guide" layoutX="531.0" layoutY="217.0" text="no chat to show!" textFill="#82c440">
+         <font>
+            <Font name="Segoe UI Light" size="31.0" />
+         </font>
+      </Label>
+      <Label fx:id="guide1" layoutX="416.0" layoutY="272.0" text="search for your friends and start a conversation with them" textFill="#82c440">
+         <font>
+            <Font name="Segoe UI Light" size="18.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="42.0" fitWidth="31.0" layoutX="39.0" layoutY="50.0" onMouseClicked="#backToTimeLinePage" opacity="0.2" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Icons/backarrow.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="root" prefHeight="110.0" prefWidth="535.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Circle fx:id="profilePhoto" fill="WHITE" layoutX="56.0" layoutY="51.0" radius="42.0" stroke="WHITE" strokeType="INSIDE" />
+      <Label fx:id="username" layoutX="103.0" layoutY="20.0" prefHeight="21.0" prefWidth="423.0" text="i am username">
+         <font>
+            <Font name="Segoe UI Light" size="24.0" />
+         </font>
+      </Label>
+      <Label fx:id="lastMessage" layoutX="103.0" layoutY="51.0" prefHeight="35.0" prefWidth="413.0" text="i am the message">
+         <font>
+            <Font name="Segoe UI Light" size="21.0" />
+         </font>
+      </Label>
+      <JFXButton onAction="#gotoMessages" prefHeight="110.0" prefWidth="535.0" text="  " />
+   </children>
+</AnchorPane>

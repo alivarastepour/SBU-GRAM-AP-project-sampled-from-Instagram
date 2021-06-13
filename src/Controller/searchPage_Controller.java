@@ -25,6 +25,10 @@ public class searchPage_Controller {
     static String username ;
     public JFXButton mute;
     public JFXButton unmute;
+    public JFXButton direct;
+    public static String directUser ;
+    public static user User ;
+
     //searches for a user using given username
     public void search(ActionEvent actionEvent) throws IOException, ClassNotFoundException {
         String username = searchBox.getText();
@@ -35,12 +39,15 @@ public class searchPage_Controller {
             unfollow.setVisible(false);
             mute.setVisible(false);
             unmute.setVisible(false);
+            direct.setVisible(false);
         }
         else{
+            User = user ;
             searchPage_Controller.username = username ;
             boolean condition = othersProfileServer.followValidity(searchPage_Controller.username , TimeLinePage_Controller.LoggedInUsername);
             boolean condition1 = othersProfileServer.muteValidity(searchPage_Controller.username , TimeLinePage_Controller.LoggedInUsername);
             validUsername.setVisible(false);
+            direct.setVisible(true);
             follow.setVisible(true);
             unfollow.setVisible(true);
             mute.setVisible(true);
@@ -77,5 +84,11 @@ public class searchPage_Controller {
     }
     public void returnToTimeLine(MouseEvent mouseEvent) throws IOException {
         new PageLoader().load("TimeLinePage");
+    }
+
+    public void direct(ActionEvent actionEvent) throws IOException {
+        directUser = searchBox.getText();
+        DirectItemController.user = User ;
+        new PageLoader().load("directPage");
     }
 }

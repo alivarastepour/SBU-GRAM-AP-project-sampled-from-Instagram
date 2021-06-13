@@ -2,7 +2,10 @@ package Model;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * this class is used to build Object so called " user " as individuals who use tha app
@@ -23,6 +26,12 @@ public class user implements Serializable {
     List<user> followersList = new ArrayList<>();
     List<user> followingsList = new ArrayList<>();
     List<user> mutedUsers = new ArrayList<>();
+    Map<user , List<message>> receivedMessages = new HashMap<>();
+    Map<user , List<message>> sentMessages = new HashMap<>();
+
+
+
+
     public String getName() {
         return name;
     }
@@ -32,7 +41,6 @@ public class user implements Serializable {
     }
     public void addMutedUser(user muted){
         mutedUsers.add(muted);
-        System.out.println(this.getUserName() + " muted " + muted);
     }
     public void removeMutedUser(user muted){
         mutedUsers.remove(muted);

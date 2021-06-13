@@ -51,7 +51,6 @@ public class MainServer {
         } catch ( ClassNotFoundException e) {
             e.printStackTrace();
         } catch ( EOFException e) {
-            System.out.println("post file is empty and cant be read");
         } catch ( IOException e) {
             e.printStackTrace();
         }
@@ -229,13 +228,14 @@ public class MainServer {
      * @param username this method tries to find a user by it's 'username'
      * @return defined user
      */
-    private static user findUserByUsername(String username){
+    public static user findUserByUsername(String username){
         user tempUser = null ;
         for (Model.user user : users)
             if (user.getUserName().equals(username))
                 tempUser = user;
         return tempUser;
     }
+
     
     /**
      *
@@ -526,693 +526,727 @@ public class MainServer {
         }
         add_post(post);
     }
+
+    /**
+     * creates an object from message class and adds it to user's sent or received messages
+     * @param message message itself
+     * @param sender sender of message
+     * @param receiver receiver of message
+     * @throws IOException since apply change method is called, the possibility of IOException is not zero
+     */
+    private static void sendTextMessage(String message , user sender , user receiver) throws IOException {
+        message textMessage = new message(message , sender , receiver);
+        for (Model.user user : users) {
+            if (user.getUserName().equals(sender.getUserName()))
+                if (user.sentMessages.get(receiver) == null) {
+                    List<message> list = new ArrayList<>();
+                    list.add(textMessage);
+                    user.sentMessages.put(receiver, list);
+                } else
+                    user.sentMessages.get(receiver).add(textMessage);
+            if (user.getUserName().equals(receiver.getUserName()))
+                if (user.receivedMessages.get(sender) == null) {
+                    List<message> list = new ArrayList<>();
+                    list.add(textMessage);
+                    user.receivedMessages.put(sender, list);
+                } else
+                    user.receivedMessages.get(sender).add(textMessage);
+        }
+        applyChanges(sender.getUserName());
+        applyChanges(receiver.getUserName());
+    }
+
+    /**
+     * returns a map holding users as key and list of user's messages as value
+     * @param user the user who is trying to receive their inbox Messages
+     * @return a map of users to a list of messages
+     */
+    private static Map<user, List<message>> findReceivedMessages(user user){
+        user tempUser = null ;
+        for (Model.user value : users)
+            if (value.getUserName().equals(user.getUserName()))
+                tempUser = value;
+        return tempUser.receivedMessages;
+    }
+    /**
+     * returns a map holding users as key and list of user's messages as value
+     * @param user the user who is trying to receive their sent Messages
+     * @return a map of users to a list of messages
+     */
+    private static Map<user, List<message>> findSentMessages(user user){
+        user tempUser = null ;
+        for (Model.user value : users)
+            if (value.getUserName().equals(user.getUserName()))
+                tempUser = value;
+        return tempUser.sentMessages;
+    }
+
+
+
     /**
      * this is our running server which starts several Threads
      * each Thread does a particular job
      * @param args java default parameters for p-s-v main
      */
     public static void main(String[] args) {
-         new Thread(new Runnable() {
-             //this Thread handles login actions
-            @Override
-            public void run() {
-                while (true){
-                    try {
-                        getUsersInformation();
-                        ServerSocket ServerLogInSocket = new ServerSocket(9094);
-                        Socket logInServerSocket = ServerLogInSocket.accept();
-                        ObjectOutputStream ServerLogInObjectOutputStream = new ObjectOutputStream(logInServerSocket.getOutputStream());
-                        ObjectInputStream ServeLogInObjectInputStream = new ObjectInputStream(logInServerSocket.getInputStream());
-                        String username = ServeLogInObjectInputStream.readUTF();
-                        String password = ServeLogInObjectInputStream.readUTF();
-                        boolean validUser = false ;
-                        for (user value : users)
-                            if (value.getUserName().equals(username)) {
-                                validUser = true;
-                                break;
-                            }
-                        boolean validPassword = false ;
-                        if (usernames.contains(username))
-                            validPassword = userPass.get(username).equals(password) ;
-                        if (validUser && validPassword){
-                            System.out.println("user [ " + username + " ] logged in at : " +  CurrentDateTime.time());
-                            setLoggedInUser(username);
-                        }
-                        ServerLogInObjectOutputStream.writeUTF(validUser + "~~.~~" + validPassword);
-                        ServerLogInObjectOutputStream.flush();
-                        user user = findUserByUsername(username);
-                        ServerLogInObjectOutputStream.writeObject(user);
-                        ServerLogInObjectOutputStream.flush();
-                        ServerLogInSocket.close();
-                        logInServerSocket.close();
-                        ServeLogInObjectInputStream.close();
-                        ServerLogInObjectOutputStream.close();
-    
-                    } catch (IOException e) {
-                        e.printStackTrace();
+        //this Thread handles login actions
+        new Thread(() -> {
+           while (true){
+               try {
+                   getUsersInformation();
+                   ServerSocket ServerLogInSocket = new ServerSocket(9094);
+                   Socket logInServerSocket = ServerLogInSocket.accept();
+                   ObjectOutputStream ServerLogInObjectOutputStream = new ObjectOutputStream(logInServerSocket.getOutputStream());
+                   ObjectInputStream ServeLogInObjectInputStream = new ObjectInputStream(logInServerSocket.getInputStream());
+                   String username = ServeLogInObjectInputStream.readUTF();
+                   String password = ServeLogInObjectInputStream.readUTF();
+                   boolean validUser = false ;
+                   for (user value : users)
+                       if (value.getUserName().equals(username)) {
+                           validUser = true;
+                           break;
+                       }
+                   boolean validPassword = false ;
+                   if (usernames.contains(username))
+                       validPassword = userPass.get(username).equals(password) ;
+                   if (validUser && validPassword){
+                       System.out.println("user [ " + username + " ] logged in at : " +  CurrentDateTime.time());
+                       setLoggedInUser(username);
+                   }
+                   ServerLogInObjectOutputStream.writeUTF(validUser + "~~.~~" + validPassword);
+                   ServerLogInObjectOutputStream.flush();
+                   user user = findUserByUsername(username);
+                   ServerLogInObjectOutputStream.writeObject(user);
+                   ServerLogInObjectOutputStream.flush();
+                   ServerLogInSocket.close();
+                   logInServerSocket.close();
+                   ServeLogInObjectInputStream.close();
+                   ServerLogInObjectOutputStream.close();
+
+               } catch (IOException e) {
+                   e.printStackTrace();
+               }
+           }
+       }).start();
+
+        //this Thread handles signUp actions
+        new Thread(() -> {
+           while (true){
+               try {
+                   ServerSocket serverSignUpSocket = new ServerSocket(9093);
+                   Socket signUpServerSocket = serverSignUpSocket.accept();
+                   DataInputStream serverSignUpDataInputStream = new DataInputStream(signUpServerSocket.getInputStream());
+                   DataOutputStream serverSignUpDataOutputStream = new DataOutputStream(signUpServerSocket.getOutputStream());
+                   String name = serverSignUpDataInputStream.readUTF();
+                   String username = serverSignUpDataInputStream.readUTF();
+                   String password = serverSignUpDataInputStream.readUTF();
+                   String phoneNumber = serverSignUpDataInputStream.readUTF();
+                   String email = serverSignUpDataInputStream.readUTF();
+                   String city = serverSignUpDataInputStream.readUTF();
+                   String profilePhotoAddress = serverSignUpDataInputStream.readUTF();
+                   boolean validUsername = validUsername(username);
+                   validFields(name , username,password,phoneNumber,email, city , profilePhotoAddress);
+                   boolean validPasswordFormation = validPasswordFormation(password);
+                   boolean validEmail = validEmail(email);
+                   boolean validPhoneNumber = validPhoneNumber(phoneNumber);
+                   serverSignUpDataOutputStream.writeBoolean(validUsername);
+                   serverSignUpDataOutputStream.flush();
+                   serverSignUpDataOutputStream.writeBoolean(validPasswordFormation);
+                   serverSignUpDataOutputStream.flush();
+                   serverSignUpDataOutputStream.writeBoolean(validEmail);
+                   serverSignUpDataOutputStream.flush();
+                   serverSignUpDataOutputStream.writeBoolean(validPhoneNumber);
+                   serverSignUpDataOutputStream.flush();
+                   serverSignUpSocket.close();
+                   signUpServerSocket.close();
+                   serverSignUpDataInputStream.close();
+                   serverSignUpDataOutputStream.close();
+               } catch (IOException e) {
+                   e.printStackTrace();
+               }
+           }
+        }).start();
+
+        //this Thread Handles passwordRecovery actions
+        new Thread(() -> {
+            while (true){
+                try {
+                    getUsersInformation();
+                    ServerSocket ServerPasswordRecoverySocket = new ServerSocket(9092);
+                    Socket PasswordRecoveryServerSocket = ServerPasswordRecoverySocket.accept();
+                    DataInputStream serverPasswordRecoveryDataInputStream = new DataInputStream(PasswordRecoveryServerSocket.getInputStream());
+                    DataOutputStream serverPasswordRecoveryDataOutputStream = new DataOutputStream(PasswordRecoveryServerSocket.getOutputStream());
+                    String username = serverPasswordRecoveryDataInputStream.readUTF();
+                    String PorE = serverPasswordRecoveryDataInputStream.readUTF();
+                    boolean action = serverPasswordRecoveryDataInputStream.readBoolean();
+                    boolean userPhoneExistence = false;
+                    boolean userEmailExistence = false;
+                    if (action){
+                        userPhoneExistence = userPhoneExistence(username , PorE) ;
+                        serverPasswordRecoveryDataOutputStream.writeBoolean(userPhoneExistence);
+                    }else{
+                        userEmailExistence = userEmailExistence(username , PorE) ;
+                        serverPasswordRecoveryDataOutputStream.writeBoolean(userEmailExistence);
                     }
+                    serverPasswordRecoveryDataOutputStream.flush();
+                    ServerPasswordRecoverySocket.close();
+                    PasswordRecoveryServerSocket.close();
+                    serverPasswordRecoveryDataInputStream.close();
+                    serverPasswordRecoveryDataOutputStream.close();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }).start();
-         
-         new Thread(new Runnable() {
-             //this Thread handles signUp actions
-             @Override
-             public void run() {
-                while (true){
-                    try {
-                        ServerSocket serverSignUpSocket = new ServerSocket(9093);
-                        Socket signUpServerSocket = serverSignUpSocket.accept();
-                        DataInputStream serverSignUpDataInputStream = new DataInputStream(signUpServerSocket.getInputStream());
-                        DataOutputStream serverSignUpDataOutputStream = new DataOutputStream(signUpServerSocket.getOutputStream());
-                        String name = serverSignUpDataInputStream.readUTF();
-                        String username = serverSignUpDataInputStream.readUTF();
-                        String password = serverSignUpDataInputStream.readUTF();
-                        String phoneNumber = serverSignUpDataInputStream.readUTF();
-                        String email = serverSignUpDataInputStream.readUTF();
-                        String city = serverSignUpDataInputStream.readUTF();
-                        String profilePhotoAddress = serverSignUpDataInputStream.readUTF();
-                        boolean validUsername = validUsername(username);
-                        validFields(name , username,password,phoneNumber,email, city , profilePhotoAddress);
-                        boolean validPasswordFormation = validPasswordFormation(password);
-                        boolean validEmail = validEmail(email);
-                        boolean validPhoneNumber = validPhoneNumber(phoneNumber);
-                        serverSignUpDataOutputStream.writeBoolean(validUsername);
-                        serverSignUpDataOutputStream.flush();
-                        serverSignUpDataOutputStream.writeBoolean(validPasswordFormation);
-                        serverSignUpDataOutputStream.flush();
-                        serverSignUpDataOutputStream.writeBoolean(validEmail);
-                        serverSignUpDataOutputStream.flush();
-                        serverSignUpDataOutputStream.writeBoolean(validPhoneNumber);
-                        serverSignUpDataOutputStream.flush();
-                        serverSignUpSocket.close();
-                        signUpServerSocket.close();
-                        serverSignUpDataInputStream.close();
-                        serverSignUpDataOutputStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+        //this Thread handles changePassword actions
+        new Thread(() -> {
+            while (true){
+                try {
+                    getUsersInformation();
+                    ServerSocket ServerChangePasswordSocket = new ServerSocket(9091);
+                    Socket ChangePasswordServerSocket = ServerChangePasswordSocket.accept();
+                    DataInputStream serverPasswordRecoveryDataInputStream = new DataInputStream(ChangePasswordServerSocket.getInputStream());
+                    DataOutputStream serverPasswordRecoveryDataOutputStream = new DataOutputStream(ChangePasswordServerSocket.getOutputStream());
+                    String username = serverPasswordRecoveryDataInputStream.readUTF();
+                    String password = serverPasswordRecoveryDataInputStream.readUTF();
+                    serverPasswordRecoveryDataOutputStream.writeBoolean(validPasswordFormation(password));
+                    serverPasswordRecoveryDataOutputStream.flush();
+                    if (validPasswordFormation(password)){
+                        changePassword(username , password);
+                        System.out.println("user [ " + username + " ] changed password at " + CurrentDateTime.time());
                     }
-                }
-             }
-         }).start();
-
-         new Thread(new Runnable() {
-             //this Thread Handles passwordRecovery actions
-             @Override
-             public void run() {
-                 while (true){
-                     try {
-                         getUsersInformation();
-                         ServerSocket ServerPasswordRecoverySocket = new ServerSocket(9092);
-                         Socket PasswordRecoveryServerSocket = ServerPasswordRecoverySocket.accept();
-                         DataInputStream serverPasswordRecoveryDataInputStream = new DataInputStream(PasswordRecoveryServerSocket.getInputStream());
-                         DataOutputStream serverPasswordRecoveryDataOutputStream = new DataOutputStream(PasswordRecoveryServerSocket.getOutputStream());
-                         String username = serverPasswordRecoveryDataInputStream.readUTF();
-                         String PorE = serverPasswordRecoveryDataInputStream.readUTF();
-                         boolean action = serverPasswordRecoveryDataInputStream.readBoolean();
-                         boolean userPhoneExistence = false;
-                         boolean userEmailExistence = false;
-                         if (action){
-                             userPhoneExistence = userPhoneExistence(username , PorE) ;
-                             serverPasswordRecoveryDataOutputStream.writeBoolean(userPhoneExistence);
-                         }else{
-                             userEmailExistence = userEmailExistence(username , PorE) ;
-                             serverPasswordRecoveryDataOutputStream.writeBoolean(userEmailExistence);
-                         }
-                         serverPasswordRecoveryDataOutputStream.flush();
-                         ServerPasswordRecoverySocket.close();
-                         PasswordRecoveryServerSocket.close();
-                         serverPasswordRecoveryDataInputStream.close();
-                         serverPasswordRecoveryDataOutputStream.close();
-
-                     } catch (IOException e) {
-                         e.printStackTrace();
-                     }
-                 }
-             }
-         }).start();
-         new Thread(new Runnable() {
-             //this Thread handles changePassword actions
-             @Override
-             public void run() {
-                 while (true){
-                     try {
-                         getUsersInformation();
-                         ServerSocket ServerChangePasswordSocket = new ServerSocket(9091);
-                         Socket ChangePasswordServerSocket = ServerChangePasswordSocket.accept();
-                         DataInputStream serverPasswordRecoveryDataInputStream = new DataInputStream(ChangePasswordServerSocket.getInputStream());
-                         DataOutputStream serverPasswordRecoveryDataOutputStream = new DataOutputStream(ChangePasswordServerSocket.getOutputStream());
-                         String username = serverPasswordRecoveryDataInputStream.readUTF();
-                         String password = serverPasswordRecoveryDataInputStream.readUTF();
-                         serverPasswordRecoveryDataOutputStream.writeBoolean(validPasswordFormation(password));
-                         serverPasswordRecoveryDataOutputStream.flush();
-                         if (validPasswordFormation(password)){
-                             changePassword(username , password);
-                             System.out.println("user [ " + username + " ] changed password at " + CurrentDateTime.time());
-                         }
-                         ServerChangePasswordSocket.close();
-                         ChangePasswordServerSocket.close();
-                         serverPasswordRecoveryDataInputStream.close();
-                         serverPasswordRecoveryDataOutputStream.close();
-                     } catch (IOException e) {
-                         e.printStackTrace();
-                     }
-                 }
-             }
-         }).start();
-         new Thread(new Runnable() {
-             @Override
-             public void run() {
-                 while (true){
-                     try {
-                         getUsersInformation();
-                         ServerSocket changeProfilePhotoSocket = new ServerSocket(9090);
-                         Socket changeProfilePhotoServerSocket = changeProfilePhotoSocket.accept();
-                         DataOutputStream changePhotoDataOutputStream = new DataOutputStream(changeProfilePhotoServerSocket.getOutputStream());
-                         DataInputStream changePhotoDataInputStream = new DataInputStream(changeProfilePhotoServerSocket.getInputStream());
-                         String username = changePhotoDataInputStream.readUTF();
-                         String Address = changePhotoDataInputStream.readUTF();
-                         apply_profilePhotoChange(username , Address);
-                         System.out.println("user [ " + username + " ] changed profilePhoto at " + CurrentDateTime.time());
-                         changeProfilePhotoSocket.close();
-                         changeProfilePhotoServerSocket.close();
-                         changePhotoDataOutputStream.close();
-                         changePhotoDataInputStream.close();
-                     } catch (IOException e) {
-                         e.printStackTrace();
-                     }
-
-                 }
-             }
-         }).start();
-         new Thread(new Runnable() {
-             //this Thread handles ..
-             @Override
-             public void run() {
-                 while (true){
-                     try {
-                         ServerSocket ServerSelfProfileSocket = new ServerSocket(9089);
-                         Socket SelfProfileServerSocket = ServerSelfProfileSocket.accept();
-                         ObjectOutputStream ServerSelfProfileObjectOutputStream = new ObjectOutputStream(SelfProfileServerSocket.getOutputStream());
-                         ObjectInputStream ServerSelfProfileObjectInputStream = new ObjectInputStream(SelfProfileServerSocket.getInputStream());
-                         read_change();
-                         String username = ServerSelfProfileObjectInputStream.readUTF();
-                         user selfUser = findUserByUsername(username);
-                         ServerSelfProfileObjectOutputStream.writeObject(selfUser);
-                         ServerSelfProfileObjectOutputStream.flush();
-                         ServerSelfProfileSocket.close();
-                         SelfProfileServerSocket.close();
-                         ServerSelfProfileObjectInputStream.close();
-                         ServerSelfProfileObjectOutputStream.close();
-                     } catch (IOException e) {
-                         e.printStackTrace();
-                     }
-                 }
-             }
-         }).start();
-         new Thread(new Runnable() {
-             //this thread handles anyChange in profile Details
-             @Override
-             public void run() {
-                while (true){
-                    try {
-                        ServerSocket ServerChangeProfileDetailsSocket = new ServerSocket(9088);
-                        Socket ChangeProfileDetailsServerSocket = ServerChangeProfileDetailsSocket.accept();
-                        ObjectOutputStream ChangeProfileDetailsObjectOutputStream = new ObjectOutputStream(ChangeProfileDetailsServerSocket.getOutputStream());
-                        ObjectInputStream ChangeProfileDetailsObjectInputStream = new ObjectInputStream(ChangeProfileDetailsServerSocket.getInputStream());
-                        Map<String , String > map = (Map<String, String>) ChangeProfileDetailsObjectInputStream.readObject();
-                        changeProfileDetails(map);
-                        boolean validPassword  = false;
-                        if (map.get("password") != null)
-                             validPassword = validPasswordFormation(map.get("password"));
-                        boolean validEmail = false ;
-                        if (map.get("email") != null)
-                            validEmail = validEmail(map.get("email"));
-                        boolean validPhoneNumber = false ;
-                        if (map.get("phoneNumber") != null)
-                            validPhoneNumber = validPhoneNumber(map.get("phoneNumber"));
-                        boolean validCity = false ;
-                        if (map.get("city") != null)
-                            validCity = !map.get("city").contains(" ");
-                        boolean validName = false ;
-                        if (map.get("name") != null)
-                            validName = !map.get("name").contains(" ");
-                        ChangeProfileDetailsObjectOutputStream.writeBoolean(validPassword);
-                        ChangeProfileDetailsObjectOutputStream.flush();
-                        ChangeProfileDetailsObjectOutputStream.writeBoolean(validEmail);
-                        ChangeProfileDetailsObjectOutputStream.flush();
-                        ChangeProfileDetailsObjectOutputStream.writeBoolean(validPhoneNumber);
-                        ChangeProfileDetailsObjectOutputStream.flush();
-                        ChangeProfileDetailsObjectOutputStream.writeBoolean(validCity);
-                        ChangeProfileDetailsObjectOutputStream.flush();
-                        ChangeProfileDetailsObjectOutputStream.writeBoolean(validName);
-                        ChangeProfileDetailsObjectOutputStream.flush();
-                        ServerChangeProfileDetailsSocket.close();
-                        ChangeProfileDetailsServerSocket.close();
-                        ChangeProfileDetailsObjectOutputStream.close();
-                        ChangeProfileDetailsObjectInputStream.close();
-                    } catch (IOException | ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                }
-             }
-         }).start();
-         
-         new Thread(new Runnable() {
-             //this Thread handles new post Actions
-             @Override
-             public void run() {
-                    while (true){
-                        try {
-                            ServerSocket newPostSocket = new ServerSocket(9087);
-                            Socket newPostServerSocket = newPostSocket.accept();
-                            ObjectOutputStream newPosObjectOutputStream = new ObjectOutputStream(newPostServerSocket.getOutputStream());
-                            ObjectInputStream newPostObjectInputStream = new ObjectInputStream(newPostServerSocket.getInputStream());
-                            post post = (Model.post) newPostObjectInputStream.readObject();
-                            posts.add(post);
-                            System.out.println("user [ " + post.getPublisherUser().getUserName() + " ] added a new post " + CurrentDateTime.time());
-                            add_post(post);
-                            newPostSocket.close();
-                            newPostServerSocket.close();
-                            newPosObjectOutputStream.close();
-                            newPostObjectInputStream.close();
-                        } catch (IOException | ClassNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                    }
-             }
-         }).start();
-         
-         new Thread(new Runnable() {
-             //this Thread returns a list of posts
-             @Override
-             public void run() {
-                while (true){
-                    try {
-                        ServerSocket TimeLineSocket = new ServerSocket(9086);
-                        Socket TimeLineSocketServerSocket = TimeLineSocket.accept();
-                        ObjectOutputStream TimeLineObjectOutputStream = new ObjectOutputStream(TimeLineSocketServerSocket.getOutputStream());
-                        ObjectInputStream TimeLineObjectInputStream = new ObjectInputStream(TimeLineSocketServerSocket.getInputStream());
-                        read_change();
-                        String username = TimeLineObjectInputStream.readUTF();
-                        List<post> postsForUsername = findPostsForUsername(username);
-                        TimeLineObjectOutputStream.writeObject(postsForUsername);
-                        TimeLineObjectOutputStream.flush();
-                        TimeLineSocket.close();
-                        TimeLineSocketServerSocket.close();
-                        TimeLineObjectOutputStream.close();
-                        TimeLineObjectInputStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-             }
-         }).start();
-         
-         new Thread(new Runnable() {
-             //this Thread handles a follow process
-             @Override
-             public void run() {
-                while (true){
-                    try {
-                        ServerSocket FollowSocket = new ServerSocket(9085);
-                        Socket FollowServerSocket = FollowSocket.accept();
-                        DataOutputStream FollowDataOutputStream = new DataOutputStream(FollowServerSocket.getOutputStream());
-                        DataInputStream FollowDataInputStream = new DataInputStream(FollowServerSocket.getInputStream());
-                        String whoIsFollowed = FollowDataInputStream.readUTF();
-                        String whoIsFollowing = FollowDataInputStream.readUTF();
-                        if (!xFollowsY(whoIsFollowed,whoIsFollowing)){
-                            followProgress(whoIsFollowed , whoIsFollowing) ;
-                            System.out.println(whoIsFollowing + " started following " + whoIsFollowed);
-                        }
-                        FollowSocket.close();
-                        FollowServerSocket.close();
-                        FollowDataOutputStream.close();
-                        FollowDataInputStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-             }
-         }).start();
-
-         new Thread(new Runnable() {
-             //this Thread Checks if a user is already followed
-             @Override
-             public void run() {
-                 while (true){
-                     try {
-                         ServerSocket FollowSearchSocket = new ServerSocket(9084);
-                         Socket FollowSearchServerSocket = FollowSearchSocket.accept();
-                         DataOutputStream FollowSearchDataOutputStream = new DataOutputStream(FollowSearchServerSocket.getOutputStream());
-                         DataInputStream FollowSearchDataInputStream = new DataInputStream(FollowSearchServerSocket.getInputStream());
-                         String y = FollowSearchDataInputStream.readUTF();
-                         String x = FollowSearchDataInputStream.readUTF();
-                         FollowSearchDataOutputStream.writeBoolean(xFollowsY(y,x));
-                         FollowSearchDataOutputStream.flush();
-                         FollowSearchSocket.close();
-                         FollowSearchServerSocket.close();
-                         FollowSearchDataOutputStream.close();
-                         FollowSearchDataInputStream.close();
-                     } catch (IOException e) {
-                         e.printStackTrace();
-                     }
-                 }
-             }
-         }).start();
-
-         new Thread(new Runnable() {
-             //this Thread Handles unFollowing Progress
-             @Override
-             public void run() {
-                 while (true){
-                     try {
-                         ServerSocket unFollowSocket = new ServerSocket(9083);
-                         Socket unFollowServerSocket = unFollowSocket.accept();
-                         DataOutputStream unFollowDataOutputStream = new DataOutputStream(unFollowServerSocket.getOutputStream());
-                         DataInputStream unFollowDataInputStream = new DataInputStream(unFollowServerSocket.getInputStream());
-                         String y = unFollowDataInputStream.readUTF();
-                         String x = unFollowDataInputStream.readUTF();
-                         unFollowProgress(y,x);
-                         System.out.println(x + " unfollowed " + y + " at " + CurrentDateTime.time());
-                         unFollowSocket.close();
-                         unFollowServerSocket.close();
-                         unFollowDataOutputStream.close();
-                         unFollowDataInputStream.close();
-                     } catch (IOException e) {
-                         e.printStackTrace();
-                     }
-                 }
-             }
-         }).start();
-
-         new Thread(new Runnable() {
-             //this Thread handles muting Process
-             @Override
-             public void run() {
-                 while (true){
-                     try {
-                         ServerSocket muteSocket = new ServerSocket(9082);
-                         Socket muteServerSocket = muteSocket.accept();
-                         DataOutputStream muteDataOutputStream = new DataOutputStream(muteServerSocket.getOutputStream());
-                         DataInputStream muteDataInputStream = new DataInputStream(muteServerSocket.getInputStream());
-                         String muter = muteDataInputStream.readUTF();
-                         String muted = muteDataInputStream.readUTF();
-                         muteProgress(muter , muted);
-                         System.out.println(muter + " muted " + muted + " at " + CurrentDateTime.time());
-                         muteSocket.close();
-                         muteServerSocket.close();
-                         muteDataOutputStream.close();
-                         muteDataInputStream.close();
-                     } catch (IOException e) {
-                         e.printStackTrace();
-                     }
-                 }
-             }
-         }).start();
-
-         new Thread(new Runnable() {
-             //this Thread checks if a user is already muted
-             @Override
-             public void run() {
-                 while(true){
-                     try {
-                         ServerSocket muteSearchSocket = new ServerSocket(45554);
-                         Socket muteSearchServerSocket = muteSearchSocket.accept();
-                         DataOutputStream muteSearchDataOutputStream = new DataOutputStream(muteSearchServerSocket.getOutputStream());
-                         DataInputStream muteSearchDataInputStream = new DataInputStream(muteSearchServerSocket.getInputStream());
-                         String muted = muteSearchDataInputStream.readUTF();
-                         String muter = muteSearchDataInputStream.readUTF();
-                         muteSearchDataOutputStream.writeBoolean(xMutesY(muter , muted));
-                         muteSearchDataOutputStream.flush();
-                         muteSearchSocket.close();
-                         muteSearchServerSocket.close();
-                         muteSearchDataOutputStream.close();
-                         muteSearchDataInputStream.close();
-                     } catch (IOException e) {
-                         e.printStackTrace();
-                     }
-                 }
-
-             }
-         }).start();
-
-         new Thread(new Runnable() {
-             //this Thread handles unMuting Progress
-             @Override
-             public void run() {
-                 while (true){
-                     try {
-                         ServerSocket unmuteSocket = new ServerSocket(9080);
-                         Socket unmuteServerSocket = unmuteSocket.accept();
-                         DataOutputStream unmuteDataOutputStream = new DataOutputStream(unmuteServerSocket.getOutputStream());
-                         DataInputStream unmuteDataInputStream = new DataInputStream(unmuteServerSocket.getInputStream());
-                         String unmuter = unmuteDataInputStream.readUTF();
-                         String unmuted = unmuteDataInputStream.readUTF();
-                         unmuteProgress(unmuter , unmuted);
-                         System.out.println(unmuter + " unmuted " + unmuted + " at " + CurrentDateTime.time());
-                         unmuteSocket.close();
-                         unmuteServerSocket.close();
-                         unmuteDataOutputStream.close();
-                         unmuteDataInputStream.close();
-                     } catch (IOException e) {
-                         e.printStackTrace();
-                     }
-                 }
-             }
-         }).start();
-
-         new Thread(new Runnable() {
-             //this Thread Handles search actions
-             @Override
-             public void run() {
-                 while (true){
-                     try {
-                         ServerSocket searchSocket = new ServerSocket(9079);
-                         Socket searchServerSocket = searchSocket.accept();
-                         ObjectOutputStream searchObjectOutputStream = new ObjectOutputStream(searchServerSocket.getOutputStream());
-                         ObjectInputStream searchObjectInputStream = new ObjectInputStream(searchServerSocket.getInputStream());
-                         String username = searchObjectInputStream.readUTF();
-                         if (findUserByUsername(username) != null)
-                            searchObjectOutputStream.writeObject(findUserByUsername(username));
-                         else
-                             searchObjectOutputStream.writeObject(null);
-                         searchObjectOutputStream.flush();
-                         searchSocket.close();
-                         searchServerSocket.close();
-                         searchObjectOutputStream.close();
-                         searchObjectInputStream.close();
-                     } catch (IOException e) {
-                         e.printStackTrace();
-                     }
-                 }
-             }
-         }).start();
-         
-         new Thread(new Runnable() {
-             //this Thread searches for post like's
-             @Override
-             public void run() {
-                 while (true){
-                     try {
-                         ServerSocket searchLikesSocket = new ServerSocket(9078);
-                         Socket searchLikesServerSocket = searchLikesSocket.accept();
-                         ObjectOutputStream searchLikesObjectOutputStream = new ObjectOutputStream(searchLikesServerSocket.getOutputStream());
-                         ObjectInputStream searchLikesObjectInputStream = new ObjectInputStream(searchLikesServerSocket.getInputStream());
-                         post post = (Model.post) searchLikesObjectInputStream.readObject();
-                         String username = searchLikesObjectInputStream.readUTF();
-                         read_change();
-                         boolean condition = searchLikes(post , username);
-                         searchLikesObjectOutputStream.writeBoolean(condition);
-                         searchLikesObjectOutputStream.flush();
-                         searchLikesSocket.close();
-                         searchLikesServerSocket.close();
-                         searchLikesObjectOutputStream.close();
-                         searchLikesObjectInputStream.close();
-                     } catch (IOException | ClassNotFoundException e) {
-                         e.printStackTrace();
-                     }
-                 }
-             }
-         }).start();
-         
-         new Thread(new Runnable() {
-             //this Thread handles adding like progress
-             @Override
-             public void run() {
-                while (true){
-                    try {
-                        ServerSocket addLikeSocket = new ServerSocket(9077);
-                        Socket addLikeServerSocket = addLikeSocket.accept();
-                        ObjectOutputStream searchLikesObjectOutputStream = new ObjectOutputStream(addLikeServerSocket.getOutputStream());
-                        ObjectInputStream searchLikesObjectInputStream = new ObjectInputStream(addLikeServerSocket.getInputStream());
-                        post post = (Model.post) searchLikesObjectInputStream.readObject();
-                        String username = searchLikesObjectInputStream.readUTF();
-                        addLike(post , username);
-                        System.out.println(username + " liked a post by "  + post.getPublisherUser().getUserName() + " at " + CurrentDateTime.time());
-                        addLikeSocket.close();
-                        addLikeServerSocket.close();
-                        searchLikesObjectOutputStream.close();
-                        searchLikesObjectInputStream.close();
-                    } catch (IOException | ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                }
-             }
-         }).start();
-    
-        new Thread(new Runnable() {
-            //this thread handles removing like progress
-            @Override
-            public void run() {
-                while (true){
-                    try {
-                        ServerSocket removeLikeSocket = new ServerSocket(9076);
-                        Socket removeLikeServerSocket = removeLikeSocket.accept();
-                        ObjectOutputStream searchLikesObjectOutputStream = new ObjectOutputStream(removeLikeServerSocket.getOutputStream());
-                        ObjectInputStream searchLikesObjectInputStream = new ObjectInputStream(removeLikeServerSocket.getInputStream());
-                        post post = (Model.post) searchLikesObjectInputStream.readObject();
-                        String username = searchLikesObjectInputStream.readUTF();
-                        removeLike(post , username);
-                        System.out.println(username + " removed a like from post by "  + post.getPublisherUser().getUserName() + " at " + CurrentDateTime.time());
-                        removeLikeSocket.close();
-                        removeLikeServerSocket.close();
-                        searchLikesObjectOutputStream.close();
-                        searchLikesObjectInputStream.close();
-                    } catch (IOException | ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
+                    ServerChangePasswordSocket.close();
+                    ChangePasswordServerSocket.close();
+                    serverPasswordRecoveryDataInputStream.close();
+                    serverPasswordRecoveryDataOutputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }).start();
-        
-        new Thread(new Runnable() {
-            //this Thread removes a user's acc
-            @Override
-            public void run() {
-                while (true){
-                    try {
-                        ServerSocket deleteAccSocket = new ServerSocket(9075);
-                        Socket deleteAccServerSocket = deleteAccSocket.accept();
-                        DataOutputStream deleteAccDataOutputStream = new DataOutputStream(deleteAccServerSocket.getOutputStream());
-                        DataInputStream deleteAccDataInputStream = new DataInputStream(deleteAccServerSocket.getInputStream());
-                        String username = deleteAccDataInputStream.readUTF();
-                        delete_account(username);
-                        System.out.println(username + " deleted their account at " + CurrentDateTime.time());
-                        deleteAccSocket.close();
-                        deleteAccServerSocket.close();
-                        deleteAccDataOutputStream.close();
-                        deleteAccDataInputStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+         new Thread(() -> {
+             while (true){
+                 try {
+                     getUsersInformation();
+                     ServerSocket changeProfilePhotoSocket = new ServerSocket(9090);
+                     Socket changeProfilePhotoServerSocket = changeProfilePhotoSocket.accept();
+                     DataOutputStream changePhotoDataOutputStream = new DataOutputStream(changeProfilePhotoServerSocket.getOutputStream());
+                     DataInputStream changePhotoDataInputStream = new DataInputStream(changeProfilePhotoServerSocket.getInputStream());
+                     String username = changePhotoDataInputStream.readUTF();
+                     String Address = changePhotoDataInputStream.readUTF();
+                     apply_profilePhotoChange(username , Address);
+                     System.out.println("user [ " + username + " ] changed profilePhoto at " + CurrentDateTime.time());
+                     changeProfilePhotoSocket.close();
+                     changeProfilePhotoServerSocket.close();
+                     changePhotoDataOutputStream.close();
+                     changePhotoDataInputStream.close();
+                 } catch (IOException e) {
+                     e.printStackTrace();
+                 }
+
+             }
+         }).start();
+        //this Thread handles ..
+        new Thread(() -> {
+            while (true){
+                try {
+                    ServerSocket ServerSelfProfileSocket = new ServerSocket(9089);
+                    Socket SelfProfileServerSocket = ServerSelfProfileSocket.accept();
+                    ObjectOutputStream ServerSelfProfileObjectOutputStream = new ObjectOutputStream(SelfProfileServerSocket.getOutputStream());
+                    ObjectInputStream ServerSelfProfileObjectInputStream = new ObjectInputStream(SelfProfileServerSocket.getInputStream());
+                    read_change();
+                    String username = ServerSelfProfileObjectInputStream.readUTF();
+                    user selfUser = findUserByUsername(username);
+                    ServerSelfProfileObjectOutputStream.writeObject(selfUser);
+                    ServerSelfProfileObjectOutputStream.flush();
+                    ServerSelfProfileSocket.close();
+                    SelfProfileServerSocket.close();
+                    ServerSelfProfileObjectInputStream.close();
+                    ServerSelfProfileObjectOutputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }).start();
-        
-        new Thread(new Runnable() {
-            //this Thread handles reposting actions
-            @Override
-            public void run() {
-                while (true){
-                    try {
-                        ServerSocket rePostSocket = new ServerSocket(9074);
-                        Socket rePostServerSocket = rePostSocket.accept();
-                        ObjectOutputStream rePostObjectOutputStream = new ObjectOutputStream(rePostServerSocket.getOutputStream());
-                        ObjectInputStream rePostObjectInputStream = new ObjectInputStream(rePostServerSocket.getInputStream());
-                        post post = (Model.post) rePostObjectInputStream.readObject();
-                        user user = findUserByUsername(rePostObjectInputStream.readUTF());
-                        post.setPublisherUser(user);
-                        post.setTime(System.currentTimeMillis());
-                        post.setFormattedTime(CurrentDateTime.time());
-                        for (Model.post value : posts)
-                            if (value.getAuthorUser().getUserName().equals(post.getAuthorUser().getUserName()))
-                                value.addReposts();
-                        posts.add(post);
-                        add_post(post);
-                        System.out.println(user.getUserName() + " reposted a post from " + post.getAuthorUser().getUserName() + " at :" +CurrentDateTime.time());
-                        rePostSocket.close();
-                        rePostServerSocket.close();
-                        rePostObjectOutputStream.close();
-                        rePostObjectInputStream.close();
-                    } catch (IOException | ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+        //this thread handles anyChange in profile Details
+        new Thread(() -> {
+           while (true){
+               try {
+                   ServerSocket ServerChangeProfileDetailsSocket = new ServerSocket(9088);
+                   Socket ChangeProfileDetailsServerSocket = ServerChangeProfileDetailsSocket.accept();
+                   ObjectOutputStream ChangeProfileDetailsObjectOutputStream = new ObjectOutputStream(ChangeProfileDetailsServerSocket.getOutputStream());
+                   ObjectInputStream ChangeProfileDetailsObjectInputStream = new ObjectInputStream(ChangeProfileDetailsServerSocket.getInputStream());
+                   Map<String , String > map = (Map<String, String>) ChangeProfileDetailsObjectInputStream.readObject();
+                   changeProfileDetails(map);
+                   boolean validPassword  = false;
+                   if (map.get("password") != null)
+                        validPassword = validPasswordFormation(map.get("password"));
+                   boolean validEmail = false ;
+                   if (map.get("email") != null)
+                       validEmail = validEmail(map.get("email"));
+                   boolean validPhoneNumber = false ;
+                   if (map.get("phoneNumber") != null)
+                       validPhoneNumber = validPhoneNumber(map.get("phoneNumber"));
+                   boolean validCity = false ;
+                   if (map.get("city") != null)
+                       validCity = !map.get("city").contains(" ");
+                   boolean validName = false ;
+                   if (map.get("name") != null)
+                       validName = !map.get("name").contains(" ");
+                   ChangeProfileDetailsObjectOutputStream.writeBoolean(validPassword);
+                   ChangeProfileDetailsObjectOutputStream.flush();
+                   ChangeProfileDetailsObjectOutputStream.writeBoolean(validEmail);
+                   ChangeProfileDetailsObjectOutputStream.flush();
+                   ChangeProfileDetailsObjectOutputStream.writeBoolean(validPhoneNumber);
+                   ChangeProfileDetailsObjectOutputStream.flush();
+                   ChangeProfileDetailsObjectOutputStream.writeBoolean(validCity);
+                   ChangeProfileDetailsObjectOutputStream.flush();
+                   ChangeProfileDetailsObjectOutputStream.writeBoolean(validName);
+                   ChangeProfileDetailsObjectOutputStream.flush();
+                   ServerChangeProfileDetailsSocket.close();
+                   ChangeProfileDetailsServerSocket.close();
+                   ChangeProfileDetailsObjectOutputStream.close();
+                   ChangeProfileDetailsObjectInputStream.close();
+               } catch (IOException | ClassNotFoundException e) {
+                   e.printStackTrace();
+               }
+           }
         }).start();
-        
-        new Thread(new Runnable() {
-            //this Thread loads previous comments
-            @Override
-            public void run() {
-                while (true){
-                    try {
-                        ServerSocket commentsSocket = new ServerSocket(9073);
-                        Socket commentsServerSocket = commentsSocket.accept();
-                        ObjectOutputStream objectOutputStream = new ObjectOutputStream(commentsServerSocket.getOutputStream());
-                        ObjectInputStream objectInputStream = new ObjectInputStream(commentsServerSocket.getInputStream());
-                        post post = (Model.post) objectInputStream.readObject();
-                        List<comment> commentList = findCommentsForPost(post);
-                        objectOutputStream.writeObject(commentList);
-                        objectOutputStream.flush();
-                        commentsServerSocket.close();
-                        objectOutputStream.close();
-                        commentsSocket.close();
-                        objectInputStream.close();
-                    } catch (IOException | ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+
+        //this Thread handles new post Actions
+        new Thread(() -> {
+               while (true){
+                   try {
+                       ServerSocket newPostSocket = new ServerSocket(9087);
+                       Socket newPostServerSocket = newPostSocket.accept();
+                       ObjectOutputStream newPosObjectOutputStream = new ObjectOutputStream(newPostServerSocket.getOutputStream());
+                       ObjectInputStream newPostObjectInputStream = new ObjectInputStream(newPostServerSocket.getInputStream());
+                       post post = (Model.post) newPostObjectInputStream.readObject();
+                       posts.add(post);
+                       System.out.println("user [ " + post.getPublisherUser().getUserName() + " ] added a new post " + CurrentDateTime.time());
+                       add_post(post);
+                       newPostSocket.close();
+                       newPostServerSocket.close();
+                       newPosObjectOutputStream.close();
+                       newPostObjectInputStream.close();
+                   } catch (IOException | ClassNotFoundException e) {
+                       e.printStackTrace();
+                   }
+               }
         }).start();
-        
-        new Thread(new Runnable() {
-            //this Thread handles comment adding progress
-            @Override
-            public void run() {
-                while (true){
-                    try {
-                        ServerSocket commentsSocket = new ServerSocket(9072);
-                        Socket commentsServerSocket = commentsSocket.accept();
-                        ObjectOutputStream commentsObjectOutputStream = new ObjectOutputStream(commentsServerSocket.getOutputStream());
-                        ObjectInputStream commentsObjectInputStream = new ObjectInputStream(commentsServerSocket.getInputStream());
-                        comment comment = (Model.comment) commentsObjectInputStream.readObject();
-                        post post = (Model.post) commentsObjectInputStream.readObject();
-                        addCommentToPost(comment , post) ;
-                        System.out.println(comment.getAuthor() + " added a new comment to " + post.getAuthorUser().getUserName() + "'s post : " + comment.getComment() + " at " + CurrentDateTime.time());
-                        commentsSocket.close();
-                        commentsServerSocket.close();
-                        commentsObjectOutputStream.close();
-                        commentsObjectInputStream.close();
-                    } catch (IOException | ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
+
+        //this Thread returns a list of posts
+        new Thread(() -> {
+           while (true){
+               try {
+                   ServerSocket TimeLineSocket = new ServerSocket(9086);
+                   Socket TimeLineSocketServerSocket = TimeLineSocket.accept();
+                   ObjectOutputStream TimeLineObjectOutputStream = new ObjectOutputStream(TimeLineSocketServerSocket.getOutputStream());
+                   ObjectInputStream TimeLineObjectInputStream = new ObjectInputStream(TimeLineSocketServerSocket.getInputStream());
+                   read_change();
+                   String username = TimeLineObjectInputStream.readUTF();
+                   List<post> postsForUsername = findPostsForUsername(username);
+                   TimeLineObjectOutputStream.writeObject(postsForUsername);
+                   TimeLineObjectOutputStream.flush();
+                   TimeLineSocket.close();
+                   TimeLineSocketServerSocket.close();
+                   TimeLineObjectOutputStream.close();
+                   TimeLineObjectInputStream.close();
+               } catch (IOException e) {
+                   e.printStackTrace();
+               }
+           }
+        }).start();
+
+        //this Thread handles a follow process
+        new Thread(() -> {
+           while (true){
+               try {
+                   ServerSocket FollowSocket = new ServerSocket(9085);
+                   Socket FollowServerSocket = FollowSocket.accept();
+                   DataOutputStream FollowDataOutputStream = new DataOutputStream(FollowServerSocket.getOutputStream());
+                   DataInputStream FollowDataInputStream = new DataInputStream(FollowServerSocket.getInputStream());
+                   String whoIsFollowed = FollowDataInputStream.readUTF();
+                   String whoIsFollowing = FollowDataInputStream.readUTF();
+                   if (!xFollowsY(whoIsFollowed,whoIsFollowing)){
+                       followProgress(whoIsFollowed , whoIsFollowing) ;
+                       System.out.println(whoIsFollowing + " started following " + whoIsFollowed);
+                   }
+                   FollowSocket.close();
+                   FollowServerSocket.close();
+                   FollowDataOutputStream.close();
+                   FollowDataInputStream.close();
+               } catch (IOException e) {
+                   e.printStackTrace();
+               }
+           }
+        }).start();
+
+        //this Thread Checks if a user is already followed
+        new Thread(() -> {
+            while (true){
+                try {
+                    ServerSocket FollowSearchSocket = new ServerSocket(9084);
+                    Socket FollowSearchServerSocket = FollowSearchSocket.accept();
+                    DataOutputStream FollowSearchDataOutputStream = new DataOutputStream(FollowSearchServerSocket.getOutputStream());
+                    DataInputStream FollowSearchDataInputStream = new DataInputStream(FollowSearchServerSocket.getInputStream());
+                    String y = FollowSearchDataInputStream.readUTF();
+                    String x = FollowSearchDataInputStream.readUTF();
+                    FollowSearchDataOutputStream.writeBoolean(xFollowsY(y,x));
+                    FollowSearchDataOutputStream.flush();
+                    FollowSearchSocket.close();
+                    FollowSearchServerSocket.close();
+                    FollowSearchDataOutputStream.close();
+                    FollowSearchDataInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }).start();
 
-        new Thread(new Runnable() {
-            //this Thread searches for self user posts(to show in profilePage)
-            @Override
-            public void run() {
-                while (true){
-                    try {
-                        ServerSocket selfPostsSocket = new ServerSocket(9071);
-                        Socket selfPostsServerSocket = selfPostsSocket.accept();
-                        ObjectOutputStream selfPostsObjectOutputStream = new ObjectOutputStream(selfPostsServerSocket.getOutputStream());
-                        ObjectInputStream selfPostsObjectInputStream = new ObjectInputStream(selfPostsServerSocket.getInputStream());
-                        String username = selfPostsObjectInputStream.readUTF();
-                        List<post> postList = posts.stream().filter(a->a.getPublisherUser().getUserName().equals(username)).collect(Collectors.toList());
-                        selfPostsObjectOutputStream.writeObject(postList);
-                        selfPostsObjectOutputStream.flush();
-                        selfPostsSocket.close();
-                        selfPostsServerSocket.close();
-                        selfPostsObjectOutputStream.close();
-                        selfPostsObjectInputStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+        //this Thread Handles unFollowing Progress
+        new Thread(() -> {
+            while (true){
+                try {
+                    ServerSocket unFollowSocket = new ServerSocket(9083);
+                    Socket unFollowServerSocket = unFollowSocket.accept();
+                    DataOutputStream unFollowDataOutputStream = new DataOutputStream(unFollowServerSocket.getOutputStream());
+                    DataInputStream unFollowDataInputStream = new DataInputStream(unFollowServerSocket.getInputStream());
+                    String y = unFollowDataInputStream.readUTF();
+                    String x = unFollowDataInputStream.readUTF();
+                    unFollowProgress(y,x);
+                    System.out.println(x + " unfollowed " + y + " at " + CurrentDateTime.time());
+                    unFollowSocket.close();
+                    unFollowServerSocket.close();
+                    unFollowDataOutputStream.close();
+                    unFollowDataInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        //this Thread handles muting Process
+        new Thread(() -> {
+            while (true){
+                try {
+                    ServerSocket muteSocket = new ServerSocket(9082);
+                    Socket muteServerSocket = muteSocket.accept();
+                    DataOutputStream muteDataOutputStream = new DataOutputStream(muteServerSocket.getOutputStream());
+                    DataInputStream muteDataInputStream = new DataInputStream(muteServerSocket.getInputStream());
+                    String muter = muteDataInputStream.readUTF();
+                    String muted = muteDataInputStream.readUTF();
+                    muteProgress(muter , muted);
+                    System.out.println(muter + " muted " + muted + " at " + CurrentDateTime.time());
+                    muteSocket.close();
+                    muteServerSocket.close();
+                    muteDataOutputStream.close();
+                    muteDataInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        //this Thread checks if a user is already muted
+        new Thread(() -> {
+            while(true){
+                try {
+                    ServerSocket muteSearchSocket = new ServerSocket(45554);
+                    Socket muteSearchServerSocket = muteSearchSocket.accept();
+                    DataOutputStream muteSearchDataOutputStream = new DataOutputStream(muteSearchServerSocket.getOutputStream());
+                    DataInputStream muteSearchDataInputStream = new DataInputStream(muteSearchServerSocket.getInputStream());
+                    String muted = muteSearchDataInputStream.readUTF();
+                    String muter = muteSearchDataInputStream.readUTF();
+                    muteSearchDataOutputStream.writeBoolean(xMutesY(muter , muted));
+                    muteSearchDataOutputStream.flush();
+                    muteSearchSocket.close();
+                    muteSearchServerSocket.close();
+                    muteSearchDataOutputStream.close();
+                    muteSearchDataInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }).start();
+
+        //this Thread handles unMuting Progress
+        new Thread(() -> {
+            while (true){
+                try {
+                    ServerSocket unmuteSocket = new ServerSocket(9080);
+                    Socket unmuteServerSocket = unmuteSocket.accept();
+                    DataOutputStream unmuteDataOutputStream = new DataOutputStream(unmuteServerSocket.getOutputStream());
+                    DataInputStream unmuteDataInputStream = new DataInputStream(unmuteServerSocket.getInputStream());
+                    String unmuter = unmuteDataInputStream.readUTF();
+                    String unmuted = unmuteDataInputStream.readUTF();
+                    unmuteProgress(unmuter , unmuted);
+                    System.out.println(unmuter + " unmuted " + unmuted + " at " + CurrentDateTime.time());
+                    unmuteSocket.close();
+                    unmuteServerSocket.close();
+                    unmuteDataOutputStream.close();
+                    unmuteDataInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        //this Thread Handles search actions
+        new Thread(() -> {
+            while (true){
+                try {
+                    ServerSocket searchSocket = new ServerSocket(9079);
+                    Socket searchServerSocket = searchSocket.accept();
+                    ObjectOutputStream searchObjectOutputStream = new ObjectOutputStream(searchServerSocket.getOutputStream());
+                    ObjectInputStream searchObjectInputStream = new ObjectInputStream(searchServerSocket.getInputStream());
+                    String username = searchObjectInputStream.readUTF();
+                    if (findUserByUsername(username) != null)
+                       searchObjectOutputStream.writeObject(findUserByUsername(username));
+                    else
+                        searchObjectOutputStream.writeObject(null);
+                    searchObjectOutputStream.flush();
+                    searchSocket.close();
+                    searchServerSocket.close();
+                    searchObjectOutputStream.close();
+                    searchObjectInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        //this Thread searches for post like's
+        new Thread(() -> {
+            while (true){
+                try {
+                    ServerSocket searchLikesSocket = new ServerSocket(9078);
+                    Socket searchLikesServerSocket = searchLikesSocket.accept();
+                    ObjectOutputStream searchLikesObjectOutputStream = new ObjectOutputStream(searchLikesServerSocket.getOutputStream());
+                    ObjectInputStream searchLikesObjectInputStream = new ObjectInputStream(searchLikesServerSocket.getInputStream());
+                    post post = (Model.post) searchLikesObjectInputStream.readObject();
+                    String username = searchLikesObjectInputStream.readUTF();
+                    read_change();
+                    boolean condition = searchLikes(post , username);
+                    searchLikesObjectOutputStream.writeBoolean(condition);
+                    searchLikesObjectOutputStream.flush();
+                    searchLikesSocket.close();
+                    searchLikesServerSocket.close();
+                    searchLikesObjectOutputStream.close();
+                    searchLikesObjectInputStream.close();
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        //this Thread handles adding like progress
+        new Thread(() -> {
+           while (true){
+               try {
+                   ServerSocket addLikeSocket = new ServerSocket(9077);
+                   Socket addLikeServerSocket = addLikeSocket.accept();
+                   ObjectOutputStream searchLikesObjectOutputStream = new ObjectOutputStream(addLikeServerSocket.getOutputStream());
+                   ObjectInputStream searchLikesObjectInputStream = new ObjectInputStream(addLikeServerSocket.getInputStream());
+                   post post = (Model.post) searchLikesObjectInputStream.readObject();
+                   String username = searchLikesObjectInputStream.readUTF();
+                   addLike(post , username);
+                   System.out.println(username + " liked a post by "  + post.getPublisherUser().getUserName() + " at " + CurrentDateTime.time());
+                   addLikeSocket.close();
+                   addLikeServerSocket.close();
+                   searchLikesObjectOutputStream.close();
+                   searchLikesObjectInputStream.close();
+               } catch (IOException | ClassNotFoundException e) {
+                   e.printStackTrace();
+               }
+           }
+        }).start();
+
+        //this thread handles removing like progress
+        new Thread(() -> {
+            while (true){
+                try {
+                    ServerSocket removeLikeSocket = new ServerSocket(9076);
+                    Socket removeLikeServerSocket = removeLikeSocket.accept();
+                    ObjectOutputStream searchLikesObjectOutputStream = new ObjectOutputStream(removeLikeServerSocket.getOutputStream());
+                    ObjectInputStream searchLikesObjectInputStream = new ObjectInputStream(removeLikeServerSocket.getInputStream());
+                    post post = (Model.post) searchLikesObjectInputStream.readObject();
+                    String username = searchLikesObjectInputStream.readUTF();
+                    removeLike(post , username);
+                    System.out.println(username + " removed a like from post by "  + post.getPublisherUser().getUserName() + " at " + CurrentDateTime.time());
+                    removeLikeSocket.close();
+                    removeLikeServerSocket.close();
+                    searchLikesObjectOutputStream.close();
+                    searchLikesObjectInputStream.close();
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        //this Thread removes a user's acc
+        new Thread(() -> {
+            while (true){
+                try {
+                    ServerSocket deleteAccSocket = new ServerSocket(9075);
+                    Socket deleteAccServerSocket = deleteAccSocket.accept();
+                    DataOutputStream deleteAccDataOutputStream = new DataOutputStream(deleteAccServerSocket.getOutputStream());
+                    DataInputStream deleteAccDataInputStream = new DataInputStream(deleteAccServerSocket.getInputStream());
+                    String username = deleteAccDataInputStream.readUTF();
+                    delete_account(username);
+                    System.out.println(username + " deleted their account at " + CurrentDateTime.time());
+                    deleteAccSocket.close();
+                    deleteAccServerSocket.close();
+                    deleteAccDataOutputStream.close();
+                    deleteAccDataInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        //this Thread handles reposting actions
+        new Thread(() -> {
+            while (true){
+                try {
+                    ServerSocket rePostSocket = new ServerSocket(9074);
+                    Socket rePostServerSocket = rePostSocket.accept();
+                    ObjectOutputStream rePostObjectOutputStream = new ObjectOutputStream(rePostServerSocket.getOutputStream());
+                    ObjectInputStream rePostObjectInputStream = new ObjectInputStream(rePostServerSocket.getInputStream());
+                    post post = (Model.post) rePostObjectInputStream.readObject();
+                    user user = findUserByUsername(rePostObjectInputStream.readUTF());
+                    post.setPublisherUser(user);
+                    post.setTime(System.currentTimeMillis());
+                    post.setFormattedTime(CurrentDateTime.time());
+                    for (Model.post value : posts)
+                        if (value.getAuthorUser().getUserName().equals(post.getAuthorUser().getUserName()))
+                            value.addReposts();
+                    posts.add(post);
+                    add_post(post);
+                    System.out.println(user.getUserName() + " reposted a post from " + post.getAuthorUser().getUserName() + " at :" +CurrentDateTime.time());
+                    rePostSocket.close();
+                    rePostServerSocket.close();
+                    rePostObjectOutputStream.close();
+                    rePostObjectInputStream.close();
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        //this Thread loads previous comments
+        new Thread(() -> {
+            while (true){
+                try {
+                    ServerSocket commentsSocket = new ServerSocket(9073);
+                    Socket commentsServerSocket = commentsSocket.accept();
+                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(commentsServerSocket.getOutputStream());
+                    ObjectInputStream objectInputStream = new ObjectInputStream(commentsServerSocket.getInputStream());
+                    post post = (Model.post) objectInputStream.readObject();
+                    List<comment> commentList = findCommentsForPost(post);
+                    objectOutputStream.writeObject(commentList);
+                    objectOutputStream.flush();
+                    commentsServerSocket.close();
+                    objectOutputStream.close();
+                    commentsSocket.close();
+                    objectInputStream.close();
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        //this Thread handles comment adding progress
+        new Thread(() -> {
+            while (true){
+                try {
+                    ServerSocket commentsSocket = new ServerSocket(9072);
+                    Socket commentsServerSocket = commentsSocket.accept();
+                    ObjectOutputStream commentsObjectOutputStream = new ObjectOutputStream(commentsServerSocket.getOutputStream());
+                    ObjectInputStream commentsObjectInputStream = new ObjectInputStream(commentsServerSocket.getInputStream());
+                    comment comment = (Model.comment) commentsObjectInputStream.readObject();
+                    post post = (Model.post) commentsObjectInputStream.readObject();
+                    addCommentToPost(comment , post) ;
+                    System.out.println(comment.getAuthor() + " added a new comment to " + post.getAuthorUser().getUserName() + "'s post : " + comment.getComment() + " at " + CurrentDateTime.time());
+                    commentsSocket.close();
+                    commentsServerSocket.close();
+                    commentsObjectOutputStream.close();
+                    commentsObjectInputStream.close();
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        //this Thread searches for self user posts(to show in profilePage)
+        new Thread(() -> {
+            while (true){
+                try {
+                    ServerSocket selfPostsSocket = new ServerSocket(9071);
+                    Socket selfPostsServerSocket = selfPostsSocket.accept();
+                    ObjectOutputStream selfPostsObjectOutputStream = new ObjectOutputStream(selfPostsServerSocket.getOutputStream());
+                    ObjectInputStream selfPostsObjectInputStream = new ObjectInputStream(selfPostsServerSocket.getInputStream());
+                    String username = selfPostsObjectInputStream.readUTF();
+                    List<post> postList = posts.stream().filter(a->a.getPublisherUser().getUserName().equals(username)).collect(Collectors.toList());
+                    selfPostsObjectOutputStream.writeObject(postList);
+                    selfPostsObjectOutputStream.flush();
+                    selfPostsSocket.close();
+                    selfPostsServerSocket.close();
+                    selfPostsObjectOutputStream.close();
+                    selfPostsObjectInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        //this Thread receives data and creates a new object from message class using the described data
+        new Thread(() -> {
+            while (true){
+                try {
+                    ServerSocket addMessageSocket = new ServerSocket(9070);
+                    Socket addMessageServerSocket = addMessageSocket.accept();
+                    ObjectOutputStream addMessageObjectOutputStream = new ObjectOutputStream(addMessageServerSocket.getOutputStream());
+                    ObjectInputStream addMessageObjectInputStream = new ObjectInputStream(addMessageServerSocket.getInputStream());
+                    String message = addMessageObjectInputStream.readUTF();
+                    user userSender = findUserByUsername(addMessageObjectInputStream.readUTF());
+                    user userReceiver = findUserByUsername(addMessageObjectInputStream.readUTF());
+                    sendTextMessage(message , userSender , userReceiver);
+                    addMessageSocket.close();
+                    addMessageServerSocket.close();
+                    addMessageObjectOutputStream.close();
+                    addMessageObjectInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        //this Thread updates all sent and received messages
+        new Thread(() -> {
+            while (true){
+                try {
+                    ServerSocket messagesSocket = new ServerSocket(9069);
+                    Socket messagesServerSocket = messagesSocket.accept();
+                    ObjectOutputStream messagesObjectOutputStream = new ObjectOutputStream(messagesServerSocket.getOutputStream());
+                    ObjectInputStream messagesObjectInputStream = new ObjectInputStream(messagesServerSocket.getInputStream());
+                    user user = findUserByUsername(messagesObjectInputStream.readUTF());
+                    String condition = messagesObjectInputStream.readUTF();
+                    Map<user, List<message>> messages = new HashMap<>();
+                    if (condition.equals("receivedMessages"))
+                        messages = findReceivedMessages(user);
+                    else if (condition.equals("sentMessages"))
+                        messages = findSentMessages(user);
+                    messagesObjectOutputStream.writeObject(messages);
+                    messagesObjectOutputStream.flush();
+                    messagesSocket.close();
+                    messagesServerSocket.close();
+                    messagesObjectOutputStream.close();
+                    messagesObjectInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }).start();

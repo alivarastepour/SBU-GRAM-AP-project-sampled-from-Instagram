@@ -9,7 +9,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
 <AnchorPane prefHeight="550.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.searchPage_Controller">
    <children>
       <Label layoutX="273.0" layoutY="67.0" prefHeight="69.0" prefWidth="512.0" text="Search for users to find your friends !">
@@ -54,5 +53,10 @@
             <Image url="@Icons/backarrow.png" />
          </image>
       </ImageView>
+      <JFXButton fx:id="direct" layoutX="408.0" layoutY="344.0" onAction="#direct" prefHeight="94.0" prefWidth="86.0" style="-fx-background-radius: 50; -fx-border-radius: 50;" text="direct" visible="false">
+         <font>
+            <Font name="Segoe UI Light" size="21.0" />
+         </font>
+      </JFXButton>
    </children>
 </AnchorPane>

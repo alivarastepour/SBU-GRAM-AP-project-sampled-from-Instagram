@@ -172,25 +172,6 @@
             </RadialGradient>
          </ripplerFill>
       </JFXButton>
-      <JFXButton layoutX="296.0" layoutY="444.0" onAction="#selfPosts" text="view all posts from this user">
-         <font>
-            <Font size="24.0" />
-         </font>
-         <textFill>
-            <LinearGradient endX="1.0" endY="1.0">
-               <stops>
-                  <Stop color="BLACK" />
-                  <Stop color="#008f0a" offset="0.5157715260017051" />
-                  <Stop color="#a5c6a7" offset="1.0" />
-               </stops>
-            </LinearGradient>
-         </textFill>
-      </JFXButton>
-      <ImageView fitHeight="34.0" fitWidth="47.0" layoutX="274.0" layoutY="456.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@Icons/692571761574330935-64.png" />
-         </image>
-      </ImageView>
     </children>
 
 

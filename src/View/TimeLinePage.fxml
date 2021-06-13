@@ -8,7 +8,7 @@
 
 <AnchorPane prefHeight="550.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.TimeLinePage_Controller">
    <children>
-      <ImageView fx:id="directIcon" fitHeight="25.0" fitWidth="25.0" layoutX="787.0" layoutY="108.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="directIcon" fitHeight="25.0" fitWidth="25.0" layoutX="787.0" layoutY="108.0" onMouseClicked="#directs" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Icons/iconfinder-32%20(6).png" />
          </image>
