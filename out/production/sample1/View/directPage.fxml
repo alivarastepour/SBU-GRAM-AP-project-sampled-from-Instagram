@@ -12,15 +12,15 @@
 
 <AnchorPane prefHeight="550.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.directPage_Controller">
    <children>
-      <ListView fx:id="messages" layoutX="366.0" prefHeight="442.0" prefWidth="535.0" />
+      <ListView fx:id="messages" layoutX="323.0" prefHeight="442.0" prefWidth="578.0" />
       <ImageView fx:id="directIcon" fitHeight="25.0" fitWidth="25.0" layoutX="819.0" layoutY="463.0" onMouseClicked="#sendMessage" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@Icons/iconfinder-32%20(6).png" />
+            <Image url="@Icons/direct%20(2).png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="42.0" fitWidth="25.0" layoutX="861.0" layoutY="463.0" opacity="0.37" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="42.0" fitWidth="25.0" layoutX="861.0" layoutY="463.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@Icons/iconfinder-32.png" />
+            <Image url="@Icons/paper-clip.png" />
          </image>
       </ImageView>
       <Label fx:id="username" alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="308.0" prefHeight="73.0" prefWidth="336.0" text="user's name" textAlignment="CENTER">
@@ -33,7 +33,7 @@
             <Image url="@Icons/backarrow.png" />
          </image>
       </ImageView>
-      <Circle fx:id="profilePhoto" fill="WHITE" layoutX="170.0" layoutY="208.0" radius="100.0" stroke="WHITE" strokeType="INSIDE" />
-      <JFXTextField fx:id="messageBox" focusColor="WHITE" layoutX="366.0" layoutY="451.0" prefHeight="43.0" prefWidth="435.0" promptText="   message..." style="-fx-background-radius: 50; -fx-border-radius: 50; -fx-border-color: #82c440;" unFocusColor="WHITE" />
+      <Circle fx:id="profilePhoto" fill="WHITE" layoutX="170.0" layoutY="208.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
+      <JFXTextField fx:id="messageBox" focusColor="WHITE" layoutX="325.0" layoutY="451.0" prefHeight="43.0" prefWidth="476.0" promptText="   message..." style="-fx-background-radius: 50; -fx-border-radius: 50; -fx-border-color: black;" unFocusColor="WHITE" />
    </children>
 </AnchorPane>

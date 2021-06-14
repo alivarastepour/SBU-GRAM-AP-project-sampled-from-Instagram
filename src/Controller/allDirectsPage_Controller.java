@@ -37,33 +37,39 @@ public class allDirectsPage_Controller {
     public void initialize() throws IOException, ClassNotFoundException {
         receivedMessages = Model.allDirectsServer.getMessages(logInPage_Controller.Username , "receivedMessages");
         sentMessages = Model.allDirectsServer.getMessages(logInPage_Controller.Username , "sentMessages");
+        System.out.println("rm size is : " + receivedMessages.size());
+        System.out.println("sm size is : " + sentMessages.size());
         List<message> messageList = new ArrayList<>();
-
+        List<message> m = new ArrayList<>();
         for (Map.Entry<user , List<message>> value: receivedMessages.entrySet()) {
-            List<message> m = value.getValue();
+            m.addAll(value.getValue());
             m = m.stream().sorted((a , b) -> (int) (b.getTime() - a.getTime())).collect(Collectors.toList());
             messageList.add(m.get(0));
+            m.clear();
         }
-
         for (Map.Entry<user , List<message>> value: sentMessages.entrySet()) {
-            List<message> m = value.getValue();
-            m = m.stream().sorted((a , b) -> (int) (b.getTime() - a.getTime())).collect(Collectors.toList());
+            m.addAll(value.getValue());
+            m = m.stream().sorted((a , b) -> Math.toIntExact((b.getTime() - a.getTime()))).collect(Collectors.toList());
             messageList.add(m.get(0));
+            m.clear();
         }
-
-        for (int i = 0; i < messageList.size(); i++)
-            for (int j = i; j < messageList.size(); j++)
-                if (messageList.get(i).getReceiver().getUserName().equals(messageList.get(j).getSender().getUserName()) && messageList.get(j).getReceiver().getUserName().equals(messageList.get(i).getSender().getUserName()))
-                    if (messageList.get(i).getTime() > messageList.get(j).getTime())
-                        messageList.remove(messageList.get(j));
+        List<message> removeList = new ArrayList<>();
+        for (message m1: messageList)
+            for (message m2:messageList)
+                if (m2.getReceiver().getUserName().equals(m1.getSender().getUserName() )
+                        &&
+                        m1.getReceiver().getUserName().equals(m2.getSender().getUserName())){
+                    if (m2.getTime() >= m1.getTime())
+                        removeList.add(m1);
                     else
-                        messageList.remove(messageList.get(i));
-
+                        removeList.add(m2);
+                }
+        messageList.removeAll(removeList);
+        messageList = messageList.stream().sorted((a,b) -> Math.toIntExact(b.getTime() - a.getTime())).collect(Collectors.toList());
         guide.setVisible(messageList.size() == 0);
         guide1.setVisible(messageList.size() == 0);
         allDirects.setItems(FXCollections.observableArrayList(messageList));
         allDirects.setCellFactory(allDirects -> new DirectItem());
-
     }
 
     public void backToTimeLinePage(MouseEvent mouseEvent) throws IOException {
