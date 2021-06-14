@@ -580,8 +580,29 @@ public class MainServer {
                 tempUser = value;
         return tempUser.sentMessages;
     }
-
-
+    
+    /**
+     * receives all necessary data for removing a message
+     * @param message message itself
+     * @param userSender sender of message
+     * @param userReceiver receiver of message
+     * @throws IOException calling "applyChange" may threw IOException
+     */
+    private static void deleteMessage(String message , user userSender , user userReceiver) throws IOException {
+        for (Model.user user : users) {
+            if (userSender.getUserName().equals(user.getUserName())) {
+                List<message> x = user.sentMessages.get(userReceiver).stream().filter(a -> !a.getMessage().equals(message)).collect(Collectors.toList());
+                user.sentMessages.put(userReceiver, x);
+            }
+            if (userReceiver.getUserName().equals(user.getUserName())) {
+                List<message> x = user.receivedMessages.get(userSender).stream().filter(a -> !a.getMessage().equals(message)).collect(Collectors.toList());
+                user.receivedMessages.put(userSender, x);
+            }
+        }
+        applyChanges(userSender.getUserName());
+        applyChanges(userReceiver.getUserName());
+    }
+    
 
     /**
      * this is our running server which starts several Threads
@@ -1210,10 +1231,14 @@ public class MainServer {
                     Socket addMessageServerSocket = addMessageSocket.accept();
                     ObjectOutputStream addMessageObjectOutputStream = new ObjectOutputStream(addMessageServerSocket.getOutputStream());
                     ObjectInputStream addMessageObjectInputStream = new ObjectInputStream(addMessageServerSocket.getInputStream());
+                    String condition = addMessageObjectInputStream.readUTF();
                     String message = addMessageObjectInputStream.readUTF();
                     user userSender = findUserByUsername(addMessageObjectInputStream.readUTF());
                     user userReceiver = findUserByUsername(addMessageObjectInputStream.readUTF());
-                    sendTextMessage(message , userSender , userReceiver);
+                    if (condition.equals("newMessage"))
+                        sendTextMessage(message , userSender , userReceiver);
+                    if (condition.equals("deleteMessage"))
+                        deleteMessage(message , userSender , userReceiver);
                     addMessageSocket.close();
                     addMessageServerSocket.close();
                     addMessageObjectOutputStream.close();

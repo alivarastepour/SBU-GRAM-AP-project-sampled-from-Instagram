@@ -1,9 +1,12 @@
 package Controller;
 
 import Model.PageLoader;
+import com.jfoenix.controls.JFXButton;
+import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
@@ -24,6 +27,7 @@ public class MessageItemController {
     public Label messageLabel;
     public ImageView edit ;
     public ImageView delete;
+    public JFXButton deleteButton ;
 
     /**
      * class constructor; it sets a specified message to be visualized
@@ -44,7 +48,18 @@ public class MessageItemController {
         messageLabel.setText(message.getMessage());
         edit.setVisible(message.getSender().getUserName().equals(logInPage_Controller.Username));
         delete.setVisible(message.getSender().getUserName().equals(logInPage_Controller.Username));
+        deleteButton.setVisible(message.getSender().getUserName().equals(logInPage_Controller.Username));
         return root ;
+    }
+    
+    /**
+     * sends a deleteMessage to server containing message sender/receiver and message itself
+     * @param actionEvent on mouse click
+     * @throws IOException page loading and calling "messageHandler" may threw IOException
+     */
+    public void delete(ActionEvent actionEvent) throws IOException {
+        Model.directsServer.MessageHandler(message.getMessage() , logInPage_Controller.Username , DirectItemController.user.getUserName() , "deleteMessage");
+        new PageLoader().load("directPage");
     }
 
 }

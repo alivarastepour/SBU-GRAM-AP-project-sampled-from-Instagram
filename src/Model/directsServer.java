@@ -14,16 +14,18 @@ import java.net.Socket;
  */
 public class directsServer {
     /**
-     * receives all necessary fields for creating an object from message class
+     * receives all necessary fields for creating an object from message class or removing it
      * @param message message itself
      * @param username sender of message
      * @param directUser receiver of message
      * @throws IOException using socket programming may cause IOException
      */
-    public static void sendMessageHandler(String message , String username , String directUser) throws IOException {
+    public static void MessageHandler(String message , String username , String directUser , String condition) throws IOException {
         Socket directsSocket = new Socket("127.0.0.1" , 9070);
         ObjectOutputStream directsObjectOutputStream = new ObjectOutputStream(directsSocket.getOutputStream());
         ObjectInputStream directsObjectInputStream = new ObjectInputStream(directsSocket.getInputStream());
+        directsObjectOutputStream.writeUTF(condition);
+        directsObjectOutputStream.flush();
         directsObjectOutputStream.writeUTF(message);
         directsObjectOutputStream.flush();
         directsObjectOutputStream.writeUTF(username);

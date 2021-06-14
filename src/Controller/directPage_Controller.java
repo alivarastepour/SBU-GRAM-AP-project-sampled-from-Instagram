@@ -3,6 +3,7 @@ package Controller;
 import Model.*;
 import com.jfoenix.controls.JFXTextField;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
@@ -63,10 +64,14 @@ public class directPage_Controller {
      */
     public void sendMessage(MouseEvent mouseEvent) throws IOException {
         String message = messageBox.getText();
-        directsServer.sendMessageHandler(message , logInPage_Controller.Username , DirectItemController.user.getUserName());
+        directsServer.MessageHandler(message , logInPage_Controller.Username , DirectItemController.user.getUserName() , "newMessage");
         messageBox.clear();
+        new PageLoader().load("directPage");
     }
     public void backToAllDirectsPage(MouseEvent mouseEvent) throws IOException {
         new PageLoader().load("allDirectsPage");
+    }
+    public void refresh(ActionEvent actionEvent) throws IOException {
+        new PageLoader().load("directPage");
     }
 }

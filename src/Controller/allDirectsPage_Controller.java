@@ -37,20 +37,20 @@ public class allDirectsPage_Controller {
     public void initialize() throws IOException, ClassNotFoundException {
         receivedMessages = Model.allDirectsServer.getMessages(logInPage_Controller.Username , "receivedMessages");
         sentMessages = Model.allDirectsServer.getMessages(logInPage_Controller.Username , "sentMessages");
-        System.out.println("rm size is : " + receivedMessages.size());
-        System.out.println("sm size is : " + sentMessages.size());
         List<message> messageList = new ArrayList<>();
         List<message> m = new ArrayList<>();
         for (Map.Entry<user , List<message>> value: receivedMessages.entrySet()) {
             m.addAll(value.getValue());
             m = m.stream().sorted((a , b) -> (int) (b.getTime() - a.getTime())).collect(Collectors.toList());
-            messageList.add(m.get(0));
+            if (m.size() != 0)
+                messageList.add(m.get(0));
             m.clear();
         }
         for (Map.Entry<user , List<message>> value: sentMessages.entrySet()) {
             m.addAll(value.getValue());
             m = m.stream().sorted((a , b) -> Math.toIntExact((b.getTime() - a.getTime()))).collect(Collectors.toList());
-            messageList.add(m.get(0));
+            if (m.size() != 0)
+                messageList.add(m.get(0));
             m.clear();
         }
         List<message> removeList = new ArrayList<>();

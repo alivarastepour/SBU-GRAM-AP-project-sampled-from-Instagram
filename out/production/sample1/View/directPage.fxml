@@ -35,5 +35,6 @@
       </ImageView>
       <Circle fx:id="profilePhoto" fill="WHITE" layoutX="170.0" layoutY="208.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
       <JFXTextField fx:id="messageBox" focusColor="WHITE" layoutX="325.0" layoutY="451.0" prefHeight="43.0" prefWidth="476.0" promptText="   message..." style="-fx-background-radius: 50; -fx-border-radius: 50; -fx-border-color: black;" unFocusColor="WHITE" />
+      <JFXButton layoutX="270.0" layoutY="17.0" onAction="#refresh" ripplerFill="WHITE" text="refresh" />
    </children>
 </AnchorPane>
