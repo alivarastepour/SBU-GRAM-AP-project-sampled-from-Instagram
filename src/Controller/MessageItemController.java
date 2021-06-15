@@ -1,7 +1,9 @@
 package Controller;
 
 import Model.PageLoader;
+import Model.message;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXTextField;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -14,7 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 /**
  <h1>MessageItemController </h1>
- <p>this class se</p>
+ <p>this class sets data for each message in directPage</p>
  @author Ali Varaste Pour
  @version 1.0
  @since 6/11/2021
@@ -28,6 +30,13 @@ public class MessageItemController {
     public ImageView edit ;
     public ImageView delete;
     public JFXButton deleteButton ;
+    public JFXTextField editMessageField ;
+    public ImageView applyEditImage;
+    public JFXButton applyEditButton ;
+    public JFXButton editButton ;
+    static boolean editAction = false ;
+    String newMessage ;
+    
 
     /**
      * class constructor; it sets a specified message to be visualized
@@ -60,6 +69,40 @@ public class MessageItemController {
     public void delete(ActionEvent actionEvent) throws IOException {
         Model.directsServer.MessageHandler(message.getMessage() , logInPage_Controller.Username , DirectItemController.user.getUserName() , "deleteMessage");
         new PageLoader().load("directPage");
+    }
+    
+    /**
+     * prepares proper fields for editing message
+     * @param actionEvent on mouse click
+     */
+    public void edit(ActionEvent actionEvent) {
+        messageLabel.setVisible(false);
+        editButton.setVisible(false);
+        edit.setVisible(false);
+        applyEditImage.setVisible(true);
+        applyEditButton.setVisible(true);
+        editMessageField.setVisible(true);
+    }
+    
+    /**
+     * receives necessary data for editing a message
+     * @param actionEvent on mouse click
+     * @throws IOException page loading and "messageHandler" Method may threw IOException
+     */
+    public void applyEdit(ActionEvent actionEvent) throws IOException {
+        String editedMessage ;
+        if (!editMessageField.getText().isBlank()){
+            editedMessage =  editMessageField.getText();
+            String mergedMessage = message.getMessage() + "A___.___A" + editedMessage ;
+            Model.directsServer.MessageHandler(mergedMessage , logInPage_Controller.Username , DirectItemController.user.getUserName() , "editMessage");
+            new PageLoader().load("directPage");
+        }
+        editButton.setVisible(true);
+        edit.setVisible(true);
+        messageLabel.setVisible(true);
+        applyEditImage.setVisible(false);
+        applyEditButton.setVisible(false);
+        editMessageField.setVisible(false);
     }
 
 }

@@ -603,7 +603,32 @@ public class MainServer {
         applyChanges(userReceiver.getUserName());
     }
     
-
+    /**
+     * edits a specified message
+     * @param message a merged String concatenated by "A___.___A" ; 1st part is primitiveMessage and 2nd part is secondaryMessage
+     * @param userSender sender of the message
+     * @param userReceiver receiver of the message
+     * @throws IOException "applyChange" method may threw IOException
+     */
+    private static void editMessage(String message , user userSender , user userReceiver) throws IOException {
+        String[] tempArray = message.split("A___.___A");
+        String primitiveMessage = tempArray[0];
+        String secondaryMessage = tempArray[1];
+        for (Model.user user : users){
+            if (user.getUserName().equals(userSender.getUserName()))
+                for (Map.Entry<user, List<message>> v : user.sentMessages.entrySet())
+                    for (int j = 0; j < v.getValue().size(); j++)
+                        if (v.getValue().get(j).getMessage().equals(primitiveMessage))
+                            v.getValue().get(j).setMessage(secondaryMessage);
+            if (user.getUserName().equals(userReceiver.getUserName()))
+                for (Map.Entry<user, List<message>> v : user.receivedMessages.entrySet())
+                    for (int j = 0; j < v.getValue().size(); j++)
+                        if (v.getValue().get(j).getMessage().equals(primitiveMessage))
+                            v.getValue().get(j).setMessage(secondaryMessage);
+        }
+        applyChanges(userSender.getUserName());
+        applyChanges(userReceiver.getUserName());
+    }
     /**
      * this is our running server which starts several Threads
      * each Thread does a particular job
@@ -1239,6 +1264,8 @@ public class MainServer {
                         sendTextMessage(message , userSender , userReceiver);
                     if (condition.equals("deleteMessage"))
                         deleteMessage(message , userSender , userReceiver);
+                    if (condition.equals("editMessage"))
+                        editMessage(message , userSender , userReceiver);
                     addMessageSocket.close();
                     addMessageServerSocket.close();
                     addMessageObjectOutputStream.close();

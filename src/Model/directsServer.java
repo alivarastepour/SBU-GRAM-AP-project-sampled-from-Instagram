@@ -14,7 +14,7 @@ import java.net.Socket;
  */
 public class directsServer {
     /**
-     * receives all necessary fields for creating an object from message class or removing it
+     * receives all necessary fields for creating an object from message class or removing/editing it
      * @param message message itself
      * @param username sender of message
      * @param directUser receiver of message

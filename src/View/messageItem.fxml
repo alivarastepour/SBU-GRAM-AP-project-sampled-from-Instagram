@@ -10,7 +10,7 @@
 <AnchorPane fx:id="root" prefHeight="59.0" prefWidth="515.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Circle fx:id="profilePhoto" fill="WHITE" layoutX="30.0" layoutY="25.0" radius="16.0" stroke="WHITE" strokeType="INSIDE" />
-      <Label fx:id="messageLabel" layoutX="58.0" layoutY="9.0" prefHeight="42.0" prefWidth="391.0" text="  message" />
+      <Label fx:id="messageLabel" layoutX="58.0" layoutY="9.0" prefHeight="42.0" prefWidth="365.0" text="  message" />
       <ImageView fx:id="delete" fitHeight="17.0" fitWidth="17.0" layoutX="493.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Icons/iconfinder-32%20(1).png" />
@@ -21,6 +21,14 @@
             <Image url="@Icons/383147-32%20(2).png" />
          </image>
       </ImageView>
-      <JFXButton fx:id="deleteButton" layoutX="492.0" layoutY="18.0" onAction="#delete" prefHeight="25.0" prefWidth="17.0" text="  " />
+      <JFXButton fx:id="deleteButton" layoutX="492.0" layoutY="17.0" onAction="#delete" prefHeight="25.0" prefWidth="17.0" text="  " />
+      <JFXButton fx:id="editButton" layoutX="461.0" layoutY="17.0" onAction="#edit" prefHeight="25.0" prefWidth="17.0" text="  " />
+      <JFXTextField fx:id="editMessageField" focusColor="WHITE" layoutX="58.0" layoutY="9.0" prefHeight="42.0" prefWidth="365.0" promptText="edit message..." unFocusColor="WHITE" visible="false" />
+      <ImageView fx:id="applyEditImage" fitHeight="25.0" fitWidth="23.0" layoutX="429.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@Icons/1391625.png" />
+         </image>
+      </ImageView>
+      <JFXButton fx:id="applyEditButton" layoutX="429.0" layoutY="18.0" onAction="#applyEdit" prefHeight="25.0" prefWidth="17.0" text="  " visible="false" />
    </children>
 </AnchorPane>
