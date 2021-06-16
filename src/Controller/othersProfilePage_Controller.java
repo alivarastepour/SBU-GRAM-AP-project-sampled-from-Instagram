@@ -84,7 +84,8 @@ public class othersProfilePage_Controller {
         Model.othersProfileServer.unMuteHandler(PostItemController.PublisherUser.getUserName(),TimeLinePage_Controller.LoggedInUsername);
     }
     public void selfPosts(ActionEvent actionEvent) throws IOException {
-        new PageLoader().load("othersPostsPage");
+        selfPostsPage_Controller.trick();
+        new PageLoader().load("selfPostsPage");
     }
     //starts process of blocking
     public void block(ActionEvent actionEvent) throws IOException {
@@ -101,6 +102,7 @@ public class othersProfilePage_Controller {
     }
     
     public void message(ActionEvent actionEvent) throws IOException {
+        DirectItemController.user = PostItemController.PublisherUser;
         new PageLoader().load("directPage");
     }
 }

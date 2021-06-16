@@ -16,16 +16,24 @@ import java.util.List;
  @since 17/3/1400
  */
 public class selfPostsPage_Controller {
+    static boolean trick = false ;
     public ListView<post> SelfTimeLine;
     private List<post> selfPosts = new ArrayList<>();
     public void initialize() throws IOException, ClassNotFoundException {
-        selfPosts = Model.selfPostServer.selfPostHandler(logInPage_Controller.Username);
+        if (!trick)
+            selfPosts = Model.selfPostServer.selfPostHandler(logInPage_Controller.Username);
+        else
+            selfPosts = Model.selfPostServer.selfPostHandler(PostItemController.PublisherUser.getUserName());
         SelfTimeLine.setItems(FXCollections.observableArrayList(selfPosts));
         SelfTimeLine.setCellFactory(TimeLine -> new PostItem());
+        trick = false ;
     }
 
 
     public void backToProfilePage(javafx.scene.input.MouseEvent mouseEvent) throws IOException {
-        new PageLoader().load("selfProfilePage");
+        new PageLoader().load("TimeLinePage");
+    }
+    public static void trick(){
+        trick = true ;
     }
 }

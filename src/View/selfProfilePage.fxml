@@ -111,58 +111,65 @@
             <Image url="@Icons/icon.png" />
          </image>
       </ImageView>
-      <JFXButton layoutX="170.0" layoutY="268.0" onMouseClicked="#changeProfilePhoto" text="change Profile photo">
-         <textFill>
-            <LinearGradient endX="1.0" endY="1.0">
-               <stops>
-                  <Stop color="BLACK" />
-                  <Stop color="#008f0a" offset="0.007246376811594203" />
-                  <Stop color="BLACK" offset="0.007246376811594203" />
-                  <Stop color="#008f0a" offset="0.5440466041489063" />
-                  <Stop color="#a5c6a7" offset="1.0" />
-               </stops>
-            </LinearGradient>
-         </textFill></JFXButton>
-      <JFXButton layoutX="197.0" layoutY="293.0" onMouseClicked="#changeProfileDetails" text="edit profile">
-         <textFill>
-            <LinearGradient endX="1.0" endY="1.0">
-               <stops>
-                  <Stop color="BLACK" />
-                  <Stop color="#008f0a" offset="0.007246376811594203" />
-                  <Stop color="BLACK" offset="0.007246376811594203" />
-                  <Stop color="#008f0a" offset="0.5440466041489063" />
-                  <Stop color="#a5c6a7" offset="1.0" />
-               </stops>
-            </LinearGradient>
-         </textFill></JFXButton>
-      <JFXButton layoutX="185.0" layoutY="318.0" onAction="#deleteAcc" text="Delete Account">
-         <textFill>
-            <LinearGradient endX="1.0" endY="1.0">
-               <stops>
-                  <Stop color="BLACK" />
-                  <Stop color="#008f0a" offset="0.5157715260017051" />
-                  <Stop color="#a5c6a7" offset="1.0" />
-               </stops>
-            </LinearGradient>
-         </textFill></JFXButton>
-      <JFXButton layoutX="296.0" layoutY="444.0" onAction="#selfPosts" text="view all posts from this user">
-         <textFill>
-            <LinearGradient endX="1.0" endY="1.0">
-               <stops>
-                  <Stop color="BLACK" />
-                  <Stop color="#008f0a" offset="0.5157715260017051" />
-                  <Stop color="#a5c6a7" offset="1.0" />
-               </stops>
-            </LinearGradient>
-         </textFill>
+      <JFXButton contentDisplay="TOP" layoutX="438.0" layoutY="269.0" onMouseClicked="#changeProfilePhoto" prefHeight="53.0" prefWidth="277.0" style="-fx-border-radius: 50; -fx-background-radius: 50; -fx-border-color: #cee8d3;" text="change profile photo" textOverrun="CLIP">
          <font>
-            <Font size="24.0" />
+            <Font name="Segoe UI Light" size="24.0" />
          </font>
+         <ripplerFill>
+            <RadialGradient centerX="0.4943181818181818" centerY="0.5922330097087378" cycleMethod="REFLECT" focusAngle="90.0" radius="0.5">
+               <stops>
+                  <Stop color="#007c0a94" />
+                  <Stop color="#73d379" offset="0.007246376811594203" />
+                  <Stop color="#ffffff94" offset="0.007246376811594203" />
+                  <Stop color="#cee8d3" offset="1.0" />
+               </stops>
+            </RadialGradient>
+         </ripplerFill>
       </JFXButton>
-      <ImageView fitHeight="34.0" fitWidth="47.0" layoutX="274.0" layoutY="456.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@Icons/692571761574330935-64.png" />
-         </image>
-      </ImageView>
+      <JFXButton contentDisplay="TOP" layoutX="147.0" layoutY="335.0" onAction="#deleteAcc" prefHeight="53.0" prefWidth="277.0" style="-fx-border-radius: 50; -fx-background-radius: 50; -fx-border-color: #cee8d3;" text="Delete Account" textOverrun="CLIP">
+         <font>
+            <Font name="Segoe UI Light" size="24.0" />
+         </font>
+         <ripplerFill>
+            <RadialGradient centerX="0.4943181818181818" centerY="0.5922330097087378" cycleMethod="REFLECT" focusAngle="90.0" radius="0.5">
+               <stops>
+                  <Stop color="#007c0a94" />
+                  <Stop color="#73d379" offset="0.007246376811594203" />
+                  <Stop color="#ffffff94" offset="0.007246376811594203" />
+                  <Stop color="#cee8d3" offset="1.0" />
+               </stops>
+            </RadialGradient>
+         </ripplerFill>
+      </JFXButton>
+      <JFXButton contentDisplay="TOP" layoutX="147.0" layoutY="269.0" onMouseClicked="#changeProfileDetails" prefHeight="53.0" prefWidth="277.0" style="-fx-border-radius: 50; -fx-background-radius: 50; -fx-border-color: #cee8d3;" text="edit profile details" textOverrun="CLIP">
+         <font>
+            <Font name="Segoe UI Light" size="24.0" />
+         </font>
+         <ripplerFill>
+            <RadialGradient centerX="0.4943181818181818" centerY="0.5922330097087378" cycleMethod="REFLECT" focusAngle="90.0" radius="0.5">
+               <stops>
+                  <Stop color="#007c0a94" />
+                  <Stop color="#73d379" offset="0.007246376811594203" />
+                  <Stop color="#ffffff94" offset="0.007246376811594203" />
+                  <Stop color="#cee8d3" offset="1.0" />
+               </stops>
+            </RadialGradient>
+         </ripplerFill>
+      </JFXButton>
+      <JFXButton contentDisplay="TOP" layoutX="438.0" layoutY="335.0" onAction="#selfPosts" prefHeight="53.0" prefWidth="277.0" style="-fx-border-radius: 50; -fx-background-radius: 50; -fx-border-color: #cee8d3;" text="posts" textOverrun="CLIP">
+         <font>
+            <Font name="Segoe UI Light" size="24.0" />
+         </font>
+         <ripplerFill>
+            <RadialGradient centerX="0.4943181818181818" centerY="0.5922330097087378" cycleMethod="REFLECT" focusAngle="90.0" radius="0.5">
+               <stops>
+                  <Stop color="#007c0a94" />
+                  <Stop color="#73d379" offset="0.007246376811594203" />
+                  <Stop color="#ffffff94" offset="0.007246376811594203" />
+                  <Stop color="#cee8d3" offset="1.0" />
+               </stops>
+            </RadialGradient>
+         </ripplerFill>
+      </JFXButton>
    </children>
 </AnchorPane>

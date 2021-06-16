@@ -46,7 +46,7 @@ public class PostItemController {
         new PageLoader().load("postItem", this);
         this.post = post;
     }
-    public static void er(user user){
+    public static void trick(user user){
         PublisherUser = user ;
     }
     //this anchor pane is returned to be set as the list view item

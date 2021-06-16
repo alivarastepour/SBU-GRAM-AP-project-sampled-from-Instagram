@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import com.jfoenix.controls.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
@@ -8,10 +9,10 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="550.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.othersProfilePage_Controller">
+<AnchorPane prefHeight="550.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.othersProfilePage_Controller">
 
     <children>
-        <Label fx:id="username" layoutX="387.0" layoutY="50.0" prefHeight="53.0" prefWidth="392.0">
+        <Label fx:id="username" layoutX="351.0" layoutY="50.0" prefHeight="53.0" prefWidth="428.0" text="userName">
             <font>
                 <Font name="Segoe UI Light" size="36.0" />
             </font>
@@ -28,7 +29,7 @@
                 </LinearGradient>
             </textFill>
         </Label>
-        <Label fx:id="name" layoutX="389.0" layoutY="108.0" prefHeight="39.0" prefWidth="358.0">
+        <Label fx:id="name" layoutX="353.0" layoutY="108.0" prefHeight="39.0" prefWidth="428.0" text="name">
             <font>
                 <Font name="Segoe UI Light" size="27.0" />
             </font>
@@ -44,7 +45,7 @@
                 </LinearGradient>
             </textFill>
         </Label>
-        <Label fx:id="city" layoutX="389.0" layoutY="167.0" prefHeight="39.0" prefWidth="366.0">
+        <Label fx:id="city" layoutX="353.0" layoutY="167.0" prefHeight="39.0" prefWidth="428.0" text="city">
             <font>
                 <Font name="Segoe UI Light" size="27.0" />
             </font>
@@ -58,7 +59,7 @@
                 </LinearGradient>
             </textFill>
         </Label>
-        <Label layoutX="388.0" layoutY="224.0" prefHeight="32.0" prefWidth="127.0" text="Followers  :">
+        <Label layoutX="351.0" layoutY="221.0" prefHeight="32.0" prefWidth="127.0" text="Followers  :">
             <font>
                 <Font name="Segoe UI Light" size="22.0" />
             </font>
@@ -74,12 +75,12 @@
                 </LinearGradient>
             </textFill>
         </Label>
-        <Label fx:id="following" layoutX="697.0" layoutY="226.0">
+        <Label fx:id="following" layoutX="663.0" layoutY="223.0" text="1">
             <font>
                 <Font name="Segoe UI Light" size="23.0" />
             </font>
         </Label>
-        <Label layoutX="582.0" layoutY="224.0" text="Followings :">
+        <Label layoutX="545.0" layoutY="221.0" text="Followings :">
             <font>
                 <Font name="Segoe UI Light" size="22.0" />
             </font>
@@ -95,12 +96,12 @@
                 </LinearGradient>
             </textFill>
         </Label>
-        <Label fx:id="follower" layoutX="503.0" layoutY="224.0">
+        <Label fx:id="follower" layoutX="466.0" layoutY="221.0" text="1">
             <font>
                 <Font name="Segoe UI Light" size="22.0" />
             </font>
         </Label>
-        <Circle fx:id="profilePhoto" fill="WHITE" layoutX="227.0" layoutY="156.0" radius="100.0" stroke="WHITE" strokeType="INSIDE" />
+        <Circle fx:id="profilePhoto" fill="WHITE" layoutX="210.0" layoutY="143.0" radius="113.0" stroke="WHITE" strokeType="INSIDE" />
         <ImageView fx:id="backArrow" fitHeight="42.0" fitWidth="31.0" layoutX="39.0" layoutY="50.0" onMouseClicked="#backToTimeLine" opacity="0.2" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@Icons/backarrow.png" />
@@ -111,7 +112,7 @@
                 <Image url="@Icons/icon.png" />
             </image>
         </ImageView>
-      <JFXButton fx:id="follow" contentDisplay="TOP" layoutX="378.0" layoutY="260.0" onAction="#follow" prefHeight="51.0" prefWidth="336.0" style="-fx-border-radius: 50; -fx-background-radius: 50; -fx-border-color: #cee8d3;" text="Follow" textOverrun="CLIP">
+      <JFXButton fx:id="follow" contentDisplay="TOP" layoutX="111.0" layoutY="257.0" onAction="#follow" prefHeight="53.0" prefWidth="277.0" style="-fx-border-radius: 50; -fx-background-radius: 50; -fx-border-color: #cee8d3;" text="Follow" textOverrun="CLIP">
          <font>
             <Font name="Segoe UI Light" size="24.0" />
          </font>
@@ -126,7 +127,7 @@
             </RadialGradient>
          </ripplerFill>
       </JFXButton>
-      <JFXButton fx:id="unfollow" contentDisplay="TOP" layoutX="378.0" layoutY="260.0" onAction="#unfollow" prefHeight="51.0" prefWidth="336.0" style="-fx-border-radius: 50; -fx-background-radius: 50; -fx-border-color: #cee8d3;" text="Unfollow" textOverrun="CLIP" visible="false">
+      <JFXButton fx:id="unfollow" contentDisplay="TOP" layoutX="111.0" layoutY="257.0" onAction="#unfollow" prefHeight="53.0" prefWidth="277.0" style="-fx-border-radius: 50; -fx-background-radius: 50; -fx-border-color: #cee8d3;" text="Unfollow" textOverrun="CLIP" visible="false">
          <font>
             <Font name="Segoe UI Light" size="24.0" />
          </font>
@@ -141,7 +142,7 @@
             </RadialGradient>
          </ripplerFill>
       </JFXButton>
-      <JFXButton fx:id="mute" contentDisplay="TOP" layoutX="378.0" layoutY="442.0" onAction="#mute" prefHeight="51.0" prefWidth="336.0" style="-fx-border-radius: 50; -fx-background-radius: 50; -fx-border-color: #cee8d3;" text="Mute" textOverrun="CLIP" visible="false">
+      <JFXButton fx:id="mute" contentDisplay="TOP" layoutX="111.0" layoutY="389.0" onAction="#mute" prefHeight="53.0" prefWidth="277.0" style="-fx-border-radius: 50; -fx-background-radius: 50; -fx-border-color: #cee8d3;" text="Mute" textOverrun="CLIP">
          <font>
             <Font name="Segoe UI Light" size="24.0" />
          </font>
@@ -156,7 +157,7 @@
             </RadialGradient>
          </ripplerFill>
       </JFXButton>
-      <JFXButton fx:id="unmute" contentDisplay="TOP" layoutX="378.0" layoutY="442.0" onAction="#unmute" prefHeight="51.0" prefWidth="336.0" style="-fx-border-radius: 50; -fx-background-radius: 50; -fx-border-color: #cee8d3;" text="unmute" textOverrun="CLIP" visible="false">
+      <JFXButton fx:id="unmute" contentDisplay="TOP" layoutX="111.0" layoutY="389.0" onAction="#unmute" prefHeight="53.0" prefWidth="277.0" style="-fx-border-radius: 50; -fx-background-radius: 50; -fx-border-color: #cee8d3;" text="unmute" textOverrun="CLIP" visible="false">
          <font>
             <Font name="Segoe UI Light" size="24.0" />
          </font>
@@ -171,7 +172,7 @@
             </RadialGradient>
          </ripplerFill>
       </JFXButton>
-      <JFXButton fx:id="block" contentDisplay="TOP" layoutX="378.0" layoutY="323.0" onAction="#block" prefHeight="51.0" prefWidth="336.0" style="-fx-border-radius: 50; -fx-background-radius: 50; -fx-border-color: #cee8d3;" text="Block" textOverrun="CLIP">
+      <JFXButton fx:id="block" contentDisplay="TOP" layoutX="392.0" layoutY="257.0" onAction="#block" prefHeight="53.0" prefWidth="277.0" style="-fx-border-radius: 50; -fx-background-radius: 50; -fx-border-color: #cee8d3;" text="Block" textOverrun="CLIP">
          <font>
             <Font name="Segoe UI Light" size="24.0" />
          </font>
@@ -186,7 +187,7 @@
             </RadialGradient>
          </ripplerFill>
       </JFXButton>
-      <JFXButton fx:id="unblock" contentDisplay="TOP" layoutX="378.0" layoutY="323.0" onAction="#unblock" prefHeight="51.0" prefWidth="336.0" style="-fx-border-radius: 50; -fx-background-radius: 50; -fx-border-color: #cee8d3;" text="unblock" textOverrun="CLIP" visible="false">
+      <JFXButton fx:id="unblock" contentDisplay="TOP" layoutX="392.0" layoutY="257.0" onAction="#unblock" prefHeight="53.0" prefWidth="277.0" style="-fx-border-radius: 50; -fx-background-radius: 50; -fx-border-color: #cee8d3;" text="unblock" textOverrun="CLIP" visible="false">
          <font>
             <Font name="Segoe UI Light" size="24.0" />
          </font>
@@ -201,7 +202,22 @@
             </RadialGradient>
          </ripplerFill>
       </JFXButton>
-      <JFXButton fx:id="message" contentDisplay="TOP" layoutX="378.0" layoutY="383.0" onAction="#message" prefHeight="51.0" prefWidth="336.0" style="-fx-border-radius: 50; -fx-background-radius: 50; -fx-border-color: #cee8d3;" text="Message" textOverrun="CLIP">
+      <JFXButton fx:id="message" contentDisplay="TOP" layoutX="111.0" layoutY="323.0" onAction="#message" prefHeight="53.0" prefWidth="277.0" style="-fx-border-radius: 50; -fx-background-radius: 50; -fx-border-color: #cee8d3;" text="Message" textOverrun="CLIP">
+         <font>
+            <Font name="Segoe UI Light" size="24.0" />
+         </font>
+         <ripplerFill>
+            <RadialGradient centerX="0.4943181818181818" centerY="0.5922330097087378" cycleMethod="REFLECT" focusAngle="90.0" radius="0.5">
+               <stops>
+                  <Stop color="#007c0a94" />
+                  <Stop color="#73d379" offset="0.007246376811594203" />
+                  <Stop color="#ffffff94" offset="0.007246376811594203" />
+                  <Stop color="#cee8d3" offset="1.0" />
+               </stops>
+            </RadialGradient>
+         </ripplerFill>
+      </JFXButton>
+      <JFXButton fx:id="posts" contentDisplay="TOP" layoutX="392.0" layoutY="323.0" onAction="#selfPosts" prefHeight="53.0" prefWidth="277.0" style="-fx-border-radius: 50; -fx-background-radius: 50; -fx-border-color: #cee8d3;" text="posts" textOverrun="CLIP">
          <font>
             <Font name="Segoe UI Light" size="24.0" />
          </font>

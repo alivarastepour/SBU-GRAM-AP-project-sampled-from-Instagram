@@ -31,7 +31,7 @@ public class searchPage_Controller {
         }
         else{
             User = user ;
-            PostItemController.er(User);
+            PostItemController.trick(User);
             DirectItemController.user = User ;
             new PageLoader().load("othersProfilePage");
             searchPage_Controller.username = username ;
