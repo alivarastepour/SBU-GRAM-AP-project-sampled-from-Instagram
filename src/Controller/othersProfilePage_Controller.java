@@ -99,4 +99,8 @@ public class othersProfilePage_Controller {
         Model.othersProfileServer.blockAction(PostItemController.PublisherUser.getUserName(),TimeLinePage_Controller.LoggedInUsername,"unblock");
     
     }
+    
+    public void message(ActionEvent actionEvent) throws IOException {
+        new PageLoader().load("directPage");
+    }
 }

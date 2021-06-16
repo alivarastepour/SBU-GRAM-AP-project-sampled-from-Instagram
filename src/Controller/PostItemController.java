@@ -1,7 +1,6 @@
 package Controller;
 
 import Model.PageLoader;
-import Model.comment;
 import Model.post;
 import Model.user;
 import com.jfoenix.controls.JFXButton;
@@ -47,7 +46,9 @@ public class PostItemController {
         new PageLoader().load("postItem", this);
         this.post = post;
     }
-
+    public static void er(user user){
+        PublisherUser = user ;
+    }
     //this anchor pane is returned to be set as the list view item
     public AnchorPane init() throws IOException, ClassNotFoundException {
         boolean condition = Model.likeServer.searchLikes(post , TimeLinePage_Controller.LoggedInUsername);

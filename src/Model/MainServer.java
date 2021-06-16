@@ -658,8 +658,10 @@ public class MainServer {
                 user.sentMessages.remove(findUserByUsername(user1));
                 findUserByUsername(user1).receivedMessages.remove(user);
                 findUserByUsername(user1).sentMessages.remove(user);
-                unFollowProgress(user.getUserName() , user1);
-                unFollowProgress(user1 , user.getUserName());
+                if (xFollowsY(user.getUserName() , user1))
+                    unFollowProgress(user.getUserName() , user1);
+                if (xFollowsY(user1 , user.getUserName()))
+                    unFollowProgress(user1 , user.getUserName());
             }
         applyChanges(user1);
         applyChanges(user2);

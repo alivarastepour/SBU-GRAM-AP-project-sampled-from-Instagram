@@ -69,6 +69,29 @@ public class user implements Serializable {
         profilePhoto = fileInputStream.readAllBytes();
     }
     
+    public void setFollowersList(List<user> followersList) {
+        this.followersList = followersList;
+    }
+    
+    public void setFollowingsList(List<user> followingsList) {
+        this.followingsList = followingsList;
+    }
+    
+    public void setMutedUsers(List<user> mutedUsers) {
+        this.mutedUsers = mutedUsers;
+    }
+    
+    public void setBlockedUsers(List<user> blockedUsers) {
+        this.blockedUsers = blockedUsers;
+    }
+    
+    public void setReceivedMessages(Map<user, List<message>> receivedMessages) {
+        this.receivedMessages = receivedMessages;
+    }
+    
+    public void setSentMessages(Map<user, List<message>> sentMessages) {
+        this.sentMessages = sentMessages;
+    }
     
     public void setName(String name) {
         this.name = name;
