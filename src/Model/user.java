@@ -26,6 +26,7 @@ public class user implements Serializable {
     List<user> followersList = new ArrayList<>();
     List<user> followingsList = new ArrayList<>();
     List<user> mutedUsers = new ArrayList<>();
+    List<user> blockedUsers = new ArrayList<>();
     Map<user , List<message>> receivedMessages = new HashMap<>();
     Map<user , List<message>> sentMessages = new HashMap<>();
 

@@ -1,5 +1,7 @@
 package Model;
 
+import Controller.logInPage_Controller;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -25,6 +27,8 @@ public class searchServer {
         ObjectOutputStream searchObjectOutputStream = new ObjectOutputStream(searchSocket.getOutputStream());
         ObjectInputStream searchObjectInputStream = new ObjectInputStream(searchSocket.getInputStream());
         searchObjectOutputStream.writeUTF(username);
+        searchObjectOutputStream.flush();
+        searchObjectOutputStream.writeUTF(logInPage_Controller.Username);
         searchObjectOutputStream.flush();
         user user= (Model.user) searchObjectInputStream.readObject();
         searchSocket.close();

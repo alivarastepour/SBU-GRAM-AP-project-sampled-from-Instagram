@@ -142,7 +142,7 @@
             </RadialGradient>
          </ripplerFill>
       </JFXButton>
-      <JFXButton fx:id="mute" contentDisplay="TOP" layoutX="378.0" layoutY="354.0" onAction="#mute" prefHeight="51.0" prefWidth="336.0" style="-fx-border-radius: 50; -fx-background-radius: 50; -fx-border-color: #cee8d3;" text="Mute" textOverrun="CLIP" visible="false">
+      <JFXButton fx:id="mute" contentDisplay="TOP" layoutX="378.0" layoutY="431.0" onAction="#mute" prefHeight="51.0" prefWidth="336.0" style="-fx-border-radius: 50; -fx-background-radius: 50; -fx-border-color: #cee8d3;" text="Mute" textOverrun="CLIP" visible="false">
          <font>
             <Font name="Segoe UI Light" size="24.0" />
          </font>
@@ -157,7 +157,37 @@
             </RadialGradient>
          </ripplerFill>
       </JFXButton>
-      <JFXButton fx:id="unmute" contentDisplay="TOP" layoutX="378.0" layoutY="354.0" onAction="#unmute" prefHeight="51.0" prefWidth="336.0" style="-fx-border-radius: 50; -fx-background-radius: 50; -fx-border-color: #cee8d3;" text="unmute" textOverrun="CLIP" visible="false">
+      <JFXButton fx:id="unmute" contentDisplay="TOP" layoutX="378.0" layoutY="431.0" onAction="#unmute" prefHeight="51.0" prefWidth="336.0" style="-fx-border-radius: 50; -fx-background-radius: 50; -fx-border-color: #cee8d3;" text="unmute" textOverrun="CLIP" visible="false">
+         <font>
+            <Font name="Segoe UI Light" size="24.0" />
+         </font>
+         <ripplerFill>
+            <RadialGradient centerX="0.4943181818181818" centerY="0.5922330097087378" cycleMethod="REFLECT" focusAngle="90.0" radius="0.5">
+               <stops>
+                  <Stop color="#007c0a94" />
+                  <Stop color="#73d379" offset="0.007246376811594203" />
+                  <Stop color="#ffffff94" offset="0.007246376811594203" />
+                  <Stop color="#cee8d3" offset="1.0" />
+               </stops>
+            </RadialGradient>
+         </ripplerFill>
+      </JFXButton>
+      <JFXButton fx:id="block" contentDisplay="TOP" layoutX="378.0" layoutY="358.0" onAction="#block" prefHeight="51.0" prefWidth="336.0" style="-fx-border-radius: 50; -fx-background-radius: 50; -fx-border-color: #cee8d3;" text="Block" textOverrun="CLIP">
+         <font>
+            <Font name="Segoe UI Light" size="24.0" />
+         </font>
+         <ripplerFill>
+            <RadialGradient centerX="0.4943181818181818" centerY="0.5922330097087378" cycleMethod="REFLECT" focusAngle="90.0" radius="0.5">
+               <stops>
+                  <Stop color="#007c0a94" />
+                  <Stop color="#73d379" offset="0.007246376811594203" />
+                  <Stop color="#ffffff94" offset="0.007246376811594203" />
+                  <Stop color="#cee8d3" offset="1.0" />
+               </stops>
+            </RadialGradient>
+         </ripplerFill>
+      </JFXButton>
+      <JFXButton fx:id="unblock" contentDisplay="TOP" layoutX="378.0" layoutY="358.0" onAction="#unblock" prefHeight="51.0" prefWidth="336.0" style="-fx-border-radius: 50; -fx-background-radius: 50; -fx-border-color: #cee8d3;" text="unblock" textOverrun="CLIP" visible="false">
          <font>
             <Font name="Segoe UI Light" size="24.0" />
          </font>

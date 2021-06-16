@@ -28,6 +28,8 @@ public class searchPage_Controller {
     public JFXButton direct;
     public static String directUser ;
     public static user User ;
+    public JFXButton block ;
+    public JFXButton unblock ;
 
     //searches for a user using given username
     public void search(ActionEvent actionEvent) throws IOException, ClassNotFoundException {
@@ -40,12 +42,18 @@ public class searchPage_Controller {
             mute.setVisible(false);
             unmute.setVisible(false);
             direct.setVisible(false);
+            block.setVisible(false);
+            unblock.setVisible(false);
         }
         else{
             User = user ;
             searchPage_Controller.username = username ;
             boolean condition = othersProfileServer.followValidity(searchPage_Controller.username , TimeLinePage_Controller.LoggedInUsername);
             boolean condition1 = othersProfileServer.muteValidity(searchPage_Controller.username , TimeLinePage_Controller.LoggedInUsername);
+            othersProfileServer.blockAction(searchPage_Controller.username , TimeLinePage_Controller.LoggedInUsername , "checkIfBlocked");
+            boolean condition2 = othersProfileServer.alreadyBlocked;
+            block.setVisible(!condition2);
+            unblock.setVisible(condition2);
             validUsername.setVisible(false);
             direct.setVisible(true);
             follow.setVisible(true);
@@ -85,10 +93,22 @@ public class searchPage_Controller {
     public void returnToTimeLine(MouseEvent mouseEvent) throws IOException {
         new PageLoader().load("TimeLinePage");
     }
-
+    //opens directPage with user
     public void direct(ActionEvent actionEvent) throws IOException {
         directUser = searchBox.getText();
         DirectItemController.user = User ;
         new PageLoader().load("directPage");
+    }
+    //starts process of blocking
+    public void block(ActionEvent actionEvent) throws IOException {
+        othersProfileServer.blockAction(searchPage_Controller.username,TimeLinePage_Controller.LoggedInUsername , "block");
+        block.setDisable(true);
+        unblock.setDisable(false);
+    }
+    //starts process of unblocking
+    public void unblock(ActionEvent actionEvent) throws IOException {
+        othersProfileServer.blockAction(searchPage_Controller.username,TimeLinePage_Controller.LoggedInUsername , "unblock");
+        unblock.setDisable(true);
+        block.setDisable(false);
     }
 }

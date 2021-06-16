@@ -1,6 +1,5 @@
 package Model;
 
-
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -161,7 +160,7 @@ public class MainServer {
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream) ;
         objectOutputStream.writeObject(users);
         objectOutputStream.flush();
-        System.out.println(userName + " joined SBU Geram at : " + CurrentDateTime.time());
+        System.out.println(userName + " joined SBU Gram at : " + CurrentDateTime.time());
     }
 
     /**
@@ -626,8 +625,58 @@ public class MainServer {
                         if (v.getValue().get(j).getMessage().equals(primitiveMessage))
                             v.getValue().get(j).setMessage(secondaryMessage);
         }
+        System.out.println(userSender.getUserName() + " edited a message from chat with  " + userReceiver.getUserName() + " at " + CurrentDateTime.time()+ " original message : " + primitiveMessage + ". edited message : " + secondaryMessage);
         applyChanges(userSender.getUserName());
         applyChanges(userReceiver.getUserName());
+    }
+    
+    /**
+     * checks if user2 already blocks user1
+     * @param user1 user1
+     * @param user2 user2
+     * @return true if user2 follow user1
+     */
+    private static boolean alreadyBlocked(String user1 , String user2){
+        boolean alreadyBlocked = false ;
+        for (Model.user user : users)
+            if (user.getUserName().equals(user2))
+                alreadyBlocked = user.blockedUsers.contains(findUserByUsername(user1));
+        return alreadyBlocked ;
+    }
+    
+    /**
+     * adds user1 to user2's blockList
+     * @param user1 user1
+     * @param user2 user2
+     * @throws IOException "applyChange" method may threw IOException
+     */
+    private static void xBlocksY(String user1 , String user2) throws IOException {
+        for (Model.user user : users)
+            if (user.getUserName().equals(user2)){
+                user.blockedUsers.add(findUserByUsername(user1));
+                user.receivedMessages.remove(findUserByUsername(user1));
+                user.sentMessages.remove(findUserByUsername(user1));
+                findUserByUsername(user1).receivedMessages.remove(user);
+                findUserByUsername(user1).sentMessages.remove(user);
+                unFollowProgress(user.getUserName() , user1);
+                unFollowProgress(user1 , user.getUserName());
+            }
+        applyChanges(user1);
+        applyChanges(user2);
+    }
+    /**
+     * removes user1 from user2's blockList
+     * @param user1 user1
+     * @param user2 user2
+     * @throws IOException "applyChange" method may threw IOException
+     */
+    private static void xunBlocksY(String user1 , String user2) throws IOException {
+        for (Model.user user : users) {
+            if (user.getUserName().equals(user2))
+                user.blockedUsers.remove(findUserByUsername(user1));
+        }
+        applyChanges(user1);
+        applyChanges(user2);
     }
     /**
      * this is our running server which starts several Threads
@@ -1049,7 +1098,9 @@ public class MainServer {
                     ObjectOutputStream searchObjectOutputStream = new ObjectOutputStream(searchServerSocket.getOutputStream());
                     ObjectInputStream searchObjectInputStream = new ObjectInputStream(searchServerSocket.getInputStream());
                     String username = searchObjectInputStream.readUTF();
-                    if (findUserByUsername(username) != null)
+                    String loggedInUserName = searchObjectInputStream.readUTF();
+                    System.out.println(findUserByUsername(loggedInUserName).blockedUsers.contains(findUserByUsername(username)));
+                    if (findUserByUsername(username) != null && !findUserByUsername(username).blockedUsers.contains(findUserByUsername(loggedInUserName)))
                        searchObjectOutputStream.writeObject(findUserByUsername(username));
                     else
                         searchObjectOutputStream.writeObject(null);
@@ -1248,7 +1299,7 @@ public class MainServer {
             }
         }).start();
 
-        //this Thread receives data and creates a new object from message class using the described data
+        //this Thread receives data and creates a new object from message class or removes one or edits one using the described data
         new Thread(() -> {
             while (true){
                 try {
@@ -1260,10 +1311,14 @@ public class MainServer {
                     String message = addMessageObjectInputStream.readUTF();
                     user userSender = findUserByUsername(addMessageObjectInputStream.readUTF());
                     user userReceiver = findUserByUsername(addMessageObjectInputStream.readUTF());
-                    if (condition.equals("newMessage"))
+                    if (condition.equals("newMessage")){
                         sendTextMessage(message , userSender , userReceiver);
-                    if (condition.equals("deleteMessage"))
+                        System.out.println(userSender.getUserName() + " sent a message to " + userReceiver.getUserName() + " at " + CurrentDateTime.time() + " message : " + message);
+                    }
+                    if (condition.equals("deleteMessage")){
                         deleteMessage(message , userSender , userReceiver);
+                        System.out.println(userSender.getUserName() + " removed a message from chat with  " + userReceiver.getUserName() + " at " + CurrentDateTime.time()+ " message : " + message);
+                    }
                     if (condition.equals("editMessage"))
                         editMessage(message , userSender , userReceiver);
                     addMessageSocket.close();
@@ -1302,5 +1357,37 @@ public class MainServer {
                 }
             }
         }).start();
+        
+        //this Thread Handles all blocking actions
+        new Thread(() -> {
+            while (true){
+                try {
+                    ServerSocket blockSocket = new ServerSocket(9068);
+                    Socket blockServerSocket = blockSocket.accept();
+                    DataOutputStream blockDataOutputStream = new DataOutputStream(blockServerSocket.getOutputStream());
+                    DataInputStream blockDataInputStream = new DataInputStream(blockServerSocket.getInputStream());
+                    String user1 = blockDataInputStream.readUTF();
+                    String user2 = blockDataInputStream.readUTF();
+                    String condition = blockDataInputStream.readUTF();
+                    boolean alreadyBlocked = false ;
+                    if (condition.equals("checkIfBlocked")){
+                        alreadyBlocked = alreadyBlocked(user1 , user2) ;
+                        blockDataOutputStream.writeBoolean(alreadyBlocked);
+                        blockDataOutputStream.flush();
+                    }
+                    if (condition.equals("block"))
+                        xBlocksY(user1 , user2);
+                    if (condition.equals("unblock"))
+                        xunBlocksY(user1 , user2);
+                    blockSocket.close();
+                    blockServerSocket.close();
+                    blockDataOutputStream.close();
+                    blockDataInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+        
     }
 }

@@ -17,7 +17,7 @@ public class PageLoader {
     static Scene scene ;
     public static void initStage(Stage primaryStage){
         stage = primaryStage ;
-        stage.setTitle("SBU Geram");
+        stage.setTitle("SBU Gram");
         stage.setWidth(900);
         stage.setHeight(550);
         stage.getIcons().add(new Image(String.valueOf(Paths.get("View/Icons/icon.png"))));

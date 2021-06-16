@@ -13,6 +13,7 @@ import java.net.Socket;
  @since 11/3/1400
  */
 public class othersProfileServer {
+    public static boolean alreadyBlocked ;
     public static void FollowHandler(String whoIsFollowed , String whoIsFollowing) throws IOException {
         Socket followSocket = new Socket("127.0.0.1" , 9085);
         DataOutputStream followDataOutputStream = new DataOutputStream(followSocket.getOutputStream());
@@ -89,4 +90,21 @@ public class othersProfileServer {
         muteDataOutputStream.close();
         muteDataInputStream.close();
     }
+    public static void blockAction(String blockUser1 , String blockUser2 , String condition) throws IOException {
+        Socket socket = new Socket("127.0.0.1" , 9068);
+        DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+        DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+        dataOutputStream.writeUTF(blockUser1);
+        dataOutputStream.flush();
+        dataOutputStream.writeUTF(blockUser2);
+        dataOutputStream.flush();
+        dataOutputStream.writeUTF(condition);
+        dataOutputStream.flush();
+        if (condition.equals("checkIfBlocked"))
+             alreadyBlocked = dataInputStream.readBoolean();
+        socket.close();
+        dataOutputStream.close();
+        dataInputStream.close();
+    }
+    
 }

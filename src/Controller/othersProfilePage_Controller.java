@@ -32,6 +32,9 @@ public class othersProfilePage_Controller {
     public JFXButton follow;
     boolean alreadyFollowed ;
     boolean alreadyMuted ;
+    boolean alreadyBlocked ;
+    public JFXButton block;
+    public JFXButton unblock;
     /**
      * since most fields in this page are variables and differs from one page to another they should be initialized by the time page opens
      */
@@ -41,17 +44,17 @@ public class othersProfilePage_Controller {
         city.setText(PostItemController.PublisherUser.getCity());
         following.setText(String.valueOf(PostItemController.PublisherUser.getFollowings()));
         follower.setText(String.valueOf(PostItemController.PublisherUser.getFollowers()));
-        profilePhoto.setFill(
-                new ImagePattern(
-                        new Image(
-                                new ByteArrayInputStream(
-                                        PostItemController.PublisherUser.getProfilePhoto()))));
+        profilePhoto.setFill(new ImagePattern(new Image(new ByteArrayInputStream(PostItemController.PublisherUser.getProfilePhoto()))));
         alreadyFollowed = othersProfileServer.followValidity(PostItemController.PublisherUser.getUserName(),TimeLinePage_Controller.LoggedInUsername);
         alreadyMuted = othersProfileServer.muteValidity(PostItemController.PublisherUser.getUserName(),TimeLinePage_Controller.LoggedInUsername);
+        othersProfileServer.blockAction(PostItemController.PublisherUser.getUserName(),TimeLinePage_Controller.LoggedInUsername , "checkIfBlocked");
+        alreadyBlocked =othersProfileServer.alreadyBlocked;
         follow.setVisible(!alreadyFollowed);
         unfollow.setVisible(alreadyFollowed);
         mute.setVisible(alreadyFollowed && !alreadyMuted);
         unmute.setVisible(alreadyFollowed && alreadyMuted);
+        block.setVisible(!alreadyBlocked);
+        unblock.setVisible(alreadyBlocked);
     }
     public void backToTimeLine(MouseEvent mouseEvent) throws IOException {
         new PageLoader().load("TimeLinePage");
@@ -82,5 +85,18 @@ public class othersProfilePage_Controller {
     }
     public void selfPosts(ActionEvent actionEvent) throws IOException {
         new PageLoader().load("othersPostsPage");
+    }
+    //starts process of blocking
+    public void block(ActionEvent actionEvent) throws IOException {
+        block.setVisible(false);
+        unblock.setVisible(true);
+        Model.othersProfileServer.blockAction(PostItemController.PublisherUser.getUserName(),TimeLinePage_Controller.LoggedInUsername,"block");
+    }
+    //starts process of unblocking
+    public void unblock(ActionEvent actionEvent) throws IOException {
+        block.setVisible(true);
+        unblock.setVisible(false);
+        Model.othersProfileServer.blockAction(PostItemController.PublisherUser.getUserName(),TimeLinePage_Controller.LoggedInUsername,"unblock");
+    
     }
 }
