@@ -680,6 +680,31 @@ public class MainServer {
         applyChanges(user1);
         applyChanges(user2);
     }
+    
+    /**
+     * marks all messaaes between two chatting users as read
+     * @param user1 first chatting user
+     * @param user2 second chatting user
+     * @throws IOException "applyChange" method may threw IOException
+     */
+    private static void markAsRead(user user1 , user user2) throws IOException {
+        for (Model.user user : users) {
+            if (user.getUserName().equals(user2.getUserName())) {
+                for (int j = 0; j < user.sentMessages.size(); j++)
+                    if (user.sentMessages.containsKey(user1) && user.sentMessages.get(user1) != null)
+                        for (int k = 0; k < user.sentMessages.get(user1).size(); k++)
+                            user.sentMessages.get(user1).get(k).setRead(true);
+            }
+            if (user.getUserName().equals(user1.getUserName())) {
+                for (int j = 0; j < user.receivedMessages.size(); j++)
+                    if (user.receivedMessages.containsKey(user2) && user.receivedMessages.get(user2) != null)
+                        for (int k = 0; k < user.receivedMessages.get(user2).size(); k++)
+                            user.receivedMessages.get(user2).get(k).setRead(true);
+            }
+        }
+        applyChanges(user1.getUserName());
+        applyChanges(user2.getUserName());
+    }
     /**
      * this is our running server which starts several Threads
      * each Thread does a particular job
@@ -1385,6 +1410,27 @@ public class MainServer {
                     blockServerSocket.close();
                     blockDataOutputStream.close();
                     blockDataInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+        
+        //this Thread marks messages as read
+        new Thread(() -> {
+            while (true){
+                try {
+                    ServerSocket readSocket = new ServerSocket(9067);
+                    Socket readServerSocket = readSocket.accept();
+                    ObjectOutputStream readObjectOutputStream = new ObjectOutputStream(readServerSocket.getOutputStream());
+                    ObjectInputStream readObjectInputStream = new ObjectInputStream(readServerSocket.getInputStream());
+                    String user1 = readObjectInputStream.readUTF();
+                    String user2 = readObjectInputStream.readUTF();
+                    markAsRead(findUserByUsername(user1) , findUserByUsername(user2));
+                    readSocket.close();
+                    readServerSocket.close();
+                    readObjectOutputStream.close();
+                    readObjectInputStream.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

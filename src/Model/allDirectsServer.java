@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
 /**
@@ -37,4 +38,24 @@ public class allDirectsServer {
         allDirectsObjectInputStream.close();
         return messages ;
     }
+    
+    /**
+     * this method changes message state from unread to read
+     * @param user1 first chatting user
+     * @param user2 second chatting user
+     * @throws IOException using socket programming may cause IOException
+     */
+    public static void read(String user1 , String user2) throws IOException {
+        Socket readSocket = new Socket("127.0.0.1" , 9067);
+        ObjectOutputStream readObjectOutputStream = new ObjectOutputStream(readSocket.getOutputStream());
+        ObjectInputStream readObjectInputStream = new ObjectInputStream(readSocket.getInputStream());
+        readObjectOutputStream.writeUTF(user1);
+        readObjectOutputStream.flush();
+        readObjectOutputStream.writeUTF(user2);
+        readObjectOutputStream.flush();
+        readSocket.close();
+        readObjectOutputStream.close();
+        readObjectInputStream.close();
+    }
+    
 }

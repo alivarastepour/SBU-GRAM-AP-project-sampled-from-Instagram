@@ -13,14 +13,24 @@ public class message implements Serializable {
     private user sender ;
     private user receiver ;
     private final long time ;
+    private boolean read  ;
 
     public message(String message, user sender, user receiver) {
         this.message = message;
         this.sender = sender;
         this.receiver = receiver;
         time = System.currentTimeMillis() ;
+        read = false ;
     }
-
+    
+    public boolean isRead() {
+        return read;
+    }
+    
+    public void setRead(boolean read) {
+        this.read = read;
+    }
+    
     public long getTime() {
         return time;
     }

@@ -34,9 +34,7 @@ public class allDirectsPage_Controller {
      * @throws IOException since "getMessage" method throws CNFException , this method should also handle it
      * @throws ClassNotFoundException since "getMessage" method throws CNFException , this method should also handle it
      */
-    public void initialize() throws IOException, ClassNotFoundException {
-        receivedMessages = Model.allDirectsServer.getMessages(logInPage_Controller.Username , "receivedMessages");
-        sentMessages = Model.allDirectsServer.getMessages(logInPage_Controller.Username , "sentMessages");
+    public static List<message> messageAssitant(Map<user, List<message>> receivedMessages , Map<user, List<message>> sentMessages){
         List<message> messageList = new ArrayList<>();
         List<message> m = new ArrayList<>();
         for (Map.Entry<user , List<message>> value: receivedMessages.entrySet()) {
@@ -66,12 +64,20 @@ public class allDirectsPage_Controller {
                 }
         messageList.removeAll(removeList);
         messageList = messageList.stream().sorted((a,b) -> Math.toIntExact(b.getTime() - a.getTime())).collect(Collectors.toList());
+        return messageList ;
+    }
+    public void initialize() throws IOException, ClassNotFoundException {
+        receivedMessages = Model.allDirectsServer.getMessages(logInPage_Controller.Username , "receivedMessages");
+        sentMessages = Model.allDirectsServer.getMessages(logInPage_Controller.Username , "sentMessages");
+        List<message> messageList  = messageAssitant(receivedMessages , sentMessages);
+
+//        int unread = (int) messageList.stream().filter(a -> !a.isRead()).count();
         guide.setVisible(messageList.size() == 0);
         guide1.setVisible(messageList.size() == 0);
         allDirects.setItems(FXCollections.observableArrayList(messageList));
         allDirects.setCellFactory(allDirects -> new DirectItem());
     }
-
+    
     public void backToTimeLinePage(MouseEvent mouseEvent) throws IOException {
         new PageLoader().load("TimeLinePage");
     }

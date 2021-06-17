@@ -1,8 +1,7 @@
 package Controller;
 
-import Model.PageLoader;
-import Model.TimeLineServer;
-import Model.post;
+import Model.*;
+import com.jfoenix.controls.JFXButton;
 import javafx.collections.FXCollections;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -10,6 +9,7 @@ import javafx.scene.input.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -26,6 +26,7 @@ public class TimeLinePage_Controller {
     public Label greet;
     public Label greet1;
     private List<post> posts = new ArrayList<>();
+    public Label unreadMessages ;
     public void initialize() throws IOException, ClassNotFoundException {
         LoggedInUsername = logInPage_Controller.Username;
         posts = TimeLineServer.TimeLineHandler(LoggedInUsername);
@@ -33,6 +34,14 @@ public class TimeLinePage_Controller {
         TimeLine.setCellFactory(TimeLine -> new PostItem());
         greet.setVisible(posts.size() == 0);
         greet1.setVisible(posts.size() == 0);
+        Map<user, List<message>> receivedMessages = Model.allDirectsServer.getMessages(logInPage_Controller.Username , "receivedMessages");
+        Map<user, List<message>> sentMessages = Model.allDirectsServer.getMessages(logInPage_Controller.Username , "sentMessages");
+        List<message> messageList  = allDirectsPage_Controller.messageAssitant(receivedMessages , sentMessages);
+        int unreadCount = (int) messageList.stream().filter(a -> !a.getSender().getUserName().equals(logInPage_Controller.Username)).filter(a -> !a.isRead()).count();
+        if (unreadCount == 0)
+            unreadMessages.setVisible(false);
+        else
+            unreadMessages.setText(String.valueOf(unreadCount));
     }
     
     public void Profile(MouseEvent mouseEvent) throws IOException {

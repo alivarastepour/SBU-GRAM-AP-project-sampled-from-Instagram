@@ -22,6 +22,7 @@ public class DirectItemController {
     Model.message message ;
     public AnchorPane root;
     public Circle profilePhoto ;
+    public Circle unread ;
     public Label username ;
     public Label lastMessage ;
     public static Model.user user ;
@@ -51,6 +52,7 @@ public class DirectItemController {
             profilePhoto.setFill(new ImagePattern(new Image(new ByteArrayInputStream(message.getSender().getProfilePhoto()))));
         }
         lastMessage.setText(message.getMessage());
+        unread.setVisible(!message.isRead() && !message.getSender().getUserName().equals(logInPage_Controller.Username));
         return root ;
     }
 
@@ -60,10 +62,14 @@ public class DirectItemController {
      * @throws IOException loading other pages may threw IOException
      */
     public void gotoMessages(ActionEvent actionEvent) throws IOException {
-        if (message.getSender().getUserName().equals(logInPage_Controller.Username))
+        if (message.getSender().getUserName().equals(logInPage_Controller.Username)){
             user = message.getReceiver();
-        else
+            Model.allDirectsServer.read(logInPage_Controller.Username , user.getUserName());
+        }
+        else{
             user = message.getSender();
+            Model.allDirectsServer.read(logInPage_Controller.Username , user.getUserName());
+        }
         new PageLoader().load("directPage");
     }
 }

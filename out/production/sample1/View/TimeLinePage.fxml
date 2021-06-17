@@ -63,5 +63,6 @@
       </Label>
       <Label layoutX="767.0" layoutY="474.0" text="SBU GERAM" textFill="#82c440" />
       <Label layoutX="738.0" layoutY="492.0" text="all rights reserved 2021" textFill="#82c440" />
+      <Label fx:id="unreadMessages" layoutX="815.0" layoutY="112.0" text="23" textFill="RED" />
    </children>
 </AnchorPane>
