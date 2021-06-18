@@ -1126,7 +1126,6 @@ public class MainServer {
                     ObjectInputStream searchObjectInputStream = new ObjectInputStream(searchServerSocket.getInputStream());
                     String username = searchObjectInputStream.readUTF();
                     String loggedInUserName = searchObjectInputStream.readUTF();
-                    System.out.println(findUserByUsername(loggedInUserName).blockedUsers.contains(findUserByUsername(username)));
                     if (findUserByUsername(username) != null && !findUserByUsername(username).blockedUsers.contains(findUserByUsername(loggedInUserName)))
                        searchObjectOutputStream.writeObject(findUserByUsername(username));
                     else
