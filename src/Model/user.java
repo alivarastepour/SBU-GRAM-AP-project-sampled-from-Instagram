@@ -125,8 +125,11 @@ public class user implements Serializable {
         this.profilePhoto = profilePhoto;
     }
     
-    public void setPhotoAddress(String photoAddress) {
+    public void setPhotoAddress(String photoAddress) throws IOException {
         PhotoAddress = photoAddress;
+        File file = new File(PhotoAddress);
+        FileInputStream fileInputStream = new FileInputStream(file) ;
+        profilePhoto = fileInputStream.readAllBytes();
     }
 
     public String getCity() {

@@ -303,7 +303,6 @@ public class MainServer {
      * if any change is applied to user's details, it is necessary to apply it to post's details as well
      */
     private static void read_change(){
-//        if (posts.size() != 0)
             for (Model.post post : posts)
                 for (Model.user user : users) {
                     if (post.getPublisherUser().getUserName().equals(user.getUserName())){
@@ -313,6 +312,12 @@ public class MainServer {
                         post.setAuthorUser(user);
                     }
             }
+//        for (int i = 0; i < users.size(); i++) {
+//            for (int j = i; j < users.size(); j++) {
+//                if (users.get(i).followingsList.contains(users.get(j)))
+//                    users.get(i).followingsList
+//            }
+//        }
         
     }
     
