@@ -40,18 +40,13 @@ public class logInServer {
         logInObjectOutputStream.flush();
         logInObjectOutputStream.writeUTF(Password);
         logInObjectOutputStream.flush();
-        String encryptedUserPassValidity = logInObjectInputStream.readUTF();
-        String[] decryptedUserPassValidityArray = encryptedUserPassValidity.split("~~.~~") ;
-        if (decryptedUserPassValidityArray[0].equals("true"))
-            validUsername = true ;
-        if (decryptedUserPassValidityArray[1].equals("true"))
-            validPassword = true ;
+        validUsername = logInObjectInputStream.readBoolean();
+        validPassword = logInObjectInputStream.readBoolean();
         user user = (Model.user) logInObjectInputStream.readObject();
         logInSocket.close();
         logInObjectInputStream.close();
         logInObjectOutputStream.close();
         changeProfileDetailsPage_Controller.username = userName ;
         changeProfileDetailsPage_Controller.user = user ;
-//        System.out.println(user.getCity());
     }
 }

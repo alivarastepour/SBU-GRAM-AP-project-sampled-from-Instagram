@@ -477,26 +477,32 @@ public class MainServer {
      * @throws IOException line 483, 491, 494 may threw IOException
      */
     private static void delete_account(String username) throws IOException {
-        users.remove(findUserByUsername(username));
-        applyChanges(username);
-        for (int i = 0; i < usernames.size(); i++) {
-            if (usernames.get(i).equals(username))
-                usernames.remove(i);
+        for (int i = 0; i < users.size(); i++) {
+            if (!users.get(i).getUserName().equals(username)){
+                users.get(i).followersList.remove(findUserByUsername(username));
+                users.get(i).followingsList.remove(findUserByUsername(username));
+                users.get(i).mutedUsers.remove(findUserByUsername(username));
+                users.get(i).blockedUsers.remove(findUserByUsername(username));
+                users.get(i).sentMessages.remove(findUserByUsername(username));
+                users.get(i).receivedMessages.remove(findUserByUsername(username));
+            }
         }
-//        usernames = usernames.stream().filter(a -> !a.equals(username)).collect(Collectors.toList());
+        for (int i = 0; i < posts.size(); i++) {
+            if (posts.get(i).getAuthorUser().getUserName().equals(username) || posts.get(i).getPublisherUser().getUserName().equals(username)){
+                posts.remove(i);
+            }
+        }
+        
+        
+        
+        usernames = usernames.stream().filter(a -> !a.equals(username)).collect(Collectors.toList());
         userPass.remove(username);
-        userEmail.remove(username);
         userPhone.remove(username);
-        for (int i = 0; i < posts.size(); i++){
-            if (posts.get(i).getAuthorUser().getUserName().equals(username)){
-                posts.remove(i);
-                add_post(new post());
-            }
-            if (posts.get(i).getPublisherUser().getUserName().equals(username)){
-                posts.remove(i);
-                add_post(new post());
-            }
-        }
+        userEmail.remove(username);
+        users.remove(findUserByUsername(username));
+        
+        applyChanges(username);
+        add_post(new post());
     }
     
     /**
@@ -728,14 +734,18 @@ public class MainServer {
                            validUser = true;
                            break;
                        }
+                   System.out.println("valid user " + validUser);
                    boolean validPassword = false ;
                    if (usernames.contains(username))
                        validPassword = userPass.get(username).equals(password) ;
+                   System.out.println("valid Password " + validPassword);
                    if (validUser && validPassword){
                        System.out.println("user [ " + username + " ] logged in at : " +  CurrentDateTime.time());
                        setLoggedInUser(username);
                    }
-                   ServerLogInObjectOutputStream.writeUTF(validUser + "~~.~~" + validPassword);
+                   ServerLogInObjectOutputStream.writeBoolean(validUser);
+                   ServerLogInObjectOutputStream.flush();
+                   ServerLogInObjectOutputStream.writeBoolean(validPassword);
                    ServerLogInObjectOutputStream.flush();
                    user user = findUserByUsername(username);
                    ServerLogInObjectOutputStream.writeObject(user);

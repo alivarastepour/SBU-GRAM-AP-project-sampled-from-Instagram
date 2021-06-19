@@ -46,7 +46,6 @@ public class logInPage_Controller {
             Model.logInServer.logInHandler(userName , passWord);
         boolean validUsername = Model.logInServer.isValidUsername();
         boolean validPassword = Model.logInServer.isValidPassword();
-        
         if (validUsername && validPassword ){
             wrongPass.setVisible(false);
             wrongUsername.setVisible(false);
