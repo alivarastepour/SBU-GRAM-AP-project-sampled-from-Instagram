@@ -2,6 +2,7 @@ package Model;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * this class allows us to create specified objects defined as message
@@ -14,6 +15,7 @@ public class message implements Serializable {
     private user receiver ;
     private final long time ;
     private boolean read  ;
+    private final String date ;
 
     public message(String message, user sender, user receiver) {
         this.message = message;
@@ -21,6 +23,11 @@ public class message implements Serializable {
         this.receiver = receiver;
         time = System.currentTimeMillis() ;
         read = false ;
+        date = CurrentDateTime.time1();
+    }
+    
+    public String getDate() {
+        return date;
     }
     
     public boolean isRead() {

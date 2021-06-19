@@ -24,4 +24,9 @@ public class CurrentDateTime {
         LocalDateTime now = LocalDateTime.now();
         return dtf.format(now);
     }
+    public static String time1() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+        LocalDateTime now = LocalDateTime.now();
+        return dtf.format(now);
+    }
 }  

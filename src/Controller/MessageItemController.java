@@ -34,8 +34,7 @@ public class MessageItemController {
     public ImageView applyEditImage;
     public JFXButton applyEditButton ;
     public JFXButton editButton ;
-    static boolean editAction = false ;
-    String newMessage ;
+    public Label time ;
     
 
     /**
@@ -58,6 +57,7 @@ public class MessageItemController {
         edit.setVisible(message.getSender().getUserName().equals(logInPage_Controller.Username));
         delete.setVisible(message.getSender().getUserName().equals(logInPage_Controller.Username));
         deleteButton.setVisible(message.getSender().getUserName().equals(logInPage_Controller.Username));
+        time.setText(message.getDate());
         return root ;
     }
     
