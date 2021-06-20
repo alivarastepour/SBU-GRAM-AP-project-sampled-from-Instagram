@@ -41,11 +41,7 @@ public class message implements Serializable {
     public long getTime() {
         return time;
     }
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
+    
     public String getMessage() {
         return message;
     }
@@ -58,15 +54,8 @@ public class message implements Serializable {
         return sender;
     }
 
-    public void setSender(user sender) {
-        this.sender = sender;
-    }
-
     public user getReceiver() {
         return receiver;
     }
 
-    public void setReceiver(user receiver) {
-        this.receiver = receiver;
-    }
 }

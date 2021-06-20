@@ -19,7 +19,7 @@ public class changePasswordPage_Controller {
     public JFXTextField newPassword;
     public JFXTextField newPasswordRepeat;
     public Label passwordDoesntMatch;
-    private static String username = Model.passwordRecoveryPageServer.getUsername();
+    private static final String username = Model.passwordRecoveryPageServer.getUsername();
     public Label passwordValidation;
 
     public void backToPasswordRecovery(MouseEvent mouseEvent) throws IOException {

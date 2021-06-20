@@ -36,7 +36,7 @@ public class PostItemController {
     public Label numOfRePost ;
     public Label repostLabel ;
     public Label repostname ;
-    public Label numOfComments ; ;
+    public Label numOfComments ;
     public JFXButton repostButton ;
     public static post currentPost ;
     public static String user;

@@ -14,7 +14,7 @@ public class post implements Serializable {
     private String caption ;
     private int likes ;
     private int reposts ;
-    private List<comment> comments = new ArrayList<>();
+    private final List<comment> comments = new ArrayList<>();
     public List<String> likeUsernames ;
     private user authorUser ;
     private user publisherUser ;
@@ -43,24 +43,8 @@ public class post implements Serializable {
         return reposts;
     }
     
-    public void setReposts(int reposts) {
-        this.reposts = reposts;
-    }
-    
     public List<comment> getComments() {
         return comments;
-    }
-    
-    public void setComments(List<comment> comments) {
-        this.comments = comments;
-    }
-    
-    public void setLikeUsernames(List<String> likeUsernames) {
-        this.likeUsernames = likeUsernames;
-    }
-    
-    public List<String> getLikeUsernames() {
-        return likeUsernames;
     }
     
     public void addReposts() {
@@ -79,41 +63,12 @@ public class post implements Serializable {
         return time;
     }
     
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-    
-    public void setTitle(String title) {
-        this.title = title;
-    }
     public void addLike(user user){
         this.likes++;
     }
+    
     public void removeLike(user user){
         this.likes--;
-    }
-    public void setCaption(String caption) {
-        this.caption = caption;
-    }
-    
-    public void setLikes(int likes) {
-        this.likes = likes;
-    }
-    
-    public List<String> getLikeUsers() {
-        return likeUsernames;
-    }
-    
-    public void setLikeUsers(List<String> likeUsers) {
-        this.likeUsernames = likeUsers;
-    }
-    
-    public void setPhotoAddress(String photoAddress) {
-        this.photoAddress = photoAddress;
-    }
-    
-    public void setPhoto(byte[] photo) {
-        this.photo = photo;
     }
     
     public void setTime(long time) {
@@ -140,10 +95,6 @@ public class post implements Serializable {
         return publisherUser;
     }
     
-    public String getPhotoAddress() {
-        return photoAddress;
-    }
-    
     public byte[] getPhoto() {
         return photo;
     }
@@ -152,9 +103,7 @@ public class post implements Serializable {
         this.authorUser = authorUser;
     }
     
-    public void setPublisherUser(user publisherUser) {
-        this.publisherUser = publisherUser;
-    }
+    public void setPublisherUser(user publisherUser) { this.publisherUser =      publisherUser; }
     public void addComment(comment comment){
         this.comments.add(comment);
     }

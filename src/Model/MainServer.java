@@ -21,9 +21,9 @@ public class MainServer {
 
     private static List<user> users = new Vector<>();//list of users
     private static List<String> usernames = new Vector<>();//list of usernames
-    private static Map<String , String> userPass = new ConcurrentHashMap<>();//map from users to passwords
-    private static Map<String , String> userEmail = new ConcurrentHashMap<>();//map from users to emails
-    private static Map<String , String> userPhone = new ConcurrentHashMap<>();//map from users to phone numbers
+    private static final Map<String , String> userPass = new ConcurrentHashMap<>();//map from users to passwords
+    private static final Map<String , String> userEmail = new ConcurrentHashMap<>();//map from users to emails
+    private static final Map<String , String> userPhone = new ConcurrentHashMap<>();//map from users to phone numbers
     private static List<post> posts = new Vector<>();//keeps all posts
 
     /**
@@ -190,10 +190,8 @@ public class MainServer {
      */
     private static void changePassword(String username , String password) throws IOException {
         for (Model.user user : users)
-            if (user.getUserName().equals(username)){
+            if (user.getUserName().equals(username))
                 user.setPassword(password);
-//                break;
-            }
         userPass.put(username , password);
         applyChanges(username);
     }
@@ -303,22 +301,13 @@ public class MainServer {
      * if any change is applied to user's details, it is necessary to apply it to post's details as well
      */
     private static void read_change(){
-            for (Model.post post : posts)
-                for (Model.user user : users) {
-                    if (post.getPublisherUser().getUserName().equals(user.getUserName())){
-                        post.setPublisherUser(user);
-                    }
-                    if (post.getAuthorUser().getUserName().equals(user.getUserName())){
-                        post.setAuthorUser(user);
-                    }
+        for (Model.post post : posts)
+            for (Model.user user : users) {
+                if (post.getPublisherUser().getUserName().equals(user.getUserName()))
+                    post.setPublisherUser(user);
+                if (post.getAuthorUser().getUserName().equals(user.getUserName()))
+                    post.setAuthorUser(user);
             }
-//        for (int i = 0; i < users.size(); i++) {
-//            for (int j = i; j < users.size(); j++) {
-//                if (users.get(i).followingsList.contains(users.get(j)))
-//                    users.get(i).followingsList
-//            }
-//        }
-        
     }
     
     /**
@@ -379,11 +368,9 @@ public class MainServer {
      * @throws IOException method "apply changes" may threw IOException
      */
     private static void muteProgress(String muter , String muted) throws IOException {
-        for (Model.user user : users) {
-            if (user.getUserName().equals(muter)){
+        for (Model.user user : users)
+            if (user.getUserName().equals(muter))
                 user.addMutedUser(findUserByUsername(muted));
-            }
-        }
         applyChanges(muted);
         applyChanges(muter);
     }
@@ -405,10 +392,9 @@ public class MainServer {
      * @throws IOException method "apply changes" may threw IOException
      */
     private static void unmuteProgress(String muter , String muted) throws IOException {
-        for (Model.user user : users) {
+        for (Model.user user : users)
             if (user.getUserName().equals(muter))
                 user.removeMutedUser(findUserByUsername(muted));
-        }
         applyChanges(muted);
         applyChanges(muter);
     }
@@ -421,14 +407,9 @@ public class MainServer {
     private static List<post> findPostsForUsername(String username){
         List<post> postsForUsername = new ArrayList<>();
         for (Model.post post : posts)
-            if (!findUserByUsername(username).getMutedUsers().contains(post.getPublisherUser())
-                    && (post.getPublisherUser().getFollowersList().contains(findUserByUsername(username))
-                    || post.getPublisherUser().getUserName().equals(username) ))
+            if (!findUserByUsername(username).getMutedUsers().contains(post.getPublisherUser()) && (post.getPublisherUser().getFollowersList().contains(findUserByUsername(username)) || post.getPublisherUser().getUserName().equals(username) ))
                 postsForUsername.add(post);
-        postsForUsername = postsForUsername
-                                        .stream()
-                                        .sorted((a , b) -> Math.toIntExact(b.getTime() - a.getTime()))
-                                        .collect(Collectors.toList());
+        postsForUsername = postsForUsername.stream().sorted((a , b) -> Math.toIntExact(b.getTime() - a.getTime())).collect(Collectors.toList());
         return postsForUsername ;
     }
     
@@ -482,30 +463,24 @@ public class MainServer {
      * @throws IOException line 483, 491, 494 may threw IOException
      */
     private static void delete_account(String username) throws IOException {
-        for (int i = 0; i < users.size(); i++) {
-            if (!users.get(i).getUserName().equals(username)){
-                users.get(i).followersList.remove(findUserByUsername(username));
-                users.get(i).followingsList.remove(findUserByUsername(username));
-                users.get(i).mutedUsers.remove(findUserByUsername(username));
-                users.get(i).blockedUsers.remove(findUserByUsername(username));
-                users.get(i).sentMessages.remove(findUserByUsername(username));
-                users.get(i).receivedMessages.remove(findUserByUsername(username));
+        for (Model.user user : users) {
+            if (!user.getUserName().equals(username)) {
+                user.followersList.remove(findUserByUsername(username));
+                user.followingsList.remove(findUserByUsername(username));
+                user.mutedUsers.remove(findUserByUsername(username));
+                user.blockedUsers.remove(findUserByUsername(username));
+                user.sentMessages.remove(findUserByUsername(username));
+                user.receivedMessages.remove(findUserByUsername(username));
             }
         }
-        for (int i = 0; i < posts.size(); i++) {
-            if (posts.get(i).getAuthorUser().getUserName().equals(username) || posts.get(i).getPublisherUser().getUserName().equals(username)){
+        for (int i = 0; i < posts.size(); i++)
+            if (posts.get(i).getAuthorUser().getUserName().equals(username) || posts.get(i).getPublisherUser().getUserName().equals(username))
                 posts.remove(i);
-            }
-        }
-        
-        
-        
         usernames = usernames.stream().filter(a -> !a.equals(username)).collect(Collectors.toList());
         userPass.remove(username);
         userPhone.remove(username);
         userEmail.remove(username);
         users.remove(findUserByUsername(username));
-        
         applyChanges(username);
         add_post(new post());
     }
@@ -530,10 +505,9 @@ public class MainServer {
      * @throws IOException add_post method may threw IOException inside
      */
     private static void addCommentToPost(comment comment , post post) throws IOException {
-        for (Model.post value : posts) {
+        for (Model.post value : posts)
             if (value.getCaption().equals(post.getCaption()))
                 value.addComment(comment);
-        }
         add_post(post);
     }
 

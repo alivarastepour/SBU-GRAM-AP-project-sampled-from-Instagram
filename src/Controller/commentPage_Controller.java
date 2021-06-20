@@ -34,7 +34,4 @@ public class commentPage_Controller {
         new PageLoader().load("TimeLinePage");
     
     }
-
-
-
 }
