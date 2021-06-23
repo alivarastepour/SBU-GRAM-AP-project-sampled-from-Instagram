@@ -3,6 +3,7 @@ package Controller;
 import Model.PageLoader;
 import Model.message;
 import Model.user;
+import com.jfoenix.controls.JFXTextField;
 import javafx.collections.FXCollections;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -26,6 +27,8 @@ public class allDirectsPage_Controller {
     public ListView<message> allDirects ;
     public Label guide ;
     public Label guide1 ;
+    public JFXTextField searchBox ;
+    public Label userNotFound;
     private Map<user, List<message>> receivedMessages = new HashMap<>();
     private Map<user, List<message>> sentMessages = new HashMap<>();
 
@@ -76,5 +79,24 @@ public class allDirectsPage_Controller {
     
     public void backToTimeLinePage(MouseEvent mouseEvent) throws IOException {
         new PageLoader().load("TimeLinePage");
+    }
+
+    /**
+     * searches for a existing user and starts a chat wit them
+     * @param mouseEvent on mouse click
+     * @throws IOException "searchHandler" method may threw IOException
+     * @throws ClassNotFoundException "searchHandler" method may threw ClassNotFoundException
+     */
+    public void search(MouseEvent mouseEvent) throws IOException, ClassNotFoundException {
+        String searchedUser = searchBox.getText();
+        user user = Model.searchServer.searchHandler(searchedUser);
+        if (user == null)
+            userNotFound.setVisible(true);
+        else{
+            DirectItemController.user = user ;
+            new PageLoader().load("directPage");
+            userNotFound.setVisible(false);
+        }
+
     }
 }

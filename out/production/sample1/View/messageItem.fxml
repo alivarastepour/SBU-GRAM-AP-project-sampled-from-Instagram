@@ -44,5 +44,6 @@
             <Font size="9.0" />
          </font>
       </Label>
+      <JFXButton fx:id="photoMessage" layoutX="60.0" layoutY="18.0" onAction="#photoMessage" prefHeight="25.0" prefWidth="389.0" text="  " visible="false" />
    </children>
 </AnchorPane>
