@@ -31,8 +31,6 @@ public class allDirectsPage_Controller {
 
     /**
      * sets received and sent messages , sorts them and then visualizes it
-     * @throws IOException since "getMessage" method throws CNFException , this method should also handle it
-     * @throws ClassNotFoundException since "getMessage" method throws CNFException , this method should also handle it
      */
     public static List<message> messageAssitant(Map<user, List<message>> receivedMessages , Map<user, List<message>> sentMessages){
         List<message> messageList = new ArrayList<>();
@@ -70,8 +68,6 @@ public class allDirectsPage_Controller {
         receivedMessages = Model.allDirectsServer.getMessages(logInPage_Controller.Username , "receivedMessages");
         sentMessages = Model.allDirectsServer.getMessages(logInPage_Controller.Username , "sentMessages");
         List<message> messageList  = messageAssitant(receivedMessages , sentMessages);
-
-//        int unread = (int) messageList.stream().filter(a -> !a.isRead()).count();
         guide.setVisible(messageList.size() == 0);
         guide1.setVisible(messageList.size() == 0);
         allDirects.setItems(FXCollections.observableArrayList(messageList));

@@ -13,19 +13,25 @@ public class message implements Serializable {
     private String message ;
     private user sender ;
     private user receiver ;
+    private byte[] photo = null;
     private final long time ;
     private boolean read  ;
     private final String date ;
 
-    public message(String message, user sender, user receiver) {
+    public message(String message, user sender, user receiver , byte[] photo) {
         this.message = message;
         this.sender = sender;
         this.receiver = receiver;
+        this.photo = photo ;
         time = System.currentTimeMillis() ;
         read = false ;
         date = CurrentDateTime.time1();
     }
-    
+
+    public byte[] getPhoto() {
+        return photo;
+    }
+
     public String getDate() {
         return date;
     }

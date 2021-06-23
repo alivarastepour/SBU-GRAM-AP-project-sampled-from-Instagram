@@ -18,7 +18,7 @@
             <Image url="@Icons/direct%20(2).png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="42.0" fitWidth="25.0" layoutX="861.0" layoutY="463.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="42.0" fitWidth="25.0" layoutX="861.0" layoutY="463.0" onMouseClicked="#insert" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Icons/paper-clip.png" />
          </image>
@@ -28,7 +28,7 @@
             <Font name="Segoe UI Light" size="29.0" />
          </font>
       </Label>
-      <ImageView fitHeight="42.0" fitWidth="31.0" layoutX="39.0" layoutY="29.0" onMouseClicked="#backToAllDirectsPage" opacity="0.2" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="42.0" fitWidth="31.0" layoutX="39.0" layoutY="50.0" onMouseClicked="#backToAllDirectsPage" opacity="0.2" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Icons/backarrow.png" />
          </image>

@@ -3,6 +3,7 @@ package Controller;
 import Model.PageLoader;
 import Model.post;
 import javafx.collections.FXCollections;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ import java.util.List;
  */
 public class selfPostsPage_Controller {
     static boolean trick = false ;
+    public Label greet ;
+    public Label greet1 ;
     public ListView<post> SelfTimeLine;
     private List<post> selfPosts = new ArrayList<>();
     public void initialize() throws IOException, ClassNotFoundException {
@@ -24,6 +27,8 @@ public class selfPostsPage_Controller {
             selfPosts = Model.selfPostServer.selfPostHandler(logInPage_Controller.Username);
         else
             selfPosts = Model.selfPostServer.selfPostHandler(PostItemController.PublisherUser.getUserName());
+        greet.setVisible(selfPosts.size() == 0);
+        greet1.setVisible(selfPosts.size() == 0);
         SelfTimeLine.setItems(FXCollections.observableArrayList(selfPosts));
         SelfTimeLine.setCellFactory(TimeLine -> new PostItem());
         trick = false ;

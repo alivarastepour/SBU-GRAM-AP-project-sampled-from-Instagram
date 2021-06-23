@@ -519,25 +519,8 @@ public class MainServer {
      * @throws IOException since apply change method is called, the possibility of IOException is not zero
      */
     private static void sendTextMessage(String message , user sender , user receiver) throws IOException {
-        message textMessage = new message(message , sender , receiver);
-        for (Model.user user : users) {
-            if (user.getUserName().equals(sender.getUserName()))
-                if (user.sentMessages.get(receiver) == null) {
-                    List<message> list = new ArrayList<>();
-                    list.add(textMessage);
-                    user.sentMessages.put(receiver, list);
-                } else
-                    user.sentMessages.get(receiver).add(textMessage);
-            if (user.getUserName().equals(receiver.getUserName()))
-                if (user.receivedMessages.get(sender) == null) {
-                    List<message> list = new ArrayList<>();
-                    list.add(textMessage);
-                    user.receivedMessages.put(sender, list);
-                } else
-                    user.receivedMessages.get(sender).add(textMessage);
-        }
-        applyChanges(sender.getUserName());
-        applyChanges(receiver.getUserName());
+        message textMessage = new message(message , sender , receiver, null);
+        addMessage(sender, receiver, textMessage);
     }
 
     /**
@@ -690,6 +673,50 @@ public class MainServer {
         applyChanges(user1.getUserName());
         applyChanges(user2.getUserName());
     }
+
+    /**
+     * creates an object from message class (image message) using images' address , sender and receiver
+     * @param photoAddress address of the image
+     * @param userSender sender of the image
+     * @param userReceiver receiver of the image
+     * @throws IOException fileInputStream,readAllBytes and "addMessage" method may threw IOException
+     */
+    private static void sendPhotoMessage(String photoAddress , user userSender , user userReceiver) throws IOException {
+        File file = new File(photoAddress);
+        FileInputStream fileInputStream = new FileInputStream(file) ;
+        byte[] b = fileInputStream.readAllBytes();
+        message PhotoMessage = new message("sent you a photo" , userSender , userReceiver , b);
+        addMessage(userSender, userReceiver, PhotoMessage);
+    }
+
+    /**
+     * adds a messages to it's owner's repository
+     * @param userSender message sender
+     * @param userReceiver message receiver
+     * @param message message itself
+     * @throws IOException "applyChanges" method may threw IOException
+     */
+    private static void addMessage(user userSender, user userReceiver, message message) throws IOException {
+        for (Model.user user : users) {
+            if (user.getUserName().equals(userSender.getUserName()))
+                if (user.sentMessages.get(userReceiver) == null) {
+                    List<message> list = new ArrayList<>();
+                    list.add(message);
+                    user.sentMessages.put(userReceiver, list);
+                } else
+                    user.sentMessages.get(userReceiver).add(message);
+            if (user.getUserName().equals(userReceiver.getUserName()))
+                if (user.receivedMessages.get(userSender) == null) {
+                    List<message> list = new ArrayList<>();
+                    list.add(message);
+                    user.receivedMessages.put(userSender, list);
+                } else
+                    user.receivedMessages.get(userSender).add(message);
+        }
+        applyChanges(userSender.getUserName());
+        applyChanges(userReceiver.getUserName());
+    }
+
     /**
      * this is our running server which starts several Threads
      * each Thread does a particular job
@@ -1336,6 +1363,8 @@ public class MainServer {
                     }
                     if (condition.equals("editMessage"))
                         editMessage(message , userSender , userReceiver);
+                    if (condition.equals("newPhotoMessage"))
+                        sendPhotoMessage(message , userSender , userReceiver);
                     addMessageSocket.close();
                     addMessageServerSocket.close();
                     addMessageObjectOutputStream.close();

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
 <?import com.jfoenix.controls.*?>
 <?import java.lang.*?>
@@ -7,7 +8,6 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 
 <AnchorPane fx:id="selfroot" prefHeight="550.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.selfPostsPage_Controller">
    <children>
@@ -17,5 +17,15 @@
             <Image url="@Icons/backarrow.png" />
          </image>
       </ImageView>
+      <Label fx:id="greet" layoutX="290.0" layoutY="209.0" text="no post here " textFill="#82c440" visible="false">
+         <font>
+            <Font name="Segoe UI Light" size="33.0" />
+         </font>
+      </Label>
+      <Label fx:id="greet1" layoutX="154.0" layoutY="254.0" text="you dont have any posts currently !" textFill="#82c440" visible="false">
+         <font>
+            <Font name="Segoe UI Light" size="33.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

@@ -10,7 +10,12 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.stage.FileChooser;
+import javafx.stage.Popup;
+
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -72,6 +77,18 @@ public class directPage_Controller {
         new PageLoader().load("allDirectsPage");
     }
     public void refresh(ActionEvent actionEvent) throws IOException {
+        new PageLoader().load("directPage");
+    }
+
+    /**
+     * shows a pop up dialogue and receives an image as message
+     * @param mouseEvent on mouse click
+     * @throws IOException loading new page and "messageHandler" method may threw IOException
+     */
+    public void insert(MouseEvent mouseEvent) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showOpenDialog(new Popup());
+        directsServer.MessageHandler(String.valueOf(file) , logInPage_Controller.Username , DirectItemController.user.getUserName() , "newPhotoMessage");
         new PageLoader().load("directPage");
     }
 }

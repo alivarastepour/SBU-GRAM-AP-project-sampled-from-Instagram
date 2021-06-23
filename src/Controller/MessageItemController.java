@@ -35,6 +35,8 @@ public class MessageItemController {
     public JFXButton applyEditButton ;
     public JFXButton editButton ;
     public Label time ;
+    public JFXButton photoMessage;
+    public static message tempMessage ;
     
 
     /**
@@ -54,10 +56,11 @@ public class MessageItemController {
     public AnchorPane init(){
         profilePhoto.setFill(new ImagePattern(new Image(new ByteArrayInputStream(message.getSender().getProfilePhoto()))));
         messageLabel.setText(message.getMessage());
-        edit.setVisible(message.getSender().getUserName().equals(logInPage_Controller.Username));
+        edit.setVisible(message.getSender().getUserName().equals(logInPage_Controller.Username) && message.getPhoto() == null);
         delete.setVisible(message.getSender().getUserName().equals(logInPage_Controller.Username));
         deleteButton.setVisible(message.getSender().getUserName().equals(logInPage_Controller.Username));
         time.setText(message.getDate());
+        photoMessage.setVisible(message.getPhoto() != null);
         return root ;
     }
     
@@ -105,4 +108,13 @@ public class MessageItemController {
         editMessageField.setVisible(false);
     }
 
+    /**
+     * opens an image message
+     * @param actionEvent on mouse click
+     * @throws IOException loading new page may threw IOException
+     */
+    public void photoMessage(ActionEvent actionEvent) throws IOException {
+        tempMessage = message ;
+        new PageLoader().load("photo");
+    }
 }
