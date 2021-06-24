@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 /**
  * <h1>MainServer</h1>
- <p>this class is our main server class and keeps data available and changeable till its closed</p>
+ <p>this class is our main server class.it holds data in containers and saves them in Database</p>
  @author Ali Varaste Pour
  @version 1.0
  @since 5/27/2021
@@ -25,7 +25,9 @@ public class MainServer {
     private static final Map<String , String> userEmail = new ConcurrentHashMap<>();//map from users to emails
     private static final Map<String , String> userPhone = new ConcurrentHashMap<>();//map from users to phone numbers
     private static List<post> posts = new Vector<>();//keeps all posts
-
+    static {
+        System.out.println("server started");
+    }
     /**
      * the following method reads all data from a txt file and adds them to users List
      */
@@ -261,14 +263,14 @@ public class MainServer {
                 if (user.getUserName().equals(username) && validEmail(map.get("email"))){
                     user.setEmail(map.get("email"));
                     userEmail.put(map.get("username") , map.get("email"));
-                    System.out.println("user [ " + username + " ] changed their Email Address at " + CurrentDateTime.time());
+                    System.out.println(username + " changed their Email Address at " + CurrentDateTime.time());
                 }
         if (map.get("phoneNumber") != null)
             for (Model.user user : users)
                 if (user.getUserName().equals(username) && validPhoneNumber(map.get("phoneNumber"))){
                     user.setPhoneNumber(map.get("phoneNumber"));
                     userPhone.put(map.get("username") , map.get("phoneNumber"));
-                    System.out.println("user [ " + username + " ] changed their Phone Number at " + CurrentDateTime.time());
+                    System.out.println( username + " changed their Phone Number at " + CurrentDateTime.time());
                 }
         if (map.get("city") != null)
             for (Model.user user : users)
@@ -752,13 +754,11 @@ public class MainServer {
                            validUser = true;
                            break;
                        }
-                   System.out.println("valid user " + validUser);
                    boolean validPassword = false ;
                    if (usernames.contains(username))
                        validPassword = userPass.get(username).equals(password) ;
-                   System.out.println("valid Password " + validPassword);
                    if (validUser && validPassword){
-                       System.out.println("user [ " + username + " ] logged in at : " +  CurrentDateTime.time());
+                       System.out.println( username + " logged in at : " +  CurrentDateTime.time());
                        setLoggedInUser(username);
                    }
                    ServerLogInObjectOutputStream.writeBoolean(validUser);
@@ -864,7 +864,7 @@ public class MainServer {
                     serverPasswordRecoveryDataOutputStream.flush();
                     if (validPasswordFormation(password)){
                         changePassword(username , password);
-                        System.out.println("user [ " + username + " ] changed password at " + CurrentDateTime.time());
+                        System.out.println(username + " changed password at " + CurrentDateTime.time());
                     }
                     ServerChangePasswordSocket.close();
                     ChangePasswordServerSocket.close();
@@ -974,7 +974,7 @@ public class MainServer {
                        ObjectInputStream newPostObjectInputStream = new ObjectInputStream(newPostServerSocket.getInputStream());
                        post post = (Model.post) newPostObjectInputStream.readObject();
                        posts.add(post);
-                       System.out.println("user [ " + post.getPublisherUser().getUserName() + " ] added a new post " + CurrentDateTime.time());
+                       System.out.println(post.getPublisherUser().getUserName() + " added a new post at : " + CurrentDateTime.time());
                        add_post(post);
                        newPostSocket.close();
                        newPostServerSocket.close();
