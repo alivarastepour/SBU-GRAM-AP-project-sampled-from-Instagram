@@ -8,6 +8,8 @@ import javafx.scene.control.ListView;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  <h1>selfPostsPage_Controller </h1>
  <p>this controller page is a connector between selfPostsPage FXML(ths stage) and selfPostServer class </p>
@@ -29,6 +31,7 @@ public class selfPostsPage_Controller {
             selfPosts = Model.selfPostServer.selfPostHandler(PostItemController.PublisherUser.getUserName());
         greet.setVisible(selfPosts.size() == 0);
         greet1.setVisible(selfPosts.size() == 0);
+        selfPosts = selfPosts.stream().sorted((a , b) -> Math.toIntExact(b.getTime() - a.getTime())).collect(Collectors.toList());
         SelfTimeLine.setItems(FXCollections.observableArrayList(selfPosts));
         SelfTimeLine.setCellFactory(TimeLine -> new PostItem());
         trick = false ;

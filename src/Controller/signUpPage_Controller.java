@@ -48,12 +48,13 @@ public class signUpPage_Controller {
         userNameField.clear();passwordField.clear();passwordRepeatField.clear();emailField.clear();phoneNumField.clear();
         cityField.clear();
     }
-    public void signUp() throws IOException {
-        /*receives data from user
-        then it sends them to server
-        then receives answer from from server and performs proper function
-        */
 
+    /**
+     * receives data from user
+     *  then it sends them to server
+     *  then receives answer from from server and performs proper function
+     */
+    public void signUp() throws IOException {
         String name = nameField.getText();
         String userName = userNameField.getText();
         String password = passwordField.getText();
@@ -61,41 +62,24 @@ public class signUpPage_Controller {
         String email = emailField.getText();
         String phoneNumber = phoneNumField.getText();
         String city = cityField.getText();
-
-
-        uploadedPhoto
-                .setVisible(profilePhotoAddress == null);
+        uploadedPhoto.setVisible(profilePhotoAddress == null);
+        usernameNotAvailable.setVisible(userNameField.getText().isBlank());
+        passwordValidation.setVisible(passwordField.getText().isBlank());
+        emailValidation.setVisible(emailField.getText().isBlank());
+        phoneNumberValidation.setVisible(phoneNumField.getText().isBlank());
+        enterName.setVisible(nameField.getText().isBlank());
+        enterCity.setVisible(cityField.getText().isBlank());
         if (profilePhotoAddress != null && !nameField.getText().isBlank()) {
-            Model.signUpServer.signUpHandler(
-                    name, userName, password, phoneNumber, email, city, profilePhotoAddress.toString()
-            );
-            passwordDoesntMatch
-                    .setVisible(!password.equals(passwordRepeat));
-            usernameNotAvailable
-                    .setVisible(!Model.signUpServer.isValidUsername());
-            passwordValidation
-                    .setVisible(!Model.signUpServer.isValidPasswordFormation());
-            emailValidation
-                    .setVisible(!Model.signUpServer.isValidEmail());
-            phoneNumberValidation
-                    .setVisible(!Model.signUpServer.isValidPhoneNumber());
-            enterName
-                    .setVisible(nameField.getText().isEmpty() || nameField.getText().contains(" "));
-            enterCity
-                    .setVisible(cityField.getText().isEmpty() || cityField.getText().contains(" "));
+            Model.signUpServer.signUpHandler(name, userName, password, phoneNumber, email, city, profilePhotoAddress.toString());
+            passwordDoesntMatch.setVisible(!password.equals(passwordRepeat));
+            usernameNotAvailable.setVisible(!Model.signUpServer.isValidUsername());
+            passwordValidation.setVisible(!Model.signUpServer.isValidPasswordFormation());
+            emailValidation.setVisible(!Model.signUpServer.isValidEmail());
+            phoneNumberValidation.setVisible(!Model.signUpServer.isValidPhoneNumber());
+            enterName.setVisible(nameField.getText().isEmpty());
+            enterCity.setVisible(cityField.getText().isEmpty());
         }
-        if (
-                !nameField.getText().contains(" ") &&
-                !nameField.getText().isEmpty() &&
-                password.equals(passwordRepeat) &&
-                Model.signUpServer.isValidUsername() &&
-                Model.signUpServer.isValidPasswordFormation() &&
-                Model.signUpServer.isValidEmail() &&
-                Model.signUpServer.isValidPhoneNumber() &&
-                fileUploaded &&
-                !cityField.getText().isEmpty() &&
-                !cityField.getText().contains(" ")
-        ){
+        if (!nameField.getText().isEmpty() && password.equals(passwordRepeat) && Model.signUpServer.isValidUsername() && Model.signUpServer.isValidPasswordFormation() && Model.signUpServer.isValidEmail() && Model.signUpServer.isValidPhoneNumber() && fileUploaded && !cityField.getText().isEmpty()){
             new PageLoader().load("loginPage");
         }
     }
