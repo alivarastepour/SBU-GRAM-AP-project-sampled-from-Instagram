@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 /**
  * <h1>MainServer</h1>
- <p>this class is our main server class and keeps data available and changeable till its closed</p>
+ <p>this class is our main server class.it holds data in containers and saves them in Database</p>
  @author Ali Varaste Pour
  @version 1.0
  @since 5/27/2021
@@ -25,7 +25,9 @@ public class MainServer {
     private static final Map<String , String> userEmail = new ConcurrentHashMap<>();//map from users to emails
     private static final Map<String , String> userPhone = new ConcurrentHashMap<>();//map from users to phone numbers
     private static List<post> posts = new Vector<>();//keeps all posts
-
+    static {
+        System.out.println("server started");
+    }
     /**
      * the following method reads all data from a txt file and adds them to users List
      */
@@ -56,8 +58,8 @@ public class MainServer {
     }
 
     /**
-     *
-     * @param userName user's input (username) validity base on the defined regex
+     *checks if a username is valid
+     * @param userName given username
      * @return true if username does not exist in usernames List and matches the given pattern
      */
     private static boolean validUsername(String userName){
@@ -68,8 +70,8 @@ public class MainServer {
     }
 
     /**
-     *
-     * @param password user's input (password) validity base on the defined regex
+     *checks if a password is valid
+     * @param password given password
      * @return true if the password matches the defined regex
      */
     private static boolean validPasswordFormation(String password){
@@ -82,8 +84,8 @@ public class MainServer {
     }
 
     /**
-     *
-     * @param email user's input (email) validity base on the defined regex
+     *checks if a email is valid
+     * @param email given email
      * @return true if the email matches the defined regex
      */
     private static boolean validEmail(String email){
@@ -97,8 +99,8 @@ public class MainServer {
     }
 
     /**
-     *
-     * @param phoneNumber user's input (phone Number) validity base on the defined regex
+     *checks if a phoneNumber is valid
+     * @param phoneNumber given phoneNumber
      * @return true if phone Number matches the defined regex
      */
     private static boolean validPhoneNumber(String phoneNumber){
@@ -109,34 +111,30 @@ public class MainServer {
     }
 
     /**
-     * checks if
-     * @param name user's name,
-     * @param userName username,
-     * @param password password,
-     * @param phoneNumber phone number,
-     * @param email email   ,
-     * @param city city,
+     * checks if fields are all available and valid
+     * @param name name
+     * @param userName username
+     * @param password password
+     * @param phoneNumber phone number
+     * @param email email
+     * @param city city
      * @param profilePhotoAddress profile Photo Address
-     * are valid
-     * @throws IOException profile photo address may be wrong
+     * @throws IOException "add_user" method may threw IOException
      */
     private static void validFields(String name ,String userName , String password  , String  phoneNumber ,
-                                   String  email ,String city , String profilePhotoAddress)
-            throws IOException {
-        boolean validName = name != null && !name.contains(" ");
+                                   String  email ,String city , String profilePhotoAddress) throws IOException {
+        boolean validName = name != null;
         boolean validUsername = validUsername(userName);
         boolean validPasswordFormation = validPasswordFormation(password) ;
         boolean validEmail = validEmail(email);
         boolean validPhoneNumber = validPhoneNumber(phoneNumber);
-        boolean validCity = city != null && !city.contains(" ");
-        if (validName && validUsername && validPasswordFormation
-                && validEmail && validPhoneNumber && validCity){
+        boolean validCity = city != null;
+        if (validName && validUsername && validPasswordFormation && validEmail && validPhoneNumber && validCity)
             add_user(name , userName , password , phoneNumber , email ,city , profilePhotoAddress);
-        }
     }
 
     /**
-     * adds user to users list using their
+     * adds user to users list and then adds them to our simple dataBase(the txt file)
      * @param name name
      * @param userName username
      * @param password password
@@ -144,12 +142,12 @@ public class MainServer {
      * @param email email
      * @param city city
      * @param profilePhotoAddress profilePhoto address
-     *amd then adds them to our simple dataBase(the txt file)
      * @throws IOException the txt file which is used as a simple dataBase may not be found
      */
     private static void add_user(String name ,String userName ,String  password ,String  phoneNumber
             ,String  email ,String city , String profilePhotoAddress) throws IOException {
-        user tempUser = new user(name , userName , password , phoneNumber , email ,city, profilePhotoAddress , String.valueOf(0) , String.valueOf(0));
+        user tempUser = new user(name , userName , password , phoneNumber , email ,city, profilePhotoAddress
+                , String.valueOf(0) , String.valueOf(0));
         MainServer.users.add(tempUser) ;
         MainServer.usernames.add(userName) ;
         MainServer.userPass.put(userName , password) ;
@@ -164,9 +162,9 @@ public class MainServer {
     }
 
     /**
-     *
-     * @param username is the username which is trying to recover their password
-     * @param email is the defined user's email address
+     *checks if a email is present and matches a specific username
+     * @param username username
+     * @param email email
      * @return true if the user exists and the email address is theirs
      */
     private static boolean userEmailExistence(String username , String email){
@@ -174,9 +172,9 @@ public class MainServer {
     }
 
     /**
-     *
-     * @param username is the username which is trying to recover their password
-     * @param phone is the defined user's phoneNumber
+     *checks if a phoneNumber is present and matches a specific username
+     * @param username username
+     * @param phone phoneNumber
      * @return true if the user exists and the phoneNumber is theirs
      */
     private static boolean userPhoneExistence(String username , String phone){
@@ -185,8 +183,8 @@ public class MainServer {
 
     /**
      * changes a user' password and apply changes to our simple database
-     * @param username is the username which is trying to change their password
-     * @param password is the defined user's new password
+     * @param username username
+     * @param password password
      */
     private static void changePassword(String username , String password) throws IOException {
         for (Model.user user : users)
@@ -197,7 +195,6 @@ public class MainServer {
     }
 
     /**
-     *
      * applies changes to database
      */
     private static void applyChanges(String username) throws IOException {
@@ -208,8 +205,8 @@ public class MainServer {
     }
 
     /**
-     *
-     * @param username is the user who has last signed in
+     *sets logged in user
+     * @param username username
      * @throws IOException loggedInUserInfo.txt may not be found
      */
     private static void setLoggedInUser(String username) throws IOException {
@@ -221,9 +218,9 @@ public class MainServer {
     }
 
     /**
-     *
-     * @param username this method tries to find a user by it's 'username'
-     * @return defined user
+     *finds a object from user class using a username
+     * @param username username
+     * @return user
      */
     public static user findUserByUsername(String username){
         user tempUser = null ;
@@ -235,23 +232,21 @@ public class MainServer {
 
     
     /**
-     *
-     * @param username to identify the user who is trying to change their profile photo
+     * applies profilePhoto change
+     * @param username user who is trying to change their profilePhoto
      * @param Address new Address of user's profile photo
-     * @throws IOException called method 'applyChanges' may throw IOException
+     * @throws IOException "applyChanges" method may throw IOException
      */
     private static void apply_profilePhotoChange(String username , String Address) throws IOException {
         for (Model.user user : users) {
-            if (user.getUserName().equals(username)) {
+            if (user.getUserName().equals(username))
                 user.setPhotoAddress(Address);
-            }
             applyChanges(username);
         }
-
     }
 
     /**
-     *
+     *applies any change in profile detail including name , city , email , number , password
      * @param map contains all possible changes that can be done in changeProfileDetailsPage
      */
     private static void changeProfileDetails(Map<String , String> map) throws IOException {
@@ -261,14 +256,14 @@ public class MainServer {
                 if (user.getUserName().equals(username) && validEmail(map.get("email"))){
                     user.setEmail(map.get("email"));
                     userEmail.put(map.get("username") , map.get("email"));
-                    System.out.println("user [ " + username + " ] changed their Email Address at " + CurrentDateTime.time());
+                    System.out.println(username + " changed their Email Address at " + CurrentDateTime.time());
                 }
         if (map.get("phoneNumber") != null)
             for (Model.user user : users)
                 if (user.getUserName().equals(username) && validPhoneNumber(map.get("phoneNumber"))){
                     user.setPhoneNumber(map.get("phoneNumber"));
                     userPhone.put(map.get("username") , map.get("phoneNumber"));
-                    System.out.println("user [ " + username + " ] changed their Phone Number at " + CurrentDateTime.time());
+                    System.out.println( username + " changed their Phone Number at " + CurrentDateTime.time());
                 }
         if (map.get("city") != null)
             for (Model.user user : users)
@@ -286,7 +281,7 @@ public class MainServer {
     
     /**
      * re-writes posts.txt to save all data in post's list
-     * @param post -_-
+     * @param post post
      * @throws IOException file posts.txt may not be found
      */
     private static void add_post(post post) throws IOException {
@@ -331,20 +326,20 @@ public class MainServer {
     }
 
     /**
-     * returns true if
-     * @param x x follows
-     * @param y y
-     * @return :)
+     * checks if user x follows user y
+     * @param x user
+     * @param y user
+     * @return true if x follows y
      */
     private static boolean xFollowsY(String y , String x){
         return findUserByUsername(y).followersList.contains(findUserByUsername(x));
     }
 
     /**
-     *
+     *removes s.one from s.one's following list
      * @param x the one who is unfollowed
      * @param y the one who unfollows
-     * @throws IOException apply change method is called;that may threw IOException
+     * @throws IOException "applyChange" method may threw IOException
      */
     private static void unFollowProgress(String x ,String y) throws IOException {
         for (Model.user user : users) {
@@ -362,10 +357,10 @@ public class MainServer {
     }
 
     /**
-     * in this method a user Mutes another user
+     *  a user Mutes another user
      * @param muter Muter
      * @param muted Muted
-     * @throws IOException method "apply changes" may threw IOException
+     * @throws IOException "applyChanges" method may threw IOException
      */
     private static void muteProgress(String muter , String muted) throws IOException {
         for (Model.user user : users)
@@ -376,20 +371,20 @@ public class MainServer {
     }
 
     /**
-     * if
+     * checks if 'muter' has already muted 'muted'
      * @param muter muter
-     * @param muted has already muted this user
-     * @return returns true
+     * @param muted muted
+     * @return true if 'muter' has already muted 'muted'
      */
     private static boolean xMutesY(String muter , String muted){
         return findUserByUsername(muter).mutedUsers.contains(findUserByUsername(muted));
     }
 
     /**
-     * in this method a user unMutes another user
+     * a user unMutes another user
      * @param muter unMuter
      * @param muted unMuted
-     * @throws IOException method "apply changes" may threw IOException
+     * @throws IOException "applyChanges" method may threw IOException
      */
     private static void unmuteProgress(String muter , String muted) throws IOException {
         for (Model.user user : users)
@@ -400,9 +395,9 @@ public class MainServer {
     }
 
     /**
-     * receives a
+     * fills timeLine of a user with posts of those whom he follows
      * @param username username
-     * @return and returns all post that should be in their TimeLine
+     * @return a list of posts
      */
     private static List<post> findPostsForUsername(String username){
         List<post> postsForUsername = new ArrayList<>();
@@ -414,10 +409,10 @@ public class MainServer {
     }
     
     /**
-     * searches if
-     * @param post this post
-     * @param username is liked by this username.
-     * @return and returns true if so
+     * searches if a specific post is liked by a specific user
+     * @param post post
+     * @param username username
+     * @return if user with username has already liked the post
      */
     private static boolean searchLikes(post post , String username){
         read_change();
@@ -428,10 +423,10 @@ public class MainServer {
     }
     
     /**
-     *
-     * @param username this user adds a
-     * @param post like to this post
-     * @throws IOException add_post method may threw IOException
+     *adds a like to a post
+     * @param username user who has liked a post
+     * @param post post
+     * @throws IOException "add_post" method may threw IOException
      */
     private static void addLike(post post , String username) throws IOException {
         for (Model.post value : posts)
@@ -441,12 +436,12 @@ public class MainServer {
             }
         add_post(post);
     }
-    
+
     /**
-     *
-     * @param username this user removes a
-     * @param post like from this post
-     * @throws IOException add_post method may threw IOException
+     *removes a like from a post
+     * @param username user who has removed a like
+     * @param post post
+     * @throws IOException "add_post" method may threw IOException
      */
     private static void removeLike(post post , String username) throws IOException {
         for (Model.post value : posts)
@@ -460,7 +455,7 @@ public class MainServer {
     /**
      * receives a username as parameter and removes it's user from all lists
      * @param username user who is trying to delete account
-     * @throws IOException line 483, 491, 494 may threw IOException
+     * @throws IOException "applyChange ,add_post " methods may threw IOException
      */
     private static void delete_account(String username) throws IOException {
         for (Model.user user : users) {
@@ -685,7 +680,7 @@ public class MainServer {
         File file = new File(photoAddress);
         FileInputStream fileInputStream = new FileInputStream(file) ;
         byte[] b = fileInputStream.readAllBytes();
-        message PhotoMessage = new message("view image" , userSender , userReceiver , b , null);
+        message PhotoMessage = new message("image message" , userSender , userReceiver , b , null);
         addMessage(userSender, userReceiver, PhotoMessage);
     }
 
@@ -752,13 +747,11 @@ public class MainServer {
                            validUser = true;
                            break;
                        }
-                   System.out.println("valid user " + validUser);
                    boolean validPassword = false ;
                    if (usernames.contains(username))
                        validPassword = userPass.get(username).equals(password) ;
-                   System.out.println("valid Password " + validPassword);
                    if (validUser && validPassword){
-                       System.out.println("user [ " + username + " ] logged in at : " +  CurrentDateTime.time());
+                       System.out.println( username + " logged in at : " +  CurrentDateTime.time());
                        setLoggedInUser(username);
                    }
                    ServerLogInObjectOutputStream.writeBoolean(validUser);
@@ -864,7 +857,7 @@ public class MainServer {
                     serverPasswordRecoveryDataOutputStream.flush();
                     if (validPasswordFormation(password)){
                         changePassword(username , password);
-                        System.out.println("user [ " + username + " ] changed password at " + CurrentDateTime.time());
+                        System.out.println(username + " changed password at " + CurrentDateTime.time());
                     }
                     ServerChangePasswordSocket.close();
                     ChangePasswordServerSocket.close();
@@ -974,7 +967,7 @@ public class MainServer {
                        ObjectInputStream newPostObjectInputStream = new ObjectInputStream(newPostServerSocket.getInputStream());
                        post post = (Model.post) newPostObjectInputStream.readObject();
                        posts.add(post);
-                       System.out.println("user [ " + post.getPublisherUser().getUserName() + " ] added a new post " + CurrentDateTime.time());
+                       System.out.println(post.getPublisherUser().getUserName() + " added a new post at : " + CurrentDateTime.time());
                        add_post(post);
                        newPostSocket.close();
                        newPostServerSocket.close();

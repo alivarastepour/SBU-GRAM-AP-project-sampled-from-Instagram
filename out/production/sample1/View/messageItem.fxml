@@ -45,5 +45,17 @@
          </font>
       </Label>
       <JFXButton fx:id="photoMessage" layoutX="60.0" layoutY="18.0" onAction="#photoMessage" prefHeight="25.0" prefWidth="389.0" text="  " visible="false" />
+      <ImageView fx:id="play" fitHeight="25.0" fitWidth="23.0" layoutX="462.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Icons/play.png" />
+         </image>
+      </ImageView>
+      <JFXButton fx:id="playButton" layoutX="463.0" layoutY="20.0" onAction="#play" text=" " visible="false" />
+      <ImageView fx:id="pause" fitHeight="25.0" fitWidth="23.0" layoutX="429.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Icons/pause.png" />
+         </image>
+      </ImageView>
+      <JFXButton fx:id="pauseButton" layoutX="429.0" layoutY="17.0" onAction="#pause" prefHeight="25.0" prefWidth="23.0" text="  " />
    </children>
 </AnchorPane>
