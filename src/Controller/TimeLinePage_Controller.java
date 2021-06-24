@@ -36,7 +36,7 @@ public class TimeLinePage_Controller {
         greet1.setVisible(posts.size() == 0);
         Map<user, List<message>> receivedMessages = Model.allDirectsServer.getMessages(logInPage_Controller.Username , "receivedMessages");
         Map<user, List<message>> sentMessages = Model.allDirectsServer.getMessages(logInPage_Controller.Username , "sentMessages");
-        List<message> messageList  = allDirectsPage_Controller.messageAssitant(receivedMessages , sentMessages);
+        List<message> messageList  = allDirectsPage_Controller.messageAssistant(receivedMessages , sentMessages);
         int unreadCount = (int) messageList.stream().filter(a -> !a.getSender().getUserName().equals(logInPage_Controller.Username)).filter(a -> !a.isRead()).count();
         if (unreadCount == 0)
             unreadMessages.setVisible(false);

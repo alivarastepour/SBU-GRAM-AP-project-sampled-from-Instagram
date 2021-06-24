@@ -519,7 +519,7 @@ public class MainServer {
      * @throws IOException since apply change method is called, the possibility of IOException is not zero
      */
     private static void sendTextMessage(String message , user sender , user receiver) throws IOException {
-        message textMessage = new message(message , sender , receiver, null);
+        message textMessage = new message(message , sender , receiver, null , null);
         addMessage(sender, receiver, textMessage);
     }
 
@@ -685,7 +685,7 @@ public class MainServer {
         File file = new File(photoAddress);
         FileInputStream fileInputStream = new FileInputStream(file) ;
         byte[] b = fileInputStream.readAllBytes();
-        message PhotoMessage = new message("sent you a photo" , userSender , userReceiver , b);
+        message PhotoMessage = new message("view image" , userSender , userReceiver , b , null);
         addMessage(userSender, userReceiver, PhotoMessage);
     }
 
@@ -715,6 +715,18 @@ public class MainServer {
         }
         applyChanges(userSender.getUserName());
         applyChanges(userReceiver.getUserName());
+    }
+
+    /**
+     * creates an object from message class (voice message) using voice' address , sender and receiver
+     * @param message address of voice
+     * @param userSender sender
+     * @param userReceiver receiver
+     * @throws IOException "addMessage" method may threw IOException
+     */
+    private static void sendVoiceMessage(String message, user userSender, user userReceiver) throws IOException {
+        message voiceMessage = new message("voice Message" , userSender , userReceiver , null , message);
+        addMessage(userSender, userReceiver, voiceMessage);
     }
 
     /**
@@ -1365,6 +1377,8 @@ public class MainServer {
                         editMessage(message , userSender , userReceiver);
                     if (condition.equals("newPhotoMessage"))
                         sendPhotoMessage(message , userSender , userReceiver);
+                    if (condition.equals("newVoiceMessage"))
+                        sendVoiceMessage(message , userSender , userReceiver);
                     addMessageSocket.close();
                     addMessageServerSocket.close();
                     addMessageObjectOutputStream.close();
@@ -1455,4 +1469,6 @@ public class MainServer {
         }).start();
         
     }
+
+
 }

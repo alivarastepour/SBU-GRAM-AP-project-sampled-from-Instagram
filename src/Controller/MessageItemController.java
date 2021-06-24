@@ -8,11 +8,14 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 /**
  <h1>MessageItemController </h1>
@@ -37,6 +40,15 @@ public class MessageItemController {
     public Label time ;
     public JFXButton photoMessage;
     public static message tempMessage ;
+    public ImageView play ;
+    public ImageView pause ;
+    public JFXButton playButton ;
+    public JFXButton pauseButton ;
+    String url ;
+    Media media ;
+    MediaPlayer mediaPlayer ;
+    public MediaView player;
+
     
 
     /**
@@ -56,11 +68,23 @@ public class MessageItemController {
     public AnchorPane init(){
         profilePhoto.setFill(new ImagePattern(new Image(new ByteArrayInputStream(message.getSender().getProfilePhoto()))));
         messageLabel.setText(message.getMessage());
-        edit.setVisible(message.getSender().getUserName().equals(logInPage_Controller.Username) && message.getPhoto() == null);
+        edit.setVisible(message.getSender().getUserName().equals(logInPage_Controller.Username) && message.getPhoto() == null && message.getVoiceAddress() == null);
         delete.setVisible(message.getSender().getUserName().equals(logInPage_Controller.Username));
         deleteButton.setVisible(message.getSender().getUserName().equals(logInPage_Controller.Username));
         time.setText(message.getDate());
         photoMessage.setVisible(message.getPhoto() != null);
+        play.setVisible(message.getVoiceAddress() != null);
+        playButton.setVisible(message.getVoiceAddress() != null);
+        pause.setVisible(message.getVoiceAddress() != null);
+        pauseButton.setVisible(message.getVoiceAddress() != null);
+        if (message.getVoiceAddress() != null){
+            tempMessage = message ;
+            url = MessageItemController.tempMessage.getVoiceAddress();
+            media = new Media(new File(url).toURI().toString());
+            mediaPlayer = new MediaPlayer(media);
+            player = new MediaView();
+            player.setMediaPlayer(mediaPlayer);
+        }
         return root ;
     }
     
@@ -116,5 +140,21 @@ public class MessageItemController {
     public void photoMessage(ActionEvent actionEvent) throws IOException {
         tempMessage = message ;
         new PageLoader().load("photo");
+    }
+
+    /**
+     * plays a voiceMessage
+     * @param actionEvent on mouseClick
+     */
+    public void play(ActionEvent actionEvent) {
+        mediaPlayer.play();
+    }
+
+    /**
+     * pauses a voiceMessage
+     * @param actionEvent on mouseClick
+     */
+    public void pause(ActionEvent actionEvent){
+        mediaPlayer.pause();
     }
 }

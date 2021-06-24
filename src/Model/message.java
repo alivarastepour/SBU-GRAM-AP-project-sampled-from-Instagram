@@ -14,18 +14,24 @@ public class message implements Serializable {
     private user sender ;
     private user receiver ;
     private byte[] photo = null;
+    private String voiceAddress = null;
     private final long time ;
     private boolean read  ;
     private final String date ;
 
-    public message(String message, user sender, user receiver , byte[] photo) {
+    public message(String message, user sender, user receiver , byte[] photo ,String voiceAddress ) {
         this.message = message;
         this.sender = sender;
         this.receiver = receiver;
         this.photo = photo ;
+        this.voiceAddress = voiceAddress;
         time = System.currentTimeMillis() ;
         read = false ;
         date = CurrentDateTime.time1();
+    }
+
+    public String getVoiceAddress() {
+        return voiceAddress;
     }
 
     public byte[] getPhoto() {

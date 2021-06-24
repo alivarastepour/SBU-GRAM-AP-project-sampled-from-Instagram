@@ -91,4 +91,15 @@ public class directPage_Controller {
         directsServer.MessageHandler(String.valueOf(file) , logInPage_Controller.Username , DirectItemController.user.getUserName() , "newPhotoMessage");
         new PageLoader().load("directPage");
     }
+    /**
+     * shows a pop up dialogue and receives an voice as message
+     * @param mouseEvent on mouse click
+     * @throws IOException loading new page and "messageHandler" method may threw IOException
+     */
+    public void insertVoice(MouseEvent mouseEvent) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showOpenDialog(new Popup());
+        directsServer.MessageHandler(String.valueOf(file) , logInPage_Controller.Username , DirectItemController.user.getUserName() , "newVoiceMessage");
+        new PageLoader().load("directPage");
+    }
 }

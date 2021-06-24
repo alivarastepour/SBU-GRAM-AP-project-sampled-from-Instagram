@@ -35,7 +35,7 @@ public class allDirectsPage_Controller {
     /**
      * sets received and sent messages , sorts them and then visualizes it
      */
-    public static List<message> messageAssitant(Map<user, List<message>> receivedMessages , Map<user, List<message>> sentMessages){
+    public static List<message> messageAssistant(Map<user, List<message>> receivedMessages , Map<user, List<message>> sentMessages){
         List<message> messageList = new ArrayList<>();
         List<message> m = new ArrayList<>();
         for (Map.Entry<user , List<message>> value: receivedMessages.entrySet()) {
@@ -70,7 +70,7 @@ public class allDirectsPage_Controller {
     public void initialize() throws IOException, ClassNotFoundException {
         receivedMessages = Model.allDirectsServer.getMessages(logInPage_Controller.Username , "receivedMessages");
         sentMessages = Model.allDirectsServer.getMessages(logInPage_Controller.Username , "sentMessages");
-        List<message> messageList  = messageAssitant(receivedMessages , sentMessages);
+        List<message> messageList  = messageAssistant(receivedMessages , sentMessages);
         guide.setVisible(messageList.size() == 0);
         guide1.setVisible(messageList.size() == 0);
         allDirects.setItems(FXCollections.observableArrayList(messageList));
@@ -97,6 +97,5 @@ public class allDirectsPage_Controller {
             new PageLoader().load("directPage");
             userNotFound.setVisible(false);
         }
-
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
 <?import java.lang.*?>
@@ -11,13 +12,13 @@
 <AnchorPane prefHeight="550.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.allDirectsPage_Controller">
    <children>
       <ListView fx:id="allDirects" layoutX="359.0" prefHeight="550.0" prefWidth="535.0" />
-      <ImageView fx:id="directIcon" fitHeight="38.0" fitWidth="33.0" layoutX="106.0" layoutY="223.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="directIcon" fitHeight="38.0" fitWidth="33.0" layoutX="106.0" layoutY="225.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Icons/iconfinder-32%20(6).png" />
          </image>
       </ImageView>
-      <Label layoutX="139.0" layoutY="229.0" text="SBU GERAM Directs" textFill="#82c440" />
-      <Label layoutX="63.0" layoutY="275.0" text="a safe and easy way to chat with your friends" textFill="#82c440" />
+      <Label layoutX="139.0" layoutY="231.0" text="SBU GERAM Directs" textFill="#82c440" />
+      <Label layoutX="63.0" layoutY="279.0" text="a safe and easy way to chat with your friends" textFill="#82c440" />
       <Label fx:id="guide" layoutX="531.0" layoutY="217.0" text="no chat to show!" textFill="#82c440">
          <font>
             <Font name="Segoe UI Light" size="31.0" />
@@ -33,5 +34,16 @@
             <Image url="@Icons/backarrow.png" />
          </image>
       </ImageView>
+      <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="323.0" layoutY="470.0" onMouseClicked="#search" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Icons/iconfinder-32%20(8).png" />
+         </image>
+      </ImageView>
+      <JFXTextField fx:id="searchBox" focusColor="#82c440" labelFloat="true" layoutX="16.0" layoutY="460.0" prefHeight="45.0" prefWidth="298.0" promptText="serach for your friends" unFocusColor="WHITE">
+         <font>
+            <Font size="21.0" />
+         </font>
+      </JFXTextField>
+      <Label fx:id="userNotFound" layoutX="235.0" layoutY="474.0" text="user not found" textFill="#d72c2c" visible="false" />
    </children>
 </AnchorPane>

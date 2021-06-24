@@ -13,12 +13,12 @@
 <AnchorPane prefHeight="550.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.directPage_Controller">
    <children>
       <ListView fx:id="messages" layoutX="323.0" prefHeight="442.0" prefWidth="578.0" />
-      <ImageView fx:id="directIcon" fitHeight="25.0" fitWidth="25.0" layoutX="819.0" layoutY="463.0" onMouseClicked="#sendMessage" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="directIcon" fitHeight="25.0" fitWidth="25.0" layoutX="781.0" layoutY="460.0" onMouseClicked="#sendMessage" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Icons/direct%20(2).png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="42.0" fitWidth="25.0" layoutX="861.0" layoutY="463.0" onMouseClicked="#insert" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="42.0" fitWidth="25.0" layoutX="862.0" layoutY="460.0" onMouseClicked="#insert" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Icons/paper-clip.png" />
          </image>
@@ -34,7 +34,12 @@
          </image>
       </ImageView>
       <Circle fx:id="profilePhoto" fill="WHITE" layoutX="170.0" layoutY="208.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
-      <JFXTextField fx:id="messageBox" focusColor="WHITE" layoutX="325.0" layoutY="451.0" prefHeight="43.0" prefWidth="476.0" promptText="   message..." style="-fx-background-radius: 50; -fx-border-radius: 50; -fx-border-color: black;" unFocusColor="WHITE" />
+      <JFXTextField fx:id="messageBox" focusColor="WHITE" layoutX="325.0" layoutY="451.0" prefHeight="43.0" prefWidth="448.0" promptText="   message..." style="-fx-background-radius: 50; -fx-border-radius: 50; -fx-border-color: black;" unFocusColor="WHITE" />
       <JFXButton layoutX="270.0" layoutY="17.0" onAction="#refresh" ripplerFill="WHITE" text="refresh" />
+      <ImageView fitHeight="42.0" fitWidth="25.0" layoutX="827.0" layoutY="460.0" onMouseClicked="#insertVoice" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Icons/voice.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>
