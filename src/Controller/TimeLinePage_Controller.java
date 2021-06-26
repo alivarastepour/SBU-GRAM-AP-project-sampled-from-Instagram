@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static Controller.logInPage_Controller.Username;
+
 
 /**
  <h1>TimeLinePage_Controller </h1>
@@ -28,16 +30,16 @@ public class TimeLinePage_Controller {
     private List<post> posts = new ArrayList<>();
     public Label unreadMessages ;
     public void initialize() throws IOException, ClassNotFoundException {
-        LoggedInUsername = logInPage_Controller.Username;
+        LoggedInUsername = Username;
         posts = TimeLineServer.TimeLineHandler(LoggedInUsername);
         TimeLine.setItems(FXCollections.observableArrayList(posts));
         TimeLine.setCellFactory(TimeLine -> new PostItem());
         greet.setVisible(posts.size() == 0);
         greet1.setVisible(posts.size() == 0);
-        Map<user, List<message>> receivedMessages = Model.allDirectsServer.getMessages(logInPage_Controller.Username , "receivedMessages");
-        Map<user, List<message>> sentMessages = Model.allDirectsServer.getMessages(logInPage_Controller.Username , "sentMessages");
+        Map<user, List<message>> receivedMessages = Model.allDirectsServer.getMessages(Username , "receivedMessages");
+        Map<user, List<message>> sentMessages = Model.allDirectsServer.getMessages(Username , "sentMessages");
         List<message> messageList  = allDirectsPage_Controller.messageAssistant(receivedMessages , sentMessages);
-        int unreadCount = (int) messageList.stream().filter(a -> !a.getSender().getUserName().equals(logInPage_Controller.Username)).filter(a -> !a.isRead()).count();
+        int unreadCount = (int) messageList.stream().filter(a -> !a.getSender().getUserName().equals(Username)).filter(a -> !a.isRead()).count();
         if (unreadCount == 0)
             unreadMessages.setVisible(false);
         else

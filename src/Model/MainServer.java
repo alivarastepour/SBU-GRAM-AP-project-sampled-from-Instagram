@@ -528,7 +528,9 @@ public class MainServer {
         for (Model.user value : users)
             if (value.getUserName().equals(user.getUserName()))
                 tempUser = value;
-        return tempUser.receivedMessages;
+        if (tempUser != null)
+            return tempUser.receivedMessages;
+        return null ;
     }
     /**
      * returns a map holding users as key and list of user's messages as value
@@ -540,7 +542,9 @@ public class MainServer {
         for (Model.user value : users)
             if (value.getUserName().equals(user.getUserName()))
                 tempUser = value;
-        return tempUser.sentMessages;
+        if (tempUser != null)
+            return tempUser.sentMessages;
+        return null ;
     }
     
     /**
@@ -562,7 +566,7 @@ public class MainServer {
             }
         }
         applyChanges(userSender.getUserName());
-        applyChanges(userReceiver.getUserName());
+//        applyChanges(userReceiver.getUserName());
     }
     
     /**
@@ -590,7 +594,7 @@ public class MainServer {
         }
         System.out.println(userSender.getUserName() + " edited a message from chat with  " + userReceiver.getUserName() + " at " + CurrentDateTime.time()+ " original message : " + primitiveMessage + ". edited message : " + secondaryMessage);
         applyChanges(userSender.getUserName());
-        applyChanges(userReceiver.getUserName());
+//        applyChanges(userReceiver.getUserName());
     }
     
     /**
@@ -645,7 +649,7 @@ public class MainServer {
     }
     
     /**
-     * marks all messaaes between two chatting users as read
+     * marks all messages between two chatting users as read
      * @param user1 first chatting user
      * @param user2 second chatting user
      * @throws IOException "applyChange" method may threw IOException
@@ -1390,13 +1394,14 @@ public class MainServer {
                     Socket messagesServerSocket = messagesSocket.accept();
                     ObjectOutputStream messagesObjectOutputStream = new ObjectOutputStream(messagesServerSocket.getOutputStream());
                     ObjectInputStream messagesObjectInputStream = new ObjectInputStream(messagesServerSocket.getInputStream());
-                    user user = findUserByUsername(messagesObjectInputStream.readUTF());
+                    String username = messagesObjectInputStream.readUTF();
                     String condition = messagesObjectInputStream.readUTF();
+                    user user123 = findUserByUsername(username);
                     Map<user, List<message>> messages = new HashMap<>();
                     if (condition.equals("receivedMessages"))
-                        messages = findReceivedMessages(user);
+                        messages = findReceivedMessages(user123);
                     else if (condition.equals("sentMessages"))
-                        messages = findSentMessages(user);
+                        messages = findSentMessages(user123);
                     messagesObjectOutputStream.writeObject(messages);
                     messagesObjectOutputStream.flush();
                     messagesSocket.close();

@@ -7,6 +7,9 @@ import java.net.Socket;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
+
+import static Controller.logInPage_Controller.Username;
+
 /**
  * <h1>allDirectsServer</h1>
  <p>this class starts a new client Socket and returns a map containing messages</p>
